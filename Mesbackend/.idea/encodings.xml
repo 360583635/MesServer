@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Authentication-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Cache-Management/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Cache-Management/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data-Visualization-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Dispatch-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Log-Management/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Log-Management/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Message-Management/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Message-Management/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Order-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Platform-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Production-Management-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Zuul-Master/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
