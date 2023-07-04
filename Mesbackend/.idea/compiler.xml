@@ -23,8 +23,11 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Authentication-Service" options="-parameters" />
+      <module name="Cache-Management" options="" />
       <module name="Data-Visualization-Service" options="-parameters" />
       <module name="Dispatch-Service" options="-parameters" />
+      <module name="Log-Management" options="" />
+      <module name="Message-Management" options="" />
       <module name="Order-Service" options="-parameters" />
       <module name="Platform-Service" options="-parameters" />
       <module name="Production-Management-Service" options="-parameters" />
