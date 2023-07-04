@@ -1,4 +1,4 @@
-package com.job;
+package com.job.platformService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,8 +9,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-public class ProductionManagementService {
+public class PlatformService {
     public static void main(String[] args) {
-        SpringApplication.run(ProductionManagementService.class,args);
+        SpringApplication.run(PlatformService.class,args);
     }
 }

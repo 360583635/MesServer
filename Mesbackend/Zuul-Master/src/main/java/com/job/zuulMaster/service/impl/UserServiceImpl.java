@@ -1,9 +1,9 @@
-package com.zx.service.impl;
+package com.job.zuulMaster.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zx.mapper.UserMapper;
-import com.zx.pojo.User;
-import com.zx.service.UserService;
+import com.job.zuulMaster.mapper.UserMapper;
+import com.job.zuulMaster.pojo.User;
+import com.job.zuulMaster.service.UserService;
 import org.springframework.stereotype.Service;
 
 /**

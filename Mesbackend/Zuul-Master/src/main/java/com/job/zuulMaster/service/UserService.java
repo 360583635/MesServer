@@ -1,7 +1,7 @@
-package com.zx.service;
+package com.job.zuulMaster.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zx.pojo.User;
+import com.job.zuulMaster.pojo.User;
 
 /**
  * @Author 菜狗

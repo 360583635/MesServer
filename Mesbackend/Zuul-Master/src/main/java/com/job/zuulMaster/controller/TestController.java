@@ -1,8 +1,8 @@
-package com.zx.controller;
+package com.job.zuulMaster.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.zx.pojo.User;
-import com.zx.service.UserService;
+import com.job.zuulMaster.pojo.User;
+import com.job.zuulMaster.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

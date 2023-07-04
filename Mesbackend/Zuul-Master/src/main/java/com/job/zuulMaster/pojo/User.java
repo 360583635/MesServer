@@ -1,4 +1,4 @@
-package com.zx.pojo;
+package com.job.zuulMaster.pojo;
 
 import lombok.Data;
 

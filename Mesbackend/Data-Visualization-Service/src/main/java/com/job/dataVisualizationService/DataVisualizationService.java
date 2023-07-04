@@ -1,4 +1,4 @@
-package com.job;
+package com.job.dataVisualizationService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,8 +9,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-public class PlatformService {
+public class DataVisualizationService {
     public static void main(String[] args) {
-        SpringApplication.run(PlatformService.class,args);
+        SpringApplication.run(DataVisualizationService.class,args);
     }
 }

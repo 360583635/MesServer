@@ -1,4 +1,4 @@
-package com.zx;
+package com.job.orderService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,8 +9,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-public class ZuulMaster {
+public class OrderService {
     public static void main(String[] args) {
-        SpringApplication.run(ZuulMaster.class,args);
+        SpringApplication.run(OrderService.class,args);
     }
 }

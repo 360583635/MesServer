@@ -1,7 +1,7 @@
-package com.zx.mapper;
+package com.job.zuulMaster.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zx.pojo.User;
+import com.job.zuulMaster.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 /**
  * @Author 菜狗
