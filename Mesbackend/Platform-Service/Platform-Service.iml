@@ -67,9 +67,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:6.0.9" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:6.0.9" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:6.0.9" level="project" />
-    <orderEntry type="module" module-name="Cache-Management" />
-    <orderEntry type="module" module-name="Log-Management" />
-    <orderEntry type="module" module-name="Message-Management" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:3.1.0" level="project" />
