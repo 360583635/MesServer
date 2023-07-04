@@ -1,6 +1,6 @@
-D:\IDEA\MesServer\Mesbackend\Zuul-Master\src\main\java\com\job\zuulMaster\mapper\UserMapper.java
-D:\IDEA\MesServer\Mesbackend\Zuul-Master\src\main\java\com\job\zuulMaster\service\impl\UserServiceImpl.java
-D:\IDEA\MesServer\Mesbackend\Zuul-Master\src\main\java\com\job\zuulMaster\service\UserService.java
-D:\IDEA\MesServer\Mesbackend\Zuul-Master\src\main\java\com\job\zuulMaster\ZuulMaster.java
-D:\IDEA\MesServer\Mesbackend\Zuul-Master\src\main\java\com\job\zuulMaster\controller\TestController.java
-D:\IDEA\MesServer\Mesbackend\Zuul-Master\src\main\java\com\job\zuulMaster\pojo\User.java
+D:\MesSB\Mesbackend\Zuul-Master\src\main\java\com\zx\controller\TestController.java
+D:\MesSB\Mesbackend\Zuul-Master\src\main\java\com\zx\mapper\UserMapper.java
+D:\MesSB\Mesbackend\Zuul-Master\src\main\java\com\zx\service\UserService.java
+D:\MesSB\Mesbackend\Zuul-Master\src\main\java\com\zx\pojo\User.java
+D:\MesSB\Mesbackend\Zuul-Master\src\main\java\com\zx\service\impl\UserServiceImpl.java
+D:\MesSB\Mesbackend\Zuul-Master\src\main\java\com\zx\ZuulMaster.java
