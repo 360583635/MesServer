@@ -1,6 +1,6 @@
+com\job\zuulMaster\pojo\User.class
 com\job\zuulMaster\mapper\UserMapper.class
 com\job\zuulMaster\service\impl\UserServiceImpl.class
 com\job\zuulMaster\service\UserService.class
-com\job\zuulMaster\controller\TestController.class
-com\job\zuulMaster\pojo\User.class
 com\job\zuulMaster\ZuulMaster.class
+com\job\zuulMaster\controller\TestController.class
