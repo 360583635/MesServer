@@ -1,4 +1,4 @@
-package com.job.dataVisualizationService.pojo;
+package com.job.orderService.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +16,6 @@ import java.util.Date;
 public class Order implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private String orderId;
-
     private String customId;
     private Integer type;
     private String productId;
@@ -28,4 +27,6 @@ public class Order implements Serializable {
     private Integer productLine;
     private Integer status;
     private Integer orderPrice;
+
+
 }
