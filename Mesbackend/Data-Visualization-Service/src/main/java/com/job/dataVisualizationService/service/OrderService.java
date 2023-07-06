@@ -7,5 +7,5 @@ import com.job.dataVisualizationService.pojo.Order;
  * @Author 菜狗
  */
 public interface OrderService extends IService<Order> {
-    Order getClassification();
+
 }

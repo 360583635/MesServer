@@ -11,8 +11,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
-    @Override
-    public Order getClassification() {
-        return null;
-    }
+    
 }
