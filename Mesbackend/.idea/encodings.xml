@@ -4,20 +4,35 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Authentication-Service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Authentication-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Authentication-Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Cache-Management" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Cache-Management/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Cache-Management/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Data-Visualization-Service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Data-Visualization-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data-Visualization-Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Dispatch-Service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Dispatch-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Dispatch-Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Log-Management" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Log-Management/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Log-Management/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Message-Management" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Message-Management/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Message-Management/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Order-Service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Order-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Order-Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Platform-Service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Platform-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Platform-Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Production-Management-Service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Production-Management-Service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Production-Management-Service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Zuul-Master" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Zuul-Master/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Zuul-Master/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>
 </project>
