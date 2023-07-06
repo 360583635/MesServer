@@ -6,15 +6,20 @@ import com.job.dispatchService.service.WorkBean;
 import com.job.dispatchService.service.WorkService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
+@FeignClient(value = "ORDERSERVICE")
 public class WorkServiceImpl implements WorkService {
 
     @Resource
     private WorkMapper workMapper;
+
+//    @Resource
+//    private Order
 
     @GetMapping(value = "/work/{processId}/{orderId}")
     public Object working(@PathVariable("processId") String processId,
