@@ -1,6 +1,7 @@
 package com.job.dataVisualizationService.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.job.dataVisualizationService.pojo.OrderData;
 import com.job.pojo.pojo.Order;
 
 /**
@@ -8,4 +9,5 @@ import com.job.pojo.pojo.Order;
  */
 public interface OrderService extends IService<Order> {
 
+    OrderData preAmount();
 }

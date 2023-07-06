@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Calendar;
+
 /**
  * @Author 菜狗
  */
@@ -40,8 +42,8 @@ public class OrderController {
 
     @GetMapping("/prediction/amount")    //金额预测
     public Result<OrderData> getPAmount(){
-        orderService.list();
-        return null;
+        OrderData orderData = orderService.preAmount();
+        return Result.success(orderData,"success");
     }
 
     @GetMapping("/prediction/count")      //数量预测
