@@ -6,5 +6,5 @@ import com.job.dataVisualizationService.pojo.Users;
 /**
  * @Auther:Liang
  */
-public interface UserService extends IService<Users> {
+public interface UsersService extends IService<Users> {
 }

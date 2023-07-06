@@ -6,5 +6,5 @@ import com.job.dataVisualizationService.pojo.MenusRoles;
 /**
  * @Auther:Liang
  */
-public interface MenusRolesMapper extends IService<MenusRoles> {
+public interface MenusRolesService extends IService<MenusRoles> {
 }
