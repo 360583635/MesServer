@@ -5,13 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Bean;
 
-@TableName
+@TableName("t_work")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TWork {
+public class Work {
     @TableField("w_id")
     private String wId;
 
