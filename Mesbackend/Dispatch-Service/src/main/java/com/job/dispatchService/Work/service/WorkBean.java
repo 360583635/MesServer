@@ -1,6 +1,6 @@
-package com.job.dispatchService.service;
+package com.job.dispatchService.Work.service;
 
-import com.job.dispatchService.pojo.Work;
+import com.job.dispatchService.Work.pojo.Work;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
