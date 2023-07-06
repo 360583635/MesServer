@@ -1,9 +1,8 @@
 package com.job.dataVisualizationService.controller;
 
 import com.job.dataVisualizationService.common.result.Result;
-import com.job.dataVisualizationService.mapper.OrderMapper;
-import com.job.dataVisualizationService.pojo.Order;
 import com.job.dataVisualizationService.service.OrderService;
+import com.job.pojo.pojo.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

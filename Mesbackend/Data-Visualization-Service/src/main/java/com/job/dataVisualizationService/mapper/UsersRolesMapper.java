@@ -1,7 +1,8 @@
 package com.job.dataVisualizationService.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.job.dataVisualizationService.pojo.UsersRoles;
+
+import com.job.pojo.pojo.UsersRoles;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
