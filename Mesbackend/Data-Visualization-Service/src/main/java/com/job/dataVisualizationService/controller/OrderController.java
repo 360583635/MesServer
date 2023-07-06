@@ -1,6 +1,7 @@
 package com.job.dataVisualizationService.controller;
 
 import com.job.dataVisualizationService.common.result.Result;
+import com.job.dataVisualizationService.pojo.OrderData;
 import com.job.dataVisualizationService.service.OrderService;
 import com.job.pojo.pojo.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,13 @@ public class OrderController {
     }
 
     @GetMapping("/prediction/amount")    //金额预测
-    public Result<Order> getPAmount(){
+    public Result<OrderData> getPAmount(){
+        orderService.list();
         return null;
     }
 
     @GetMapping("/prediction/count")      //数量预测
-    public Result<Order> getPCount(){
+    public Result<OrderData> getPCount(){
         return null;
     }
 }
