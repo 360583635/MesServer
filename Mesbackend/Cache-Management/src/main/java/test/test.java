@@ -1,14 +1,10 @@
+package test;
 
 import config.JedisPoolUtils;
 import org.junit.Test;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-
-import static config.JedisPoolUtils.getJedis;
 
 public class test {
     private Jedis jedis;
@@ -21,7 +17,8 @@ public class test {
     }
 
     @Test
-    public void testString(){        System.out.println(jedis.get("xxx"));
+    public void testString(){
+        System.out.println(jedis.get("xxx"));
     }
 
 
