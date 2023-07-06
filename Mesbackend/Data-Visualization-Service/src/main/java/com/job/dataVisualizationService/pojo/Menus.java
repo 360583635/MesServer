@@ -10,15 +10,13 @@ public class Menus {
     private String MenuID;
     private String Name;
     private String url;
-    private Integer type;
+    private Integer Type;
     private Integer Sort;
     private String Remark;
     private String ParentId;
     private String permission;
-    //timestamp
     private TimeStampedData CreateTime;
     private String CreateUser;
-    //timestamp
     private TimeStampedData UpdateTime;
     private String UpdateUser;
     private Integer Is_delete;

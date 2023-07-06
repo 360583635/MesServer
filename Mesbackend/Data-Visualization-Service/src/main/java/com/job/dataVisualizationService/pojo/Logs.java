@@ -12,11 +12,8 @@ public class Logs {
     private String Method;
     private String Args;
     private String Operation;
-    //char
     private String Ip;
-    //timestamp
     private TimeStampedData OperationTime;
-
     private Integer Result;
     private String Detail;
 

@@ -16,6 +16,7 @@ import java.util.Date;
 public class Order implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private String orderId;
+
     private String customId;
     private Integer type;
     private String productId;

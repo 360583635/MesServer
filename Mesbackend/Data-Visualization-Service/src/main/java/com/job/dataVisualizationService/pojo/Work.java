@@ -16,5 +16,4 @@ public class Work {
     private String WErrorTime;
     private String wNeedTime;
     private String wEquipmentID;
-
 }

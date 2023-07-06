@@ -1,13 +1,12 @@
 package com.job.dataVisualizationService.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.job.dataVisualizationService.pojo.Order;
+import com.job.dataVisualizationService.pojo.Process;
 import org.apache.ibatis.annotations.Mapper;
 
-
 /**
- * @Author 菜狗
+ * @Auther:Liang
  */
 @Mapper
-public interface OrderMapper extends BaseMapper<Order> {
+public interface ProcessMapper extends BaseMapper<Process> {
 }

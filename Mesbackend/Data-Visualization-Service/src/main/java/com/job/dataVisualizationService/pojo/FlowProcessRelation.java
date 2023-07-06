@@ -9,13 +9,13 @@ public class FlowProcessRelation {
     private String Id;
     private String flowId;
     private String Flow;
-    private String perOper;
-    private String perOperId;
-    private String oper;
-    private String operId;
-    private String nextOper;
-    private String nextOperId;
+    private String perProcess;
+    private String perProcessId;
+    private String process;
+    private String processId;
+    private String nextProcess;
+    private String nextProcessId;
     private String sortNum;
-    private String operType;
+    private String processType;
 
 }
