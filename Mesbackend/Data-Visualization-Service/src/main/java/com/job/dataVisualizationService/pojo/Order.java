@@ -26,7 +26,5 @@ public class Order implements Serializable {
     private Integer priority;
     private Integer productLine;
     private Integer status;
-    private Float orderPrice;
-
-
+    private Integer orderPrice;
 }
