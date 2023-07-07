@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/Message-Management/pom.xml" />
         <option value="$PROJECT_DIR$/Log-Management/pom.xml" />
         <option value="$PROJECT_DIR$/Cache-Management/pom.xml" />
+        <option value="$PROJECT_DIR$/PojoUtils/pom.xml" />
       </list>
     </option>
   </component>
