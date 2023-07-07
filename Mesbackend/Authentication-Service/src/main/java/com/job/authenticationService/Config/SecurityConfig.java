@@ -44,6 +44,7 @@ public class SecurityConfig{
 ////                        .anyRequest().authenticated()
 //                );
         http.csrf().disable();
+
         http.authorizeHttpRequests((authz)->authz
                 .requestMatchers("/hello").permitAll()
                 .requestMatchers("/authen/login").anonymous()
