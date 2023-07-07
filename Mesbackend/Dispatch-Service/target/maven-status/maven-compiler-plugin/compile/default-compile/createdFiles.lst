@@ -1,6 +1,0 @@
-com\job\dispatchService\service\WorkBean.class
-com\job\dispatchService\service\WorkService.class
-com\job\dispatchService\service\impl\WorkServiceImpl.class
-com\job\dispatchService\pojo\TWork.class
-com\job\dispatchService\controller\WorkController.class
-com\job\dispatchService\DispatchService.class
