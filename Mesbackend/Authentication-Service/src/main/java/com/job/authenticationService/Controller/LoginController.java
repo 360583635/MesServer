@@ -16,7 +16,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
     @PostMapping ("/login")
-    public ResponseResult login(@RequestBody Users users){
+    public ResponseResult login( Users users){
         //System.out.println("10001");
         System.out.println(users);
         return loginService.login(users);
