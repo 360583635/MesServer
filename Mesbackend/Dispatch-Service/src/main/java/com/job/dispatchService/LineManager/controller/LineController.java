@@ -1,6 +1,7 @@
 package com.job.dispatchService.LineManager.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author 庸俗可耐
@@ -8,5 +9,6 @@ import org.springframework.stereotype.Controller;
  * @description
  */
 @Controller
+@RequestMapping("/dispatch/line")
 public class LineController {
 }
