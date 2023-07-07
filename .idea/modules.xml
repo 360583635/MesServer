@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Authentication-Service/Authentication-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Authentication-Service/Authentication-Service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Data-Visualization-Service/Data-Visualization-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Data-Visualization-Service/Data-Visualization-Service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Dispatch-Service/Dispatch-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/Dispatch-Service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MesServer01.iml" filepath="$PROJECT_DIR$/.idea/MesServer01.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Mesbackend.iml" filepath="$PROJECT_DIR$/Mesbackend/Mesbackend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Order-Service/Order-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Order-Service/Order-Service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Platform-Service/Platform-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Platform-Service/Platform-Service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Production-Management-Service/Production-Management-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Production-Management-Service/Production-Management-Service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Zuul-Master/Zuul-Master.iml" filepath="$PROJECT_DIR$/Mesbackend/Zuul-Master/Zuul-Master.iml" />
+    </modules>
+  </component>
+</project>

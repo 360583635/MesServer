@@ -11,7 +11,6 @@ import com.job.dispatchService.LineManager.vo.ProcessVo;
 import com.job.dispatchService.common.Result;
 import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 import com.job.dispatchService.LineManager.pojo.TProcess;
-import com.job.pojo.pojo.FlowProcessRelation;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
