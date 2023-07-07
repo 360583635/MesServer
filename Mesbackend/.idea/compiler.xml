@@ -27,7 +27,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Authentication-Service" options="-parameters" />
       <module name="Cache-Management" options="" />
-      <module name="CommonUtils" options="-parameters" />
+      <module name="CommonUtils" options="" />
       <module name="Data-Visualization-Service" options="-parameters" />
       <module name="Dispatch-Service" options="-parameters" />
       <module name="Log-Management" options="" />
