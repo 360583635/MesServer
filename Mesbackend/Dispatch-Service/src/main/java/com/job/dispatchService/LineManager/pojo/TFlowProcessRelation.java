@@ -58,7 +58,7 @@ public class TFlowProcessRelation {
     /**
      * 排序
      */
-    private String sortNum;
+    private int sortNum;
 
     /**
      * 工序类型 (首道工序firstOper;最后一道工序lastOper)

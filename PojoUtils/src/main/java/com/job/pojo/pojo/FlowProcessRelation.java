@@ -19,7 +19,7 @@ public class FlowProcessRelation {
     private String processId;
     private String nextProcess;
     private String nextProcessId;
-    private String sortNum;
+    private int sortNum;
     private String processType;
 
 }
