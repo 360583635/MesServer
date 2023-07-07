@@ -30,3 +30,4 @@ com\job\dataVisualizationService\mapper\ProcessMapper.class
 com\job\dataVisualizationService\service\FlowProcessRelationService.class
 com\job\dataVisualizationService\mapper\MenusRolesMapper.class
 com\job\dataVisualizationService\service\MessagesService.class
+com\job\dataVisualizationService\pojo\OrderData.class

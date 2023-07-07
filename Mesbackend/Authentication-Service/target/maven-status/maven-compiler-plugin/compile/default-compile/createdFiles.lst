@@ -12,6 +12,7 @@ com\job\authenticationService\pojo\LoginUser.class
 com\job\authenticationService\Config\SecurityConfig.class
 com\job\authenticationService\utils\FastJsonRedisSerializer.class
 com\job\authenticationService\service\impl\UserDetailsServiceImpl.class
+com\job\authenticationService\Config\CorsConfig.class
 com\job\authenticationService\pojo\ResponseResult.class
 com\job\authenticationService\filter\JwtAuthenticationTokenFilter.class
 com\job\authenticationService\Config\RedisConfig.class

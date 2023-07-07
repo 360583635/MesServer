@@ -15,6 +15,7 @@ com\job\dispatchService\LineManager\service\ProcessService.class
 com\job\dispatchService\common\BasePageReq.class
 com\job\dispatchService\LineManager\pojo\TLine.class
 com\job\dispatchService\LineManager\mapper\ProcessMapper.class
+com\job\dispatchService\mapper\WorkMapper.class
 com\job\dispatchService\Work\controller\WorkController.class
 com\job\dispatchService\LineManager\controller\FlowProcessRelationController.class
 com\job\dispatchService\LineManager\mapper\FlowProcessRelationMapper.class

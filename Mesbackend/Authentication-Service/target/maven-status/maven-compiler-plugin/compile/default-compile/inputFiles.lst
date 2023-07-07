@@ -6,6 +6,7 @@ D:\MesSB\Mesbackend\Authentication-Service\src\main\java\com\job\authenticationS
 D:\MesSB\Mesbackend\Authentication-Service\src\main\java\com\job\authenticationService\utils\JwtUtil.java
 D:\MesSB\Mesbackend\Authentication-Service\src\main\java\com\job\authenticationService\pojo\ResponseResult.java
 D:\MesSB\Mesbackend\Authentication-Service\src\main\java\com\job\authenticationService\utils\WebUtils.java
+D:\MesSB\Mesbackend\Authentication-Service\src\main\java\com\job\authenticationService\Config\CorsConfig.java
 D:\MesSB\Mesbackend\Authentication-Service\src\main\java\com\job\authenticationService\Controller\LoginController.java
 D:\MesSB\Mesbackend\Authentication-Service\src\main\java\com\job\authenticationService\AuthenticationService.java
 D:\MesSB\Mesbackend\Authentication-Service\src\main\java\com\job\authenticationService\service\impl\UserDetailsServiceImpl.java

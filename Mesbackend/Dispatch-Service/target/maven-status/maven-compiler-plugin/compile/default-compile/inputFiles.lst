@@ -16,6 +16,7 @@ D:\MesSB\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService\LineM
 D:\MesSB\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService\LineManager\controller\LineController.java
 D:\MesSB\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService\Work\pojo\Work.java
 D:\MesSB\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService\LineManager\service\impl\LineServiceImpl.java
+D:\MesSB\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService\mapper\WorkMapper.java
 D:\MesSB\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService\common\Result.java
 D:\MesSB\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService\LineManager\service\FlowService.java
 D:\MesSB\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService\Work\service\WorkService.java
