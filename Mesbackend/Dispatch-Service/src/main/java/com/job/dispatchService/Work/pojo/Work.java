@@ -1,4 +1,4 @@
-package com.job.dispatchService.pojo;
+package com.job.dispatchService.Work.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

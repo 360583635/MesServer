@@ -1,10 +1,14 @@
 package com.job.pojo.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @TableName("t_flow_process_relation")
+@AllArgsConstructor
+@NoArgsConstructor
 public class FlowProcessRelation {
     private String Id;
     private String flowId;

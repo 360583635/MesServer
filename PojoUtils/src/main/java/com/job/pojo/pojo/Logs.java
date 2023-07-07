@@ -1,12 +1,16 @@
 package com.job.pojo.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
 @TableName("t_logs")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Logs {
     private String LogId;
     private String UserId;

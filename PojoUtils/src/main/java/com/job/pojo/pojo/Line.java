@@ -1,10 +1,14 @@
 package com.job.pojo.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @TableName("t_line")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Line {
     private String id;
     private String line;

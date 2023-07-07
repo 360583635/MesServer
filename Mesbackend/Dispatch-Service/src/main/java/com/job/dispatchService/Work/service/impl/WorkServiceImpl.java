@@ -1,20 +1,26 @@
-package com.job.dispatchService.service.impl;
+package com.job.dispatchService.Work.service.impl;
 
-import com.job.dispatchService.mapper.WorkMapper;
-import com.job.dispatchService.pojo.Work;
-import com.job.dispatchService.service.WorkBean;
-import com.job.dispatchService.service.WorkService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+import com.job.dispatchService.Work.mapper.WorkMapper;
+import com.job.dispatchService.Work.pojo.Work;
+import com.job.dispatchService.Work.service.WorkBean;
+import com.job.dispatchService.Work.service.WorkService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
-public class WorkServiceImpl implements WorkService {
+public class WorkServiceImpl extends ServiceImpl<WorkMapper,Work> implements WorkService {
 
     @Resource
     private WorkMapper workMapper;
+
+//    @Resource
+//    private Order
 
     @GetMapping(value = "/work/{processId}/{orderId}")
     public Object working(@PathVariable("processId") String processId,

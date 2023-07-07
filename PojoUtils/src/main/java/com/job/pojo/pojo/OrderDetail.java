@@ -1,10 +1,14 @@
 package com.job.pojo.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @TableName("t_order_detail")
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderDetail {
     private String detailId;
     private String orderId;
