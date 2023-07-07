@@ -1,7 +1,7 @@
 package com.job.dataVisualizationService.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.job.dataVisualizationService.pojo.OrderDetail;
+import com.job.pojo.pojo.OrderDetail;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
