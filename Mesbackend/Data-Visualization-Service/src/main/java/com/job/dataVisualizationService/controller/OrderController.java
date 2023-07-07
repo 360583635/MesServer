@@ -40,14 +40,10 @@ public class OrderController {
         return null;
     }
 
-    @GetMapping("/prediction/amount")    //金额预测
+    @GetMapping("/prediction")    //金额预测和数量
     public Result<OrderData> getPAmount(){
-        OrderData orderData = orderService.preAmount();
+        OrderData orderData = orderService.preData();
         return Result.success(orderData,"success");
     }
 
-    @GetMapping("/prediction/count")      //数量预测
-    public Result<OrderData> getPCount(){
-        return null;
-    }
 }

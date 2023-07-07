@@ -9,5 +9,5 @@ import com.job.pojo.pojo.Order;
  */
 public interface OrderService extends IService<Order> {
 
-    OrderData preAmount();
+    OrderData preData();
 }

@@ -8,7 +8,6 @@ import com.job.dataVisualizationService.service.OrderService;
 import com.job.pojo.pojo.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,7 +19,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private OrderMapper orderMapper;
     @Override
-    public OrderData preAmount() {
+    public OrderData preData() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String dateString = sdf.format(date);
@@ -43,19 +42,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             LambdaQueryWrapper<Order> qq = new LambdaQueryWrapper<>();
             qq.le(Order::getOrderDate,new Date());
             List<Order> orders1 = orderMapper.selectList(qq);
-            long sumPrice = 0;
+            int sumPrice = 0;  //计算金额
+            int sumCount = orders1==null ? 0 : orders1.size();  //计算数量
             for (Order order : orders1) {
-                sumPrice+=(long)order.getOrderPrice();
+                sumPrice+=order.getOrderPrice();
             }
             OrderData orderData = new OrderData();
-            int atm = (int)(sumPrice*1.0*30/day);
+            int atm = (int)(sumPrice*1.0*30/day + 0.5);//向上取整
+            int cnt = (int)(sumCount*1.0*30/day + 0.5);
             orderData.setPreAmount(new int[]{atm,atm,atm,atm,atm});
             orderData.setPreTime(mPre);
+            orderData.setPreCount(new int[]{cnt,cnt,cnt,cnt,cnt});
             return orderData;
         } else {                    //工厂的订单这个月前也有有数据
-            Map<Integer,Long> map = new HashMap<>();
+            Map<Integer,Long> mapAtm = new HashMap<>();
+            Map<Integer,Integer> mapCnt = new HashMap<>();
             double sMm = 0;
             double sPrice = 0;
+            double sCount = 0;
             int sm = mm;
             for (int i = 0; i < 5; i++) {
                 LambdaQueryWrapper<Order> q1 = new LambdaQueryWrapper<>();
@@ -66,9 +70,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 for (Order order : orders1) {
                     sumPrice+=(long)order.getOrderPrice();
                 }
-                map.put(--sm,sumPrice);
+                mapAtm.put(--sm,sumPrice);
+                mapCnt.put(sm,orders1.size());
                 sMm+=sm;
                 sPrice+=sumPrice;
+                sCount+=orders1.size();
                 LambdaQueryWrapper<Order> q2 = new LambdaQueryWrapper<>();
                 q2.le(Order::getOrderDate,cPre);
                 List<Order> orders2 = orderMapper.selectList(q2);
@@ -76,20 +82,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 cEnd.add(Calendar.MONTH,-1);
                 cPre.add(Calendar.MONTH,-1);
             }
-            sMm = sMm/map.size();
-            sPrice = sPrice/map.size();
-            double fz = -sMm*sPrice*map.size(),fm = -sMm*sMm*map.size();
-            for (Integer m : map.keySet()){
-                fz+= m*map.get(m);
+            sMm = sMm/mapAtm.size();
+            sPrice = sPrice/mapAtm.size();
+            sCount = sCount/mapCnt.size();
+            double fz = -sMm*sPrice*mapAtm.size(),fm = -sMm*sMm*mapAtm.size();   //计算金额
+            for (Integer m : mapAtm.keySet()){
+                fz+= m*mapAtm.get(m);
                 fm+= m*m;
             }
             double b = fz/fm;  // 25/0.5
             double a = sPrice - b*sMm;
             int[] arrAtm = new int[]{(int)(b*(1+mm)+a),(int)(b*(2+mm)+a),(int)(b*(3+mm)+a)
             ,(int)(b*(4+mm)+a),(int)(b*(5+mm)+a)};
+            fz = -sMm*sCount*mapCnt.size();      //计算数量
+            for (Integer m : mapCnt.keySet()){
+                fz+= m*mapCnt.get(m);
+            }
+            b = fz/fm;
+            a = sCount - b*sMm;
+            int[] arrCnt = new int[]{(int)(b*(1+mm)+a),(int)(b*(2+mm)+a),(int)(b*(3+mm)+a)
+                    ,(int)(b*(4+mm)+a),(int)(b*(5+mm)+a)};
             OrderData orderData = new OrderData();
             orderData.setPreTime(mPre);
             orderData.setPreAmount(arrAtm);
+            orderData.setPreCount(arrCnt);
             return orderData;
         }
     }
