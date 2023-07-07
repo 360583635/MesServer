@@ -1,1 +1,17 @@
+com\job\authenticationService\service\impl\LoginServiceImpl.class
+com\job\authenticationService\utils\WebUtils.class
+com\job\authenticationService\Controller\LoginController.class
+com\job\authenticationService\service\LoginService.class
+com\job\authenticationService\Controller\HelloController.class
+com\job\authenticationService\utils\JwtUtil.class
+com\job\authenticationService\utils\RedisCache.class
+com\job\authenticationService\mapper\UsersMapper.class
+com\job\authenticationService\pojo\Users.class
 com\job\authenticationService\AuthenticationService.class
+com\job\authenticationService\pojo\LoginUser.class
+com\job\authenticationService\Config\SecurityConfig.class
+com\job\authenticationService\utils\FastJsonRedisSerializer.class
+com\job\authenticationService\service\impl\UserDetailsServiceImpl.class
+com\job\authenticationService\pojo\ResponseResult.class
+com\job\authenticationService\filter\JwtAuthenticationTokenFilter.class
+com\job\authenticationService\Config\RedisConfig.class

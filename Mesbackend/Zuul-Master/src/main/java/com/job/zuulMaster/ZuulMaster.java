@@ -12,5 +12,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class ZuulMaster {
     public static void main(String[] args) {
         SpringApplication.run(ZuulMaster.class,args);
+
     }
 }

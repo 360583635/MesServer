@@ -1,7 +1,7 @@
 package com.job.dataVisualizationService.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.job.dataVisualizationService.pojo.Line;
+import com.job.pojo.pojo.Line;
 
 /**
  * @Auther:Liang
