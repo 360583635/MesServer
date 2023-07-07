@@ -7,24 +7,27 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Log-Management" />
         <module name="Order-Service" />
         <module name="Authentication-Service" />
         <module name="Platform-Service" />
         <module name="Dispatch-Service" />
         <module name="Data-Visualization-Service" />
-        <module name="Message-Management" />
+        <module name="CommonUtils" />
         <module name="Zuul-Master" />
-        <module name="PojoUtils" />
         <module name="Production-Management-Service" />
-        <module name="Cache-Management" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Cache-Management" target="17" />
+      <module name="Log-Management" target="17" />
+      <module name="Message-Management" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Authentication-Service" options="-parameters" />
       <module name="Cache-Management" options="" />
+      <module name="CommonUtils" options="-parameters" />
       <module name="Data-Visualization-Service" options="-parameters" />
       <module name="Dispatch-Service" options="-parameters" />
       <module name="Log-Management" options="" />

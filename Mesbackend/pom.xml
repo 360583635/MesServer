@@ -11,6 +11,7 @@
         <module>Authentication-Service</module>
         <module>Platform-Service</module>
         <module>Data-Visualization-Service</module>
+        <module>CommonUtils</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
