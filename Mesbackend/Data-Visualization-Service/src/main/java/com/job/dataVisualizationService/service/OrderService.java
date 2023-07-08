@@ -2,7 +2,7 @@ package com.job.dataVisualizationService.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.job.dataVisualizationService.pojo.OrderData;
-import com.job.pojo.pojo.Order;
+import com.job.common.pojo.Order;
 
 /**
  * @Author 菜狗

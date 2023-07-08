@@ -1,6 +1,6 @@
 package com.job.dataVisualizationService.pojo;
 
-import com.job.pojo.pojo.Order;
+import com.job.common.pojo.Order;
 import lombok.Data;
 
 import java.util.List;

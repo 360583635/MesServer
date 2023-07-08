@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.dataVisualizationService.mapper.OrderMapper;
 import com.job.dataVisualizationService.pojo.OrderData;
 import com.job.dataVisualizationService.service.OrderService;
-import com.job.pojo.pojo.Order;
+import com.job.common.pojo.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
