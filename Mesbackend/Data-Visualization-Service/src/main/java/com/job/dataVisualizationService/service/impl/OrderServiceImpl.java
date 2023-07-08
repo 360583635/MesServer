@@ -109,4 +109,43 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return orderData;
         }
     }
+
+    @Override
+    public OrderData countData() {
+        OrderData orderData = new OrderData();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String dateString = sdf.format(date);
+        String dayString = dateString.substring(8,8+2);
+        String mmString = dateString.substring(5,5+2);
+        if(dateString.charAt(0) == '0')dayString = dateString.substring(1);
+        int day = Integer.parseInt(dayString);
+        if(mmString.charAt(0) == '0')mmString = mmString.substring(1);
+        int mm = Integer.parseInt(mmString);
+        Calendar endTime = Calendar.getInstance();   // 7 1
+        endTime.add(Calendar.DAY_OF_MONTH,-day);
+        Calendar preTime = Calendar.getInstance();
+        preTime.add(Calendar.DAY_OF_MONTH,-day);
+        preTime.add(Calendar.MONTH,-1);
+        int[] m = new int[6];
+        int[] c = new int[6];
+        for (int i = 5; i >= 0; i--) {
+            LambdaQueryWrapper<Order> q = new LambdaQueryWrapper<>();
+            q.le(Order::getOrderDate,endTime);
+            q.ge(Order::getOrderDate,preTime);
+            long cnt = orderMapper.selectCount(q);
+            m[i] = --mm;
+            c[i] = (int)cnt;
+            endTime.add(Calendar.MONTH,-1);
+            preTime.add(Calendar.MONTH,-1);
+        }
+        orderData.setCount(c);
+        orderData.setTime(m);
+        return orderData;
+    }
+
+    @Override
+    public OrderData classification() {
+        return null;
+    }
 }

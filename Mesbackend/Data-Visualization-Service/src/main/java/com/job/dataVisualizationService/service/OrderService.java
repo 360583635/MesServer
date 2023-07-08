@@ -8,6 +8,8 @@ import com.job.pojo.pojo.Order;
  * @Author 菜狗
  */
 public interface OrderService extends IService<Order> {
+ OrderData preData();
+ OrderData countData();
 
-    OrderData preData();
+ OrderData classification();
 }
