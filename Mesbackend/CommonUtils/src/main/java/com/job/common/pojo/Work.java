@@ -14,7 +14,7 @@ public class Work {
     private String wState;
     private String wProcessId;
     private String wOrderID;
-    private String wProdNums;
+    private Integer wProdNums;
     private String wCreateTime;
     private String WErrorTime;
 

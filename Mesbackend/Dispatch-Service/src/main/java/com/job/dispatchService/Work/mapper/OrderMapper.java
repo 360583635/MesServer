@@ -1,7 +1,7 @@
 package com.job.dispatchService.Work.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.job.common.pojo.Work;
+import com.job.common.pojo.Order;
 
-public interface WorkMapper extends BaseMapper<Work> {
+public interface OrderMapper extends BaseMapper<Order> {
 }
