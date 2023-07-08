@@ -1,5 +1,6 @@
 package com.job.dataVisualizationService.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.dataVisualizationService.common.result.Result;
 import com.job.dataVisualizationService.pojo.OrderData;
 import com.job.dataVisualizationService.service.OrderService;
@@ -44,6 +45,9 @@ public class OrderController {
     public Result<OrderData> getPAmount(){
         OrderData orderData = orderService.preData();
         return Result.success(orderData,"success");
+
     }
+
+
 
 }
