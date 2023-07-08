@@ -1,5 +1,6 @@
 package com.job.dispatchService.LineManager.request;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.job.dispatchService.common.BasePageReq;
 
 /**
@@ -8,4 +9,5 @@ import com.job.dispatchService.common.BasePageReq;
  * @description
  */
 public class FlowPageReq extends BasePageReq {
+
 }
