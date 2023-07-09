@@ -1,9 +1,8 @@
-package com.job.dispatchService.Work.service;
+package com.job.dispatchService.work.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.job.common.pojo.Work;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.cloud.openfeign.FeignClient;
 
 import java.util.List;
 
