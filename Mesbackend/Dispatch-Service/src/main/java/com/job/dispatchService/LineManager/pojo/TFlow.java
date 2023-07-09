@@ -1,6 +1,7 @@
 package com.job.dispatchService.LineManager.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,7 @@ public class TFlow {
     /**
      * 创建时间
      */
+
     private Date createTime;
 
     /**
@@ -45,6 +47,7 @@ public class TFlow {
     /**
      * 修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date updateTime;
 
     /**
