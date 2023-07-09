@@ -2,16 +2,13 @@ package com.job.dispatchService.LineManager.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.job.common.pojo.Flow;
 import com.job.dispatchService.LineManager.request.FlowPageReq;
 import com.job.dispatchService.LineManager.service.FlowService;
 import com.job.dispatchService.common.Result;
-import com.job.dispatchService.LineManager.pojo.TFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,7 +17,7 @@ import java.util.List;
  * @create 2023-07-06-18:04
  * @description
  */
-@Controller
+@RestController
 @RequestMapping("/dispatch/flow")
 public class FlowController {
     @Autowired
@@ -49,7 +46,7 @@ public class FlowController {
     @ResponseBody
     public Result list(){
         QueryWrapper queryWrapper = new QueryWrapper();
-        List<TFlow> list = flowService.list(queryWrapper);
+        List<Flow> list = flowService.list(queryWrapper);
         return Result.success(list);
     }
 }

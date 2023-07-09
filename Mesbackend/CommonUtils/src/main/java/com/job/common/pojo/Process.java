@@ -9,17 +9,44 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
-@TableName("t_process")
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("t_process")
 public class Process {
+    /**
+     * 工序ID
+     */
     private String id;
+
+    /**
+     * 工序
+     */
     private String process;
+
+    /**
+     * 工序描述
+     */
     private String processDesc;
+
+    /**
+     * 创建时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date CreateTime;
-    private String CreateUsername;
+    private Date createTime;
+
+    /**
+     * 创建人
+     */
+    private String createUsername;
+
+    /**
+     * 修改时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date UpdateTime;
-    private String UpdateUsername;
+    private Date updateTime;
+
+    /**
+     * 修改人
+     */
+    private String updateUsername;
 }

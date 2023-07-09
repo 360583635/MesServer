@@ -1,21 +1,18 @@
 package com.job.dispatchService.LineManager.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.job.common.pojo.Flow;
 import com.job.dispatchService.LineManager.dto.FlowDto;
 import com.job.dispatchService.LineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.LineManager.service.FlowService;
 import com.job.dispatchService.LineManager.service.ProcessService;
-import com.job.dispatchService.LineManager.pojo.TFlow;
 import com.job.dispatchService.LineManager.vo.ProcessVo;
 import com.job.dispatchService.common.Result;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ import java.util.List;
  * @create 2023-07-06-18:05
  * @description
  */
-@Controller
+@RestController
 @RequestMapping("/dispatch/flow/process")
 public class FlowProcessRelationController {
 
@@ -66,12 +63,12 @@ public class FlowProcessRelationController {
      * @return 更改界面
      */
     @GetMapping("/add-or-update-ui")
-    public String addOrUpdateUI(Model model, TFlow record) throws Exception {
+    public String addOrUpdateUI(Model model, Flow record) throws Exception {
         List<ProcessVo> allProcessVos = flowProcessRelationService.allProcessViewServer();
         //全部工序
         model.addAttribute("allProcess",allProcessVos);
         if(StringUtils.isNotEmpty(record.getId())){
-            TFlow flowbyId = flowService.getById(record.getId());
+            Flow flowbyId = flowService.getById(record.getId());
             //当前流程信息
             model.addAttribute("flow",flowbyId);
             List<ProcessVo> currentProcessVo = flowProcessRelationService.currentProcessViewServer(record.getId());
