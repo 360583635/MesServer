@@ -25,16 +25,16 @@ import java.util.Random;
 //@FeignClient(value = "ORDERSERVICE")
 public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements WorkService {
 
-    @Resource
+    @Autowired
     private Snowflake snowflake;
 
-    @Resource
+    @Autowired
     private WorkMapper workMapper;
 
-    @Resource
+    @Autowired
     private WOrderMapper orderMapper;
 
-    @Resource
+    @Autowired
     private WProcessMapper processMapper;
 
     //创建工单

@@ -10,6 +10,7 @@ import com.job.dispatchService.Work.service.WorkService;
 import com.job.dispatchService.Work.util.DateTimeUtil;
 import com.job.dispatchService.Work.util.StringAndNumberUtil;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wiki.xsx.core.snowflake.config.Snowflake;
 
@@ -25,16 +26,16 @@ public class WorkController {
     @Resource
     private Snowflake snowflake;
 
-    @Resource
+    @Autowired
     private WorkService workService;
 
-    @Resource
+    @Autowired
     private WOrderMapper orderMapper;
 
-    @Resource
+    @Autowired
     private WProcessMapper processMapper;
 
-    @Resource
+    @Autowired
     private WFlowMapper flowMapper;
 
     //processId=11&orderId=1676951868304564226
