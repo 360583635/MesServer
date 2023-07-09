@@ -10,14 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Work {
-    private String wID;
+    private String wId;
     private String wState;
     private String wProcessId;
-    private String wOrderID;
+    private String wOrderId;
     private Integer wProdNums;
     private String wCreateTime;
     private String WErrorTime;
-
     private String wNeedTime;
-    private String wEquipmentID;
+    private String wEquipmentId;
 }
