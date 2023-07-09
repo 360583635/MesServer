@@ -1,8 +1,0 @@
-com\job\orderService\mapper\OrderMapper.class
-com\job\orderService\service\impl\OrderServiceImpl.class
-com\job\orderService\OrderService.class
-com\job\orderService\common\result\Result.class
-com\job\orderService\service\OrderService.class
-com\job\orderService\controller\OrderController.class
-com\job\orderService\pojo\OrderDetail.class
-com\job\orderService\pojo\Order.class

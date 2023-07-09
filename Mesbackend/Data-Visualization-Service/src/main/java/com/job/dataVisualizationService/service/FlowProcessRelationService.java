@@ -1,7 +1,7 @@
 package com.job.dataVisualizationService.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.job.pojo.pojo.FlowProcessRelation;
+import com.job.common.pojo.FlowProcessRelation;
 
 /**
  * @Auther:Liang
