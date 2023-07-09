@@ -1,4 +1,4 @@
-package com.job.dispatchService.Work.dao;
+package com.job.dispatchService.work.dao;
 
 //@Mapper
 public interface WorkDAO {

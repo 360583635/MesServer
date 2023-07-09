@@ -1,4 +1,4 @@
-package com.job.dispatchService.Work.service;
+package com.job.dispatchService.work.service;
 
 import com.job.common.pojo.Work;
 import org.springframework.context.annotation.Bean;

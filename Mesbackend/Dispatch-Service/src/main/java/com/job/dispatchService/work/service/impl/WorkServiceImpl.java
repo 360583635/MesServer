@@ -1,4 +1,4 @@
-package com.job.dispatchService.Work.service.impl;
+package com.job.dispatchService.work.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -7,11 +7,11 @@ import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
 
-import com.job.dispatchService.Work.mapper.WOrderMapper;
-import com.job.dispatchService.Work.mapper.WProcessMapper;
-import com.job.dispatchService.Work.mapper.WorkMapper;
-import com.job.dispatchService.Work.service.WorkBean;
-import com.job.dispatchService.Work.service.WorkService;
+import com.job.dispatchService.work.mapper.WOrderMapper;
+import com.job.dispatchService.work.mapper.WProcessMapper;
+import com.job.dispatchService.work.mapper.WorkMapper;
+import com.job.dispatchService.work.service.WorkBean;
+import com.job.dispatchService.work.service.WorkService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ import java.util.Random;
 
 @Service
 //@FeignClient(value = "ORDERSERVICE")
+@SuppressWarnings("all")
 public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements WorkService {
 
     @Autowired
