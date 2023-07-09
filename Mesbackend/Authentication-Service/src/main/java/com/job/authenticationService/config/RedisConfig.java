@@ -1,4 +1,4 @@
-package com.job.authenticationService.Config;
+package com.job.authenticationService.config;
 
 import com.job.authenticationService.utils.FastJsonRedisSerializer;
 import org.springframework.context.annotation.Bean;
