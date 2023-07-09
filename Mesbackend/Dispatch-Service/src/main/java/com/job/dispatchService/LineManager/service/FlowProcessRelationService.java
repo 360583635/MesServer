@@ -1,14 +1,14 @@
 package com.job.dispatchService.LineManager.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.job.common.pojo.FlowProcessRelation;
 import com.job.dispatchService.LineManager.dto.FlowDto;
 import com.job.dispatchService.LineManager.vo.ProcessVo;
 import com.job.dispatchService.common.Result;
-import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 
 import java.util.List;
 
-public interface FlowProcessRelationService extends IService<TFlowProcessRelation> {
+public interface FlowProcessRelationService extends IService<FlowProcessRelation> {
     /**
      * 流程与工序关系新增与修改
      *

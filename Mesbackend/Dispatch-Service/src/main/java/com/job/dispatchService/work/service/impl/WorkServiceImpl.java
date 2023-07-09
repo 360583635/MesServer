@@ -1,4 +1,4 @@
-package com.job.dispatchService.Work.service.impl;
+package com.job.dispatchService.work.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -6,11 +6,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
-import com.job.dispatchService.Work.mapper.WOrderMapper;
-import com.job.dispatchService.Work.mapper.WProcessMapper;
-import com.job.dispatchService.Work.mapper.WorkMapper;
-import com.job.dispatchService.Work.service.WorkBean;
-import com.job.dispatchService.Work.service.WorkService;
+
+import com.job.dispatchService.work.mapper.WOrderMapper;
+import com.job.dispatchService.work.mapper.WProcessMapper;
+import com.job.dispatchService.work.mapper.WorkMapper;
+import com.job.dispatchService.work.service.WorkBean;
+import com.job.dispatchService.work.service.WorkService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,18 +24,19 @@ import java.util.Random;
 
 @Service
 //@FeignClient(value = "ORDERSERVICE")
+@SuppressWarnings("all")
 public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements WorkService {
 
-    @Resource
+    @Autowired
     private Snowflake snowflake;
 
-    @Resource
+    @Autowired
     private WorkMapper workMapper;
 
-    @Resource
+    @Autowired
     private WOrderMapper orderMapper;
 
-    @Resource
+    @Autowired
     private WProcessMapper processMapper;
 
     //创建工单
@@ -47,19 +49,19 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         Process process = processMapper.selectById("11");
 
         //雪花算法生产工单id、设置状态（创建工单）、工序id、订单id、生产数量、创建时间、设备id
-        work.setWID(String.valueOf(snowflake.nextId()));
+        work.setWId(String.valueOf(snowflake.nextId()));
         work.setWState("1");
-        work.setWProcessId("11");
-        work.setWOrderID("1");
+        work.setWProcessId(processId);
+        work.setWOrderId(orderId);
         work.setWProdNums(0);
         work.setWCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        work.setWEquipmentID("1");
+        work.setWEquipmentId("1");
 
         int result = workMapper.insert(work);
         if(result != 1){
             return "error";
         }
-        return work.getWID();
+        return work.getWId();
     }
 
     //生产中
@@ -67,7 +69,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
     public String working(String workId){
 
         Work work = workMapper.selectById(workId);
-        String wOrderId = work.getWOrderID();
+        String wOrderId = work.getWOrderId();
 
         Order order = orderMapper.selectById(wOrderId);
         Integer orderNumber = order.getOrderNumber();
@@ -82,7 +84,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
 
     //生产
     public String product(String workId, int orderNumber){
-        int count = 1;
+        int count = 0;
         int sum = 100;
         boolean flag = true;
         long next;
@@ -95,7 +97,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         pre = System.currentTimeMillis();
         for (int i = 0; i < orderNumber; i++) {
             //生产机器是否报错
-            String message = this.productError(workId, count-1);
+            String message = this.productError(workId, count);
             if("error".equals(message)){
                 return "error";
             }
@@ -122,7 +124,8 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
                 //生产100件时，记录所需时间到表格中
                 next = System.currentTimeMillis();
                 UpdateWrapper<Work> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("w_id", workId).set("w_need_time", String.valueOf(next - pre));
+                updateWrapper.eq("w_id", workId)
+                        .set("w_need_time", String.valueOf(next - pre));
                 boolean update = update(updateWrapper);
                 if(update == false){
                     return "error";
@@ -134,6 +137,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         while (count == orderNumber){
             UpdateWrapper<Work> updateWrapper = new UpdateWrapper<>();
             updateWrapper.set("w_state", "4")
+                    .set("w_prod_nums", count)
                     .eq("w_id", workId);
             boolean update = update(updateWrapper);
             if(update){
@@ -177,10 +181,14 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         return "ok";
     }
 
-    public List<Work> getWorkList(String dateTime){
+    public List<Work> getWorkListByDateTime(String dateTime){
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.gt("w_create_time", dateTime);
         List<Work> works = workMapper.selectList(queryWrapper);
         return works;
+    }
+
+    public List<Work> getAllWorkList(){
+        return workMapper.selectList(null);
     }
 }

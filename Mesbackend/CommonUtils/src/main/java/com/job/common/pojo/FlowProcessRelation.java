@@ -6,20 +6,79 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@TableName("t_flow_process_relation")
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("t_flow_process_relation")
 public class FlowProcessRelation {
-    private String Id;
-    private String flowId;
-    private String Flow;
-    private String perProcess;
-    private String perProcessId;
-    private String process;
-    private String processId;
-    private String nextProcess;
-    private String nextProcessId;
-    private int sortNum;
-    private String processType;
+    /**
+     * 流程与工序关系ID
+     */
+    private String id;
 
+    /**
+     * 流程ID
+     */
+    private String flowId;
+
+    /**
+     * 流程代码
+     */
+    private String flow;
+
+    /**
+     * 前道工序
+     */
+    private String perProcess;
+
+    /**
+     * 前道工序ID
+     */
+    private String perProcessId;
+
+    /**
+     * 当前工序
+     */
+    private String Process;
+
+    /**
+     * 当前工序ID
+     */
+    private String ProcessId;
+
+    /**
+     * 下道工序
+     */
+    private String nextProcess;
+
+    /**
+     * 下道工序ID
+     */
+    private String nextProcessId;
+
+    /**
+     * 排序
+     */
+    private int sortNum;
+
+    /**
+     * 工序类型 (首道工序firstOper;最后一道工序lastOper)
+     */
+    private String operType;
+
+    @Override
+    public String toString() {
+        return "TFlowProcessRelation{" +
+                "id='" + id + '\'' +
+                ", flowId='" + flowId + '\'' +
+                ", flow='" + flow + '\'' +
+                ", perProcess='" + perProcess + '\'' +
+                ", perProcessId='" + perProcessId + '\'' +
+                ", Process='" + Process + '\'' +
+                ", ProcessId='" + ProcessId + '\'' +
+                ", nextProcess='" + nextProcess + '\'' +
+                ", nextProcessId='" + nextProcessId + '\'' +
+                ", sortNum='" + sortNum + '\'' +
+                ", operType='" + operType + '\'' +
+                '}';
+    }
 }

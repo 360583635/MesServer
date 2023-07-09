@@ -1,6 +1,7 @@
-package com.job.authenticationService.Config;
+package com.job.dispatchService.LineManager.config;
 
-import com.job.authenticationService.utils.FastJsonRedisSerializer;
+
+import com.job.dispatchService.LineManager.utils.FastJsonRedisSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

@@ -42,7 +42,6 @@ public class TProcess {
     /**
      * 修改时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date updateTime;
 
     /**
