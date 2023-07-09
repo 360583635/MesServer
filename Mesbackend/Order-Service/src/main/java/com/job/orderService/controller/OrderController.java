@@ -2,10 +2,9 @@ package com.job.orderService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.job.common.pojo.Order;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.OrderMapper;
-import com.job.orderService.service.OrderService;
-import com.job.pojo.pojo.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

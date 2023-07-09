@@ -38,4 +38,5 @@ public class Order implements Serializable {
     private String rawNum;
     private String customTel;
     private Integer delete;// 0 未删除；1 删除
+    private String productName;
 }
