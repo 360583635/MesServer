@@ -1,8 +1,8 @@
 package com.job.dispatchService.LineManager.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.job.common.pojo.FlowProcessRelation;
 import com.job.dispatchService.LineManager.vo.ProcessVo;
-import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @create 2023-07-06-17:44
  * @description
  */
-public interface FlowProcessRelationMapper extends BaseMapper<TFlowProcessRelation> {
+public interface FlowProcessRelationMapper extends BaseMapper<FlowProcessRelation> {
     /**
      * 根据流程ID查询下挂的全部工序
      * @param flowId 流程关联ID
