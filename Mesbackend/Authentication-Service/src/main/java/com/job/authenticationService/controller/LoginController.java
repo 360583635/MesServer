@@ -1,17 +1,13 @@
-package com.job.authenticationService.Controller;
+package com.job.authenticationService.controller;
 
 import com.job.authenticationService.pojo.ResponseResult;
 import com.job.authenticationService.pojo.Users;
 import com.job.authenticationService.service.LoginService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
