@@ -1,7 +1,7 @@
 package com.job.dispatchService.LineManager.dto;
 
+import com.job.common.pojo.Flow;
 import com.job.dispatchService.LineManager.vo.ProcessVo;
-import com.job.dispatchService.LineManager.pojo.TFlow;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @create 2023-07-06-19:38
  * @description
  */
-public class FlowDto extends TFlow {
+public class FlowDto extends Flow {
     /**
      * 流程与工序关系集合
      */
