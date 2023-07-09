@@ -10,10 +10,7 @@ import com.job.dispatchService.Work.service.WorkService;
 import com.job.dispatchService.Work.util.DateTimeUtil;
 import com.job.dispatchService.Work.util.StringAndNumberUtil;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wiki.xsx.core.snowflake.config.Snowflake;
 
 import java.text.SimpleDateFormat;
@@ -22,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/work")
+//@RequestMapping("/work")
 public class WorkController {
 
     @Resource
@@ -41,9 +38,9 @@ public class WorkController {
     private WFlowMapper flowMapper;
 
     //processId=11&orderId=1676951868304564226
-    @GetMapping(value = "/{processId}/{orderId}")
-    public Object working(@PathVariable("processId") String processId,
-                          @PathVariable("orderId") String orderId){
+    @RequestMapping(value = "/work")
+    public Object working(@RequestParam("processId") String processId,
+                          @RequestParam("orderId") String orderId){
 
         boolean b = StringAndNumberUtil.StingAndNumberTest(processId, orderId);
         if(!b){
@@ -80,8 +77,8 @@ public class WorkController {
             List<Work> works = workService.getWorkList(dateTime);
             for (Work work : works) {
                 Map hashMap = new HashMap<>();
-                Order order = orderMapper.selectById(work.getWOrderID());
-                hashMap.put("workId", work.getWID());
+                Order order = orderMapper.selectById(work.getWOrderId());
+                hashMap.put("workId", work.getWId());
                 hashMap.put("orderName", "小米");
                 hashMap.put("nums", work.getWProdNums());
                 Process process = processMapper.selectById(work.getWProcessId());
