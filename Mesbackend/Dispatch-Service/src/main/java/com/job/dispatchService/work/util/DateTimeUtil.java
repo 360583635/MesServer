@@ -1,4 +1,4 @@
-package com.job.dispatchService.work.util;
+package com.job.dispatchService.Work.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
