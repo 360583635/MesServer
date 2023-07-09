@@ -3,16 +3,18 @@ package com.job.dispatchService.Work.controller;
 import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
-import com.job.dispatchService.Work.mapper.FlowMapper;
-import com.job.dispatchService.Work.mapper.OrderMapper;
-import com.job.dispatchService.Work.mapper.ProcessMapper;
+import com.job.dispatchService.Work.mapper.WFlowMapper;
+import com.job.dispatchService.Work.mapper.WOrderMapper;
+import com.job.dispatchService.Work.mapper.WProcessMapper;
 import com.job.dispatchService.Work.service.WorkService;
 import com.job.dispatchService.Work.util.DateTimeUtil;
+import com.job.dispatchService.Work.util.StringAndNumberUtil;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wiki.xsx.core.snowflake.config.Snowflake;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -24,20 +26,30 @@ import java.util.Map;
 public class WorkController {
 
     @Resource
+    private Snowflake snowflake;
+
+    @Resource
     private WorkService workService;
 
     @Resource
-    private OrderMapper orderMapper;
+    private WOrderMapper orderMapper;
 
     @Resource
-    private ProcessMapper processMapper;
+    private WProcessMapper processMapper;
 
     @Resource
-    private FlowMapper flowMapper;
+    private WFlowMapper flowMapper;
 
+    //processId=11&orderId=1676951868304564226
     @GetMapping(value = "/{processId}/{orderId}")
     public Object working(@PathVariable("processId") String processId,
                           @PathVariable("orderId") String orderId){
+
+        boolean b = StringAndNumberUtil.StingAndNumberTest(processId, orderId);
+        if(!b){
+            return "工单id或工序id不是只有字符串和数字组成";
+        }
+
         String workId = workService.insertWork(processId, orderId);
         if(workId != null){
             String message = workService.working(workId);
@@ -47,7 +59,7 @@ public class WorkController {
         }else {
             return "error";
         }
-        return "error";
+        return "ok";
     }
 
     @GetMapping("/search/{dateTime}")
