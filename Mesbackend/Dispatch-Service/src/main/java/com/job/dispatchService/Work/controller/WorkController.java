@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import wiki.xsx.core.snowflake.config.Snowflake;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class WorkController {
     @Resource
     private WFlowMapper flowMapper;
 
+    //工序调用接口
     //processId=11&orderId=1676951868304564226
     @RequestMapping(value = "/work")
     public Object working(@RequestParam("processId") String processId,
@@ -59,8 +61,9 @@ public class WorkController {
         return "ok";
     }
 
-    @GetMapping("/search/{dateTime}")
-    public Map searchByDatetime(@PathVariable("dateTime") String dateTime){
+    //前端网页数据呈现
+    @GetMapping("/search")
+    public Map searchByDatetime(@RequestParam("dateTime") String dateTime){
 
         Map map = new HashMap();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -74,27 +77,39 @@ public class WorkController {
             }
             map.put("state", "ok");
 
-            List<Work> works = workService.getWorkList(dateTime);
-            for (Work work : works) {
-                Map hashMap = new HashMap<>();
-                Order order = orderMapper.selectById(work.getWOrderId());
-                hashMap.put("workId", work.getWId());
-                hashMap.put("orderName", "小米");
-                hashMap.put("nums", work.getWProdNums());
-                Process process = processMapper.selectById(work.getWProcessId());
-                hashMap.put("processName", "工序1");
-                hashMap.put("flowName", "流水线1");
-                if("3".equals(work.getWState())){
-                    hashMap.put("finish", "异常");
-                    hashMap.put("errorTime", work.getWErrorTime());
-                }else {
-                    hashMap.put("finish", "是");
-                    hashMap.put("errorTime", "");
-                }
-                hashMap.put("createTime", work.getWCreateTime());
-            }
+            List<Work> works = workService.getWorkListByDateTime(dateTime);
+            List pagesList = this.forEachWorks(works);
+            map.put("pagesList", pagesList);
+        }else if(dateTime != null && dateTime.isEmpty()){
+            List<Work> works = workService.getAllWorkList();
+            List pagesList = this.forEachWorks(works);
+            map.put("pagesList", pagesList);
         }
 
         return map;
+    }
+
+    public List forEachWorks(List<Work> works){
+        List pagesList = new ArrayList();
+        for (Work work : works) {
+            Map hashMap = new HashMap<>();
+            Order order = orderMapper.selectById(work.getWOrderId());
+            hashMap.put("workId", work.getWId());
+            hashMap.put("orderName", "小米");
+            hashMap.put("nums", work.getWProdNums());
+            Process process = processMapper.selectById(work.getWProcessId());
+            hashMap.put("processName", process.getProcess());
+            hashMap.put("flowName", "流水线1");
+            if("3".equals(work.getWState())){
+                hashMap.put("finish", "异常");
+                hashMap.put("errorTime", work.getWErrorTime());
+            }else {
+                hashMap.put("finish", "是");
+                hashMap.put("errorTime", "");
+            }
+            hashMap.put("createTime", work.getWCreateTime());
+            pagesList.add(hashMap);
+        }
+        return pagesList;
     }
 }

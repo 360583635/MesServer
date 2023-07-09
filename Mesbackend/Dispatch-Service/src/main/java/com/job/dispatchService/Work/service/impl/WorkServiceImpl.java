@@ -179,10 +179,14 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         return "ok";
     }
 
-    public List<Work> getWorkList(String dateTime){
+    public List<Work> getWorkListByDateTime(String dateTime){
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.gt("w_create_time", dateTime);
         List<Work> works = workMapper.selectList(queryWrapper);
         return works;
+    }
+
+    public List<Work> getAllWorkList(){
+        return workMapper.selectList(null);
     }
 }

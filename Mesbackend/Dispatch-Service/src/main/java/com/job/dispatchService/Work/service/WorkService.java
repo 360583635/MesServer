@@ -13,5 +13,8 @@ public interface WorkService extends IService<Work> {
 
     public String working(@Param("workId") String workId);
 
-    public List<Work> getWorkList(@Param("dateTime") String dateTime);
+    public List<Work> getWorkListByDateTime(@Param("dateTime") String dateTime);
+
+    public List<Work> getAllWorkList();
+
 }
