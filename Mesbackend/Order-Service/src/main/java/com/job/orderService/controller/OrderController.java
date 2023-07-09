@@ -1,6 +1,5 @@
 package com.job.orderService.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.job.common.pojo.Order;
 import com.job.orderService.common.result.Result;
