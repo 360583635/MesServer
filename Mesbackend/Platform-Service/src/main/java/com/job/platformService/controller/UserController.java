@@ -46,26 +46,33 @@ public class UserController {
         System.out.println(pattern);
         Collection<String> keys = redisCache.keys("*"+pattern+"*");
         System.out.println(keys);
-        for (String key:keys){
-            System.out.println(key);
-            String value=redisCache.getCacheObject(key);
-            System.out.println(value);
-        }
-        return null;
+        List<String> dataList = redisTemplate.opsForValue().multiGet(keys);
+        System.out.println(dataList);
+//        for (String key:keys){
+//            System.out.println(key);
+//            Object value=redisCache.getCacheObject(key);
+//            System.out.println(value);
+//        }
+        return dataList;
     }
 
         //    添加数据
     @RequestMapping("/add")
     public void add(){
+        System.out.println(111);
         User user=new User();
         user.setUsername("zyx");
-        user.setPassword("uuu");
+        user.setPassword("zyx");
+        User user1=new User();
+        user1.setUsername("ysx");
+        user1.setPassword("ysx");
+        User user2=new User();
+        user2.setUsername("faq");
+        user2.setPassword("faq");
 
-        redisCache.setCacheObject("user:3",user);
-        User s = redisCache.getCacheObject("user:3");
-        Integer sss=redisCache.getCacheObject("user:22");
-        System.out.println(s);
-        System.out.println(sss);
+        redisCache.setCacheObject("user:1",user);
+        redisCache.setCacheObject("user:2",user1);
+        redisCache.setCacheObject("user:3",user2);
     }
 
     //    删除单个缓存数据

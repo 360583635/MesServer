@@ -1,4 +1,4 @@
-package com.job.dispatchService.work.service;
+package com.job.dispatchservice.work.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.job.common.pojo.Work;

@@ -1,4 +1,4 @@
-package com.job.dispatchService.work.util;
+package com.job.dispatchservice.work.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
