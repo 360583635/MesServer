@@ -27,17 +27,17 @@ public class OrderController {
         if (order == null){
             return  Result.error("输入对象不能为空！");
         }else if (order.getOrderNumber() != null  && order.getExpectDate() != null && order.getProductId() !=null
-                && order.getType() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
+                && order.getTypeName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
                 && order.getRawName() !=null && order.getRawNum() !=null){
 
             order.setOrderDate(new Date());
             //TODO: 2023/7/8
             order.setAuditor(null);//获取当前登录用户
             order.setPriority(0);
-            order.setStatus(0);
+            order.setProductionStatus(0);
             //TODO: 2023/7/8
             order.setOrderPrice(null);
-            order.setDelete(0);
+            order.setIsDelete(0);
             int i = orderMapper.insert(order);
             if (i>0)
             {
@@ -49,7 +49,6 @@ public class OrderController {
         else{
             return  Result.error("error!");
         }
-
 
     }
 
@@ -73,7 +72,7 @@ public class OrderController {
      */
     @GetMapping("/saveUpdateOrder/{orderId}")
     public Result<Order> saveUpdateOrder(@PathVariable String orderId, Order order){
-        Integer status = order.getStatus();
+        Integer status = order.getProductionStatus();
         if (status == 0){
             QueryWrapper<Order> wrapper=new QueryWrapper<>();
             wrapper.eq(orderId,orderId);
@@ -134,9 +133,9 @@ public class OrderController {
         QueryWrapper<Order> wrapper=new QueryWrapper<>();
         wrapper.eq(orderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
-        Integer status = order.getStatus();
+        Integer status = order.getProductionStatus();
         if (status == 0){
-            order.setDelete(1);
+            order.setIsDelete(1);
             QueryWrapper<Order> wrapper1=new QueryWrapper<>();
             wrapper1.eq(orderId,orderId);
             int i = orderMapper.update(order, wrapper1);
