@@ -14,7 +14,6 @@
         <module name="Data-Visualization-Service" />
         <module name="CommonUtils" />
         <module name="Zuul-Master" />
-        <module name="PojoUtils" />
         <module name="Production-Management-Service" />
       </profile>
     </annotationProcessing>

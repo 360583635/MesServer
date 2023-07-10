@@ -19,20 +19,20 @@ public class Users implements Serializable {
     @TableId
     private Long Id;
 
-    private String Name;
-    private String Salt;
-    private String Password;
-    private String Phone;
-    private String Email;
-    private String Address;
-    private String Enter_time;
-    private String Sex;
-    private Date Create_time;
-    private String Create_user;
-    private Date Update_time;
-    private String Update_user;
-    private int State;
-    private Date Birth;
+    private String name;
+    private String salt;
+    private String password;
+    private String phone;
+    private String email;
+    private String address;
+    private String enter_time;
+    private String sex;
+    private Date create_time;
+    private String create_user;
+    private Date update_time;
+    private String update_user;
+    private int state;
+    private Date birth;
     private int Is_delete;
 }
 
