@@ -4,7 +4,8 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.FlowProcessRelation;
-import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
+import com.job.common.pojo.Process;
+//import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 import com.job.dispatchService.LineManager.pojo.TProcess;
 import com.job.dispatchService.LineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.LineManager.service.ProcessService;
@@ -42,7 +43,7 @@ public class ProcessController {
      */
     @PostMapping("/update")
     @ResponseBody
-    public Result updateProcess(@RequestBody TProcess tProcess){
+    public Result updateProcess(@RequestBody Process tProcess){
         //获得用户信息
         String userinf="温帅";
         tProcess.setUpdateUsername(userinf);
@@ -60,7 +61,7 @@ public class ProcessController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result saveProcess(@RequestBody TProcess tProcess){
+    public Result saveProcess(@RequestBody Process tProcess){
         //获得用户信息
         String userinf="温帅";
         tProcess.setUpdateUsername(userinf);
@@ -74,8 +75,8 @@ public class ProcessController {
     @PostMapping("/remove")
     @ResponseBody
     public Result removePeocess(String processId){
-        LambdaQueryWrapper<TFlowProcessRelation> queryWrapper=new LambdaQueryWrapper();
-        queryWrapper.eq(TFlowProcessRelation::getProcessId,processId);
+        LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper();
+        queryWrapper.eq(FlowProcessRelation::getProcessId,processId);
         long count = processRelationService.count(queryWrapper);
 //        List<TFlowProcessRelation> list = processRelationService.list(queryWrapper);
         if(count>0){
