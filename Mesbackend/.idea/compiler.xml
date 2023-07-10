@@ -7,14 +7,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Dispatch-Service" />
-        <module name="Authentication-Service" />
-        <module name="Data-Visualization-Service" />
-        <module name="Production-Management-Service" />
-        <module name="Platform-Service" />
         <module name="Order-Service" />
+        <module name="Authentication-Service" />
+        <module name="Platform-Service" />
+        <module name="Dispatch-Service" />
+        <module name="Data-Visualization-Service" />
         <module name="CommonUtils" />
         <module name="Zuul-Master" />
+        <module name="Production-Management-Service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
