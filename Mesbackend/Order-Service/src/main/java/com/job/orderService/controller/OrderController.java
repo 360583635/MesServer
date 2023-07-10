@@ -38,8 +38,13 @@ public class OrderController {
             //TODO: 2023/7/8
             order.setOrderPrice(null);
             order.setDelete(0);
-            orderMapper.insert(order);
-            return Result.success("success");
+            int i = orderMapper.insert(order);
+            if (i>0)
+            {
+                return Result.success("success");
+            }else {
+                return  Result.error("error!");
+            }
         }
         else{
             return  Result.error("error!");
