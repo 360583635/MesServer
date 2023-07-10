@@ -11,11 +11,9 @@ import com.job.dispatchservice.linemanager.service.FlowProcessRelationService;
 import com.job.dispatchservice.linemanager.service.ProcessService;
 import com.job.dispatchservice.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author 庸俗可耐
@@ -63,11 +61,16 @@ public class ProcessController {
         tProcess.setUpdateUsername(userinf);
         tProcess.setCreateUsername(userinf);
         DateTime nowTime = DateUtil.date();
-        tProcess.setUpdateTime(nowTime);
+        tProcess.setCreateTime(nowTime);
         processService.saveOrUpdate(tProcess);
         return Result.success();
     }
 
+    /**
+     * 删除工序
+     * @param processId
+     * @return
+     */
     @PostMapping("/remove")
     @ResponseBody
     public Result removePeocess(String processId){
@@ -86,7 +89,22 @@ public class ProcessController {
 
     }
 
+    /**
+     * 查询全部工序
+     */
+    @GetMapping("/list")
+    public Result list(){
+        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+        List<Process> list = processService.list(queryWrapper);
+        return Result.success(list,"查询成功");
+    }
 
+
+    /**
+     * 查询工序
+     * 
+     */
+    // TODO: 2023/7/10  
 
 
 }

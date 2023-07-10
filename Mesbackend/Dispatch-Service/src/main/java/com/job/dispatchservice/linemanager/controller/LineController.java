@@ -1,7 +1,9 @@
 package com.job.dispatchservice.linemanager.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.job.common.pojo.Line;
+
 import com.job.common.result.Result;
 import com.job.dispatchservice.linemanager.service.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author 庸俗可耐
@@ -72,6 +76,17 @@ public class LineController {
         return Result.success(null,"删除成功");
     }
 
+    /**
+     * 查询全部流水线
+     * @return
+     */
+    @RequestMapping("/list")
+    @ResponseBody
+    public Result list(){
+        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+        List<Line> list = lineService.list(queryWrapper);
+        return Result.success(list,"查询成功");
+    }
 
 
 

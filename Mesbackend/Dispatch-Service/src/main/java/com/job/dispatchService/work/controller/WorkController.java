@@ -1,15 +1,14 @@
-package com.job.dispatchService.work.controller;
+package com.job.dispatchservice.work.controller;
 
 import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
-import com.job.dispatchService.work.mapper.WFlowMapper;
-import com.job.dispatchService.work.mapper.WOrderMapper;
-import com.job.dispatchService.work.mapper.WProcessMapper;
-import com.job.dispatchService.work.service.WorkService;
-import com.job.dispatchService.work.util.DateTimeUtil;
-import com.job.dispatchService.work.util.StringAndNumberUtil;
-import jakarta.annotation.Resource;
+import com.job.dispatchservice.work.mapper.WFlowMapper;
+import com.job.dispatchservice.work.mapper.WOrderMapper;
+import com.job.dispatchservice.work.mapper.WProcessMapper;
+import com.job.dispatchservice.work.service.WorkService;
+import com.job.dispatchservice.work.util.DateTimeUtil;
+import com.job.dispatchservice.work.util.StringAndNumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wiki.xsx.core.snowflake.config.Snowflake;
