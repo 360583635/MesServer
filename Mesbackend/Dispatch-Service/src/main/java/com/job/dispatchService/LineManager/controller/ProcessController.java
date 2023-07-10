@@ -45,7 +45,7 @@ public class ProcessController {
     @ResponseBody
     public Result updateProcess(@RequestBody Process tProcess){
         //获得用户信息
-        String userinf="温帅";
+        String userinf="郭帅比";
         tProcess.setUpdateUsername(userinf);
         DateTime nowTime = DateUtil.date();
         tProcess.setUpdateTime(nowTime);
@@ -63,7 +63,7 @@ public class ProcessController {
     @ResponseBody
     public Result saveProcess(@RequestBody Process tProcess){
         //获得用户信息
-        String userinf="温帅";
+        String userinf="郭帅比";
         tProcess.setUpdateUsername(userinf);
         tProcess.setCreateUsername(userinf);
         DateTime nowTime = DateUtil.date();
