@@ -68,6 +68,7 @@ public class LineController {
             return Result.error("流水线未关闭，无法删除");
         }
         lineService.removeById(lineId);
+        //todo 记入日志
         return Result.success(null,"删除成功");
     }
 
