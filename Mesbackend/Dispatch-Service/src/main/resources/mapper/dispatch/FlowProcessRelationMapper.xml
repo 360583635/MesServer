@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.job.dispatchService.LineManager.mapper.FlowProcessRelationMapper">
 
-    <resultMap id="ResultVoMap" type="com.job.dispatchService.LineManager.vo.ProcessVo">
+    <resultMap id="ResultVoMap" type="com.job.dispatchService.lineManager.vo.ProcessVo">
         <result column="process_id" property="value" jdbcType="VARCHAR"/>
         <result column="process" property="title" jdbcType="VARCHAR"/>
     </resultMap>
