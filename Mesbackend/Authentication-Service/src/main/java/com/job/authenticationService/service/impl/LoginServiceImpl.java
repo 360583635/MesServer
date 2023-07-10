@@ -43,7 +43,6 @@ public class LoginServiceImpl implements LoginService {
             throw new RuntimeException("登录失败");
         }
 
-
         //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
         LoginUser loignUser = (LoginUser) authenticate.getPrincipal();
         String userid = loignUser.getUser().getId().toString();
