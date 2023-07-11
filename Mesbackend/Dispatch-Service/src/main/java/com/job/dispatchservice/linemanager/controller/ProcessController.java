@@ -3,10 +3,12 @@ package com.job.dispatchservice.linemanager.controller;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Process;
 //import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 //import com.job.dispatchService.LineManager.pojo.TProcess;
+import com.job.dispatchservice.linemanager.request.ProcessPageReq;
 import com.job.dispatchservice.linemanager.service.FlowProcessRelationService;
 import com.job.dispatchservice.linemanager.service.ProcessService;
 import com.job.dispatchservice.common.Result;
@@ -29,6 +31,17 @@ public class ProcessController {
 
     @Autowired
     private FlowProcessRelationService processRelationService;
+
+    /**
+     * 工序分页查询
+     * @param req
+     * @return
+     */
+    @PostMapping("/page")
+    public Result page(ProcessPageReq req){
+        IPage result = processService.page(req);
+        return Result.success(result,"查询成功");
+    }
 
     /**
      * 修改工序

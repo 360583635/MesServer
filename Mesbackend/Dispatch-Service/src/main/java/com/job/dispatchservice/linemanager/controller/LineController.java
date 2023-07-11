@@ -2,15 +2,14 @@ package com.job.dispatchservice.linemanager.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.Line;
 
 import com.job.common.result.Result;
+import com.job.dispatchservice.linemanager.request.LinePageReq;
 import com.job.dispatchservice.linemanager.service.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +25,17 @@ public class LineController {
 
     @Autowired
     private LineService lineService;
+
+    /**
+     * 流水线分页查询
+     * @param req
+     * @return
+     */
+    @PostMapping
+    public Result page(LinePageReq req){
+        IPage result = lineService.page(req);
+        return Result.success(result,"查询成功");
+    }
 
     /**
      * 添加流水线
@@ -64,9 +74,8 @@ public class LineController {
      * @param lineId
      * @return
      */
-    @RequestMapping("/removeLine")
-    @ResponseBody
-    public Result removeLine(String lineId){
+    @GetMapping("/removeLine/{lineId}")
+    public Result removeLine(@PathVariable String lineId){
         Line byId = lineService.getById(lineId);
         if(!"0".equals(byId.getStatus())){
             return Result.error("流水线未关闭，无法删除");
@@ -87,9 +96,6 @@ public class LineController {
         List<Line> list = lineService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }
-
-
-
 
 
 
