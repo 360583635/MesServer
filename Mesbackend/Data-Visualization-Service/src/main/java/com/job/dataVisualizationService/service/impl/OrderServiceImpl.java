@@ -1,11 +1,14 @@
 package com.job.dataVisualizationService.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.job.dataVisualizationService.mapper.OrderMapper;
 import com.job.dataVisualizationService.pojo.OrderData;
 import com.job.dataVisualizationService.service.OrderService;
 import com.job.common.pojo.Order;
+import org.apache.ibatis.javassist.expr.NewArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
@@ -20,9 +23,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private OrderMapper orderMapper;
     @Override
     public OrderData preData() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String dateString = sdf.format(date);
+        System.out.println("31:========="+dateString);
         String dayString = dateString.substring(8,8+2);
         String mmString = dateString.substring(5,5+2);
         if(dateString.charAt(0) == '0')dayString = dateString.substring(1);
@@ -36,7 +40,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         cPre.add(Calendar.DAY_OF_MONTH,-day);
         cPre.add(Calendar.MONTH,-1);
         LambdaQueryWrapper<Order> q = new LambdaQueryWrapper<>();
-        q.le(Order::getOrderDate,cEnd.getTime());
+        q.le(Order::getOrderDate,cEnd);
         List<Order> orders = orderMapper.selectList(q);
         if(orders==null||orders.size()==0){      //工厂的订单只有这个月有数据
             LambdaQueryWrapper<Order> qq = new LambdaQueryWrapper<>();
@@ -63,7 +67,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             int sm = mm;
             for (int i = 0; i < 5; i++) {
                 LambdaQueryWrapper<Order> q1 = new LambdaQueryWrapper<>();
-                q1.le(Order::getOrderDate,cEnd.getTime());
+                q1.le(Order::getOrderDate,cEnd);
                 q1.ge(Order::getOrderDate,cPre);
                 List<Order> orders1 = orderMapper.selectList(q1);
                 long sumPrice = 0;
@@ -111,41 +115,89 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public OrderData countData() {
+    public OrderData countData(OrderData order) {
+
         OrderData orderData = new OrderData();
+        //格式化时间日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String dateString = sdf.format(date);
+        //取年月
         String dayString = dateString.substring(8,8+2);
         String mmString = dateString.substring(5,5+2);
+        //月日消0
         if(dateString.charAt(0) == '0')dayString = dateString.substring(1);
         int day = Integer.parseInt(dayString);
         if(mmString.charAt(0) == '0')mmString = mmString.substring(1);
         int mm = Integer.parseInt(mmString);
-        Calendar endTime = Calendar.getInstance();   // 7 1
+        //获取当前时间
+        //获得结束时间
+        Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.DAY_OF_MONTH,-day);
         Calendar preTime = Calendar.getInstance();
+        //获得开始时间
         preTime.add(Calendar.DAY_OF_MONTH,-day);
-        preTime.add(Calendar.MONTH,-1);
-        int[] m = new int[6];
-        int[] c = new int[6];
-        for (int i = 5; i >= 0; i--) {
+        preTime.add(Calendar.MONTH,-order.getSeparate());
+        //数量 金额 时间
+        int[] time = new int[order.getDataNumber()];
+        int[] count = new int[order.getDataNumber()];
+        int[] amount = new int[order.getDataNumber()];
+
+        for (int i = 0; i < order.getDataNumber(); i++) {
             LambdaQueryWrapper<Order> q = new LambdaQueryWrapper<>();
             q.le(Order::getOrderDate,endTime);
             q.ge(Order::getOrderDate,preTime);
-            long cnt = orderMapper.selectCount(q);
-            m[i] = --mm;
-            c[i] = (int)cnt;
-            endTime.add(Calendar.MONTH,-1);
-            preTime.add(Calendar.MONTH,-1);
+            long count1 = orderMapper.selectCount(q);
+            List<Order> orders = orderMapper.selectList(q);
+            time[i] = --mm;
+            count[i] = (int)count1;
+
+            int total = 0;
+            for (Order order2 :orders
+                 ) {
+                total+=order2.getOrderNumber()*order2.getOrderPrice();
+            }
+            endTime.add(Calendar.MONTH,-order.getSeparate());
+            preTime.add(Calendar.MONTH,-order.getSeparate());
+            amount[i] = total;
         }
-        orderData.setCount(c);
-        orderData.setTime(m);
+        orderData.setCount(count);
+        orderData.setTime(time);
+        orderData.setAmount(amount);
         return orderData;
     }
 
     @Override
-    public OrderData classification() {
+    public OrderData classification(OrderData order) {
+        OrderData orderData = new OrderData();
+
+        LambdaQueryWrapper<Order> q1 = new LambdaQueryWrapper<>();
+        q1.select(Order::getTypeName);
+        Long typeCount = orderMapper.selectCount(q1);
+
+        String[] type = new String[Math.toIntExact(typeCount)];
+        int[] total = new int[Math.toIntExact(typeCount)];
+
+        //sql语句
+        QueryWrapper<Order> q = new QueryWrapper<>();
+        q.select("product_name","SUM(order_price*order_number)");
+        q.between("order_date",order.getStartTime(),order.getEndTime());
+        q.groupBy("product_name");
+        List<Order> orders = orderMapper.selectList(q);
+        int i = 0;
+        for (Order order1:orders
+             ) {
+            type[i] = order1.getProductName();
+            total[i] = (order1.getOrderPrice()*order1.getOrderNumber());
+            i++;
+        }
+        orderData.setProductType(type);
+        orderData.setTotal(total);
+        return orderData;
+    }
+
+    @Override
+    public OrderData countOneData(OrderData order) {
         return null;
     }
 }

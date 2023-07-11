@@ -8,5 +8,5 @@ import com.job.dataVisualizationService.service.MessagesService;
 /**
  * @Auther:Liang
  */
-public class MessagesImpl extends ServiceImpl<MessagesMapper, Messages> implements MessagesService {
+public class MessagesServiceImpl extends ServiceImpl<MessagesMapper, Messages> implements MessagesService {
 }

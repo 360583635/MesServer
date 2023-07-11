@@ -9,5 +9,6 @@ import com.job.dataVisualizationService.service.FlowService;
 /**
  * @Auther:Liang
  */
-public class FlowImpl extends ServiceImpl<FlowMapper, Flow> implements FlowService {
+public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements FlowService {
+
 }
