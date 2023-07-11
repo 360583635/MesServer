@@ -1,5 +1,6 @@
 package com.job.orderService.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.job.common.pojo.Order;
 import com.job.orderService.common.result.Result;
@@ -59,8 +60,8 @@ public class OrderController {
      */
     @GetMapping("/updateOrder/{orderId}")
     public Result<Order> updateOrder(@PathVariable String orderId){
-        QueryWrapper<Order> wrapper=new QueryWrapper<>();
-        wrapper.eq(orderId,orderId);
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         return Result.success(order,"success");
     }
@@ -74,8 +75,8 @@ public class OrderController {
     public Result<Order> saveUpdateOrder(@PathVariable String orderId, Order order){
         Integer status = order.getProductionStatus();
         if (status == 0){
-            QueryWrapper<Order> wrapper=new QueryWrapper<>();
-            wrapper.eq(orderId,orderId);
+            LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+            wrapper.eq(Order::getOrderId,orderId);
             int i = orderMapper.update(order, wrapper);
             if (i>0){
                 return Result.success("success");
@@ -104,8 +105,8 @@ public class OrderController {
      */
     @GetMapping("/selectOrderById/{orderId}")
     public Result<Order> selectOrderById(@PathVariable String orderId){
-        QueryWrapper<Order> wrapper=new QueryWrapper<>();
-        wrapper.eq(orderId,orderId);
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         return Result.success(order,"success");
     }
@@ -117,8 +118,8 @@ public class OrderController {
      */
     @GetMapping("/showOrderDetail/{orderId}")
     public Result<Order> showOrderDetail(@PathVariable String orderId){
-        QueryWrapper<Order> wrapper=new QueryWrapper<>();
-        wrapper.eq(orderId,orderId);
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         return Result.success(order,"success");
     }
@@ -130,8 +131,8 @@ public class OrderController {
      */
     @GetMapping("/deleteOrder/{orderId}")
     public Result<Order> deleteOrder(@PathVariable String orderId){
-        QueryWrapper<Order> wrapper=new QueryWrapper<>();
-        wrapper.eq(orderId,orderId);
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         Integer status = order.getProductionStatus();
         if (status == 0){
