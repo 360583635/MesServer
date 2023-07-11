@@ -13,8 +13,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableDiscoveryClient
 @EnableAsync(proxyTargetClass = true)
 //@EnableFeignClients
-@MapperScan("com.job.dispatchService.**.mapper*")
-public class DispatchService {
+@MapperScan("com.job.dispatchservice.**.mapper*")
+public class
+DispatchService {
     public static void main(String[] args) {
         SpringApplication.run(DispatchService.class,args);
     }
