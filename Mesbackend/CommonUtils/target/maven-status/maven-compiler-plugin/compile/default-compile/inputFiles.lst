@@ -1,4 +1,6 @@
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\Process.java
+D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\redis\RedisCache.java
+D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\redis\RedisConfig.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\MenusRoles.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\result\Result.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\Line.java
@@ -7,6 +9,7 @@ D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\Messages.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\Roles.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\FlowProcessRelation.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\Logs.java
+D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\redis\FastJsonRedisSerializer.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\Users.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\OrderDetail.java
 D:\MesSB\Mesbackend\CommonUtils\src\main\java\com\job\common\pojo\UsersRoles.java
