@@ -41,6 +41,7 @@ public class SecurityConfig{
 
         http.authorizeHttpRequests((authz)->authz
                 .requestMatchers("/hello").permitAll()
+
                 .requestMatchers("/authen/login").anonymous()
                 .anyRequest().authenticated()
         );
