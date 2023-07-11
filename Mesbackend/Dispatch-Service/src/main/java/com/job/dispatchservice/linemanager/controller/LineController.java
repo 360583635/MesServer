@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.Line;
 
+import com.job.common.pojo.Order;
 import com.job.common.result.Result;
 import com.job.dispatchservice.linemanager.request.LinePageReq;
 import com.job.dispatchservice.linemanager.service.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -25,6 +27,8 @@ public class LineController {
 
     @Autowired
     private LineService lineService;
+
+
 
     /**
      * 流水线分页查询
@@ -97,6 +101,19 @@ public class LineController {
         return Result.success(list,"查询成功");
     }
 
+    /**
+     * 根据id查询流水线
+     */
+    @GetMapping("/selectLineById/{id}")
+    public Result selectLineById(@PathVariable("id") String id){
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(Line::getId,id);
+        Line line = lineService.getOne(queryWrapper);
+        if(line==null){
+            return Result.error("查询失败");
+        }
+        return Result.success(line,"查询成功");
+    }
 
 
 }

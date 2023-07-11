@@ -28,6 +28,7 @@ public class Line {
     private String lineFlow;
     /**
      * 状态
+     * 0 待生产；1 停机；2 生产中；3 生产异常；4 生产完成
      */
     private String status;
     /**
