@@ -8,5 +8,5 @@ import com.job.dataVisualizationService.service.WorkService;
 /**
  * @Auther:Liang
  */
-public class WorkImpl extends ServiceImpl<WorkMapper, Work> implements WorkService {
+public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements WorkService {
 }

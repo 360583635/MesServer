@@ -8,5 +8,5 @@ import com.job.dataVisualizationService.service.FlowProcessRelationService;
 /**
  * @Auther:Liang
  */
-public class FlowProcessRelationImpl extends ServiceImpl<FlowProcessRelationMapper, FlowProcessRelation> implements FlowProcessRelationService {
+public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelationMapper, FlowProcessRelation> implements FlowProcessRelationService {
 }

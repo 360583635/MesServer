@@ -10,5 +10,5 @@ import com.job.dataVisualizationService.service.ProcessService;
  * @Auther:Liang
  */
 
-public class ProcessImpl extends ServiceImpl<ProcessMapper, Process> implements ProcessService {
+public class ProcessServiceImpl extends ServiceImpl<ProcessMapper, Process> implements ProcessService {
 }

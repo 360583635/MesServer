@@ -8,5 +8,5 @@ import com.job.dataVisualizationService.service.MenusService;
 /**
  * @Auther:Liang
  */
-public class MenusImpl extends ServiceImpl<MenusMapper, Menus> implements MenusService {
+public class MenusServiceImpl extends ServiceImpl<MenusMapper, Menus> implements MenusService {
 }
