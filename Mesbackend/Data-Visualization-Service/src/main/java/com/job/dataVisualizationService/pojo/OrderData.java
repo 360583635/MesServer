@@ -29,6 +29,5 @@ public class OrderData extends Order {
     private Date endTime;
 
     private String[] productType = new String[6];
-    private int[] total    = new int[6];
-
+    private int[] total  = new int[6];
 }
