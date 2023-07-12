@@ -9,6 +9,7 @@ import com.job.common.pojo.Work;
 import com.job.dispatchservice.linemanager.service.FlowProcessRelationService;
 import com.job.dispatchservice.linemanager.service.FlowService;
 import com.job.dispatchservice.linemanager.service.LineService;
+import com.job.dispatchservice.work.controller.WorkController;
 import com.job.dispatchservice.work.service.WorkService;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
+import javax.sound.sampled.BooleanControl;
 import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +34,8 @@ import java.util.List;
 public class LineTaskController {
 
     @Autowired
+    private WorkController workController;
+    @Autowired
     private LineService lineService;
 
     @Autowired
@@ -43,7 +47,6 @@ public class LineTaskController {
     private WorkService workService;
 
     @Async
-    @Scheduled(initialDelay = 0,fixedDelay = 0)
     public void lineInstance(Line line) throws InterruptedException{
         // TODO: 2023/7/10 流水线实列执行流程
         FlowProcessRelation firstRelation;
@@ -71,7 +74,7 @@ public class LineTaskController {
                 LambdaQueryWrapper<FlowProcessRelation> queryWrapper1 = new LambdaQueryWrapper<>();
                 queryWrapper1
                         .eq(FlowProcessRelation::getFlowId,flowId)
-                        .eq(FlowProcessRelation::getPerProcessId,"");
+                        .eq(FlowProcessRelation::getSortNum,"0");
                 FlowProcessRelation flowProcessRelation = flowProcessRelationService.getOne(queryWrapper1);
                 firstProcessId = flowProcessRelation.getProcessId();
             }
@@ -83,13 +86,40 @@ public class LineTaskController {
             firstRelation = flowProcessRelationService.getOne(queryWrapper2);
             if(firstRelation!=null){
                 //将流水线状态修改为繁忙
+                order.setProductionStatus(2);
                 line.setStatus("2");
             }
+            FlowProcessRelation relation = firstRelation;
             //遍历工序开始生产
-            do{
+            while(!StringUtil.isNullOrEmpty(relation.getNextProcessId())){
+                //调用工单处理方法
+                String currentProcessId = relation.getProcessId();
+                String workingStatus = String.valueOf(workController.working(currentProcessId,order.getOrderId()));
+                if("error".equals(workingStatus)){
+                    //如果工单运行失败
+                    order.setProductionStatus(3);
+                    line.setStatus("3");
+                }else if("ok".equals(workingStatus)){
+                    //如果工单运行成功，获取下一个工序
+                    LambdaQueryWrapper<FlowProcessRelation> queryWrapper3 = new LambdaQueryWrapper<>();
+                    queryWrapper3.eq(FlowProcessRelation::getProcessId,relation.getNextProcessId()).eq(FlowProcessRelation::getFlowId,flowId);
+                    relation = flowProcessRelationService.getOne(queryWrapper3);
+                }
+            }
+            //判断此时的流程是否为最后的流程
+           if("lastProcess".equals(relation.getProcessType())){
+               //调用工单处理方法
+               String currentProcessId = relation.getProcessId();
+               String workingStatus = String.valueOf(workController.working(currentProcessId,order.getOrderId()));
+               if("error".equals(workingStatus)){
+                   //如果工单运行失败
 
-            }while(StringUtil.isNullOrEmpty(firstRelation.getNextProcessId())==false);
-
+               }else if("ok".equals(workingStatus)){
+                   //如果工单运行成功
+                   order.setProductionStatus(4);
+                   line.setStatus("0");
+               }
+           }
         }
     }
 
