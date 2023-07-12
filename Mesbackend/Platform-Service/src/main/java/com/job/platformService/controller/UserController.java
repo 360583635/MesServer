@@ -3,6 +3,7 @@ package com.job.platformService.controller;
 import com.job.platformService.config.RedisCache;
 import com.job.platformService.pojo.MyDTO;
 import com.job.platformService.pojo.User;
+import com.job.platformService.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
@@ -11,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -46,26 +51,33 @@ public class UserController {
         System.out.println(pattern);
         Collection<String> keys = redisCache.keys("*"+pattern+"*");
         System.out.println(keys);
-        for (String key:keys){
-            System.out.println(key);
-            String value=redisCache.getCacheObject(key);
-            System.out.println(value);
-        }
-        return null;
+        List<String> dataList = redisTemplate.opsForValue().multiGet(keys);
+        System.out.println(dataList);
+//        for (String key:keys){
+//            System.out.println(key);
+//            Object value=redisCache.getCacheObject(key);
+//            System.out.println(value);
+//        }
+        return dataList;
     }
 
         //    添加数据
     @RequestMapping("/add")
     public void add(){
+        System.out.println(111);
         User user=new User();
         user.setUsername("zyx");
-        user.setPassword("uuu");
+        user.setPassword("zyx");
+        User user1=new User();
+        user1.setUsername("ysx");
+        user1.setPassword("ysx");
+        User user2=new User();
+        user2.setUsername("faq");
+        user2.setPassword("faq");
 
-        redisCache.setCacheObject("user:3",user);
-        User s = redisCache.getCacheObject("user:3");
-        Integer sss=redisCache.getCacheObject("user:22");
-        System.out.println(s);
-        System.out.println(sss);
+        redisCache.setCacheObject("user:1",user);
+        redisCache.setCacheObject("user:2",user1);
+        redisCache.setCacheObject("user:3",user2);
     }
 
     //    删除单个缓存数据
@@ -201,6 +213,93 @@ public class UserController {
             throw new RuntimeException("Error while creating file writer", e);
         }
     }
+
+
+
+//    添加数据
+    @RequestMapping("stamp")
+    public Result getDataWithTimestamp() {
+        // 时间字符串
+        String timeString = "2023-07-09 14:30:00";
+// 时间字符串转换为日期时间对象
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
+// 日期时间对象转换为时间戳（秒级）
+        long timestamp1 = dateTime.toEpochSecond(ZoneOffset.UTC);
+        System.out.println("Timestamp (seconds): " + timestamp1);
+
+        // 构建数据
+        Map<String, String> dataMap = new HashMap<>();
+        dataMap.put("user", "zyx");
+        dataMap.put("password", "12345");
+
+        // 向Redis存储数据，并设置时间戳字段   数据以哈希类型（Hash）的方式存储
+        redisTemplate.opsForHash().putAll("data1", dataMap);
+        redisTemplate.opsForHash().put("data1", "timestamp", timestamp1);
+        return null;
+    }
+
+//    根据时间查询数据
+@RequestMapping("data")
+    public String getHashData(String hashKey) {
+//    // 创建日期时间对象
+//    LocalDateTime dateTime1 = LocalDateTime.of(2023, 7, 9, 14, 30, 0);
+//    // 创建日期时间格式化对象
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//    System.out.println(formatter);
+//    // 将时间对象转换为字符串
+//    String timeString1 = dateTime1.format(formatter);
+//    System.out.println(timeString1);
+
+    // 获取当前时间
+    LocalDateTime currentTime = LocalDateTime.now();
+    System.out.println(currentTime);
+    // 将时间转换为时间戳（秒级）
+    long timestamp = currentTime.toEpochSecond(ZoneOffset.UTC);
+    System.out.println(timestamp);
+
+
+// 时间字符串
+    String timeString = "2023-07-11 14:30:00";
+// 时间字符串转换为日期时间对象
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime dateTime = LocalDateTime.parse(timeString, formatter);
+// 日期时间对象转换为时间戳（秒级）
+    long timestamp1 = dateTime.toEpochSecond(ZoneOffset.UTC);
+    System.out.println("Timestamp (seconds): " + timestamp1);
+
+
+// 时间字符串
+    String timeString2= "2023-07-12 14:30:00";
+// 时间字符串转换为日期时间对象
+
+    LocalDateTime dateTime2 = LocalDateTime.parse(timeString2, formatter);
+// 日期时间对象转换为时间戳（秒级）
+    long timestamp2 = dateTime2.toEpochSecond(ZoneOffset.UTC);
+    System.out.println("Timestamp (seconds): " + timestamp2);
+
+
+    // 获取HashOperations对象
+    HashOperations<String, String, Object> hashOps = redisTemplate.opsForHash();
+    // 定义匹配模式
+    String pattern = "data";
+    // 获取所有符合模式的键值对
+    Collection<String> keys = redisCache.keys("*"+pattern+"*");
+    System.out.println(keys);
+
+    for (String key : keys) {
+        long time = redisCache.getCacheMapValue(key, "timestamp");
+        System.out.println(time);
+        if (time >= timestamp1 && time <= timestamp2) {
+            System.out.println("Key: " + key + ", Value: " + time);
+        }
+
+    }
+   return null;
+    }
+
+
+
 
 
 

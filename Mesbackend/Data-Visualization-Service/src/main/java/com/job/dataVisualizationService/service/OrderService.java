@@ -9,7 +9,9 @@ import com.job.common.pojo.Order;
  */
 public interface OrderService extends IService<Order> {
  OrderData preData();
- OrderData countData();
+ OrderData countData(OrderData order);
 
- OrderData classification();
+ OrderData classification(OrderData order);
+
+ OrderData countOneData(OrderData order);
 }

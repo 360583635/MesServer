@@ -1,5 +1,6 @@
 package com.job.orderService.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.job.common.pojo.Order;
 import com.job.orderService.common.result.Result;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/order")
+@CrossOrigin
 public class OrderController {
     @Autowired
     private OrderMapper orderMapper;
@@ -26,24 +28,28 @@ public class OrderController {
         if (order == null){
             return  Result.error("输入对象不能为空！");
         }else if (order.getOrderNumber() != null  && order.getExpectDate() != null && order.getProductId() !=null
-                && order.getType() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
+                && order.getTypeName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
                 && order.getRawName() !=null && order.getRawNum() !=null){
 
             order.setOrderDate(new Date());
             //TODO: 2023/7/8
             order.setAuditor(null);//获取当前登录用户
             order.setPriority(0);
-            order.setStatus(0);
+            order.setProductionStatus(0);
             //TODO: 2023/7/8
             order.setOrderPrice(null);
-            order.setDelete(0);
-            orderMapper.insert(order);
-            return Result.success("success");
+            order.setIsDelete(0);
+            int i = orderMapper.insert(order);
+            if (i>0)
+            {
+                return Result.success("success");
+            }else {
+                return  Result.error("error!");
+            }
         }
         else{
             return  Result.error("error!");
         }
-
 
     }
 
@@ -54,8 +60,8 @@ public class OrderController {
      */
     @GetMapping("/updateOrder/{orderId}")
     public Result<Order> updateOrder(@PathVariable String orderId){
-        QueryWrapper<Order> wrapper=new QueryWrapper<>();
-        wrapper.eq(orderId,orderId);
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         return Result.success(order,"success");
     }
@@ -67,11 +73,14 @@ public class OrderController {
      */
     @GetMapping("/saveUpdateOrder/{orderId}")
     public Result<Order> saveUpdateOrder(@PathVariable String orderId, Order order){
-        Integer status = order.getStatus();
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
+        Order oldOrder = orderMapper.selectOne(wrapper);
+        Integer status = oldOrder.getProductionStatus();
         if (status == 0){
-            QueryWrapper<Order> wrapper=new QueryWrapper<>();
-            wrapper.eq(orderId,orderId);
-            int i = orderMapper.update(order, wrapper);
+            LambdaQueryWrapper<Order> wrapper1=new LambdaQueryWrapper<>();
+            wrapper1.eq(Order::getOrderId,orderId);
+            int i = orderMapper.update(order, wrapper1);
             if (i>0){
                 return Result.success("success");
             }else {
@@ -99,8 +108,8 @@ public class OrderController {
      */
     @GetMapping("/selectOrderById/{orderId}")
     public Result<Order> selectOrderById(@PathVariable String orderId){
-        QueryWrapper<Order> wrapper=new QueryWrapper<>();
-        wrapper.eq(orderId,orderId);
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         return Result.success(order,"success");
     }
@@ -112,8 +121,8 @@ public class OrderController {
      */
     @GetMapping("/showOrderDetail/{orderId}")
     public Result<Order> showOrderDetail(@PathVariable String orderId){
-        QueryWrapper<Order> wrapper=new QueryWrapper<>();
-        wrapper.eq(orderId,orderId);
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         return Result.success(order,"success");
     }
@@ -125,14 +134,15 @@ public class OrderController {
      */
     @GetMapping("/deleteOrder/{orderId}")
     public Result<Order> deleteOrder(@PathVariable String orderId){
-        QueryWrapper<Order> wrapper=new QueryWrapper<>();
-        wrapper.eq(orderId,orderId);
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
-        Integer status = order.getStatus();
+        System.out.println(order);
+        Integer status = order.getProductionStatus();
         if (status == 0){
-            order.setDelete(1);
-            QueryWrapper<Order> wrapper1=new QueryWrapper<>();
-            wrapper1.eq(orderId,orderId);
+            order.setIsDelete(1);
+            LambdaQueryWrapper<Order> wrapper1=new LambdaQueryWrapper<>();
+            wrapper1.eq(Order::getOrderId,orderId);
             int i = orderMapper.update(order, wrapper1);
             if (i>0){
                 return Result.success("订单删除成功！");

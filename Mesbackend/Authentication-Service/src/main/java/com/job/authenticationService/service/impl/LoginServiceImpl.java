@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class  LoginServiceImpl implements LoginService {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -42,7 +42,6 @@ public class LoginServiceImpl implements LoginService {
         if (Objects.isNull(authenticate)) {
             throw new RuntimeException("登录失败");
         }
-
 
         //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
         LoginUser loignUser = (LoginUser) authenticate.getPrincipal();

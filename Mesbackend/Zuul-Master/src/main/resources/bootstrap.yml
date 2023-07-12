@@ -8,3 +8,6 @@ spring:
       server-addr: 116.205.138.253:8848
       config:
         file-extension: properties
+    #解决gateway 与 mvc 包冲突的问题
+  main:
+    web-application-type: reactive

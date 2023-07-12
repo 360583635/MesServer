@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.job.zuulMaster.mapper.MenusMapper">
+    <select id="selectPermsByUserId" resultType="java.lang.String">
+        SELECT
+            DISTINCT m.`url`
+        FROM
+            t_users_roles ur
+                LEFT JOIN `t_roles` r ON ur.`Role_id` = r.`Role_Id`
+                LEFT JOIN `t_menus_roles` rm ON ur.`Role_id` = rm.`Role_id`
+                LEFT JOIN `t_menus` m ON m.`Menu_Id` = rm.`Menu_id`
+        WHERE
+            ur.User_id = #{ID}
+    </select>
+</mapper>

@@ -41,6 +41,10 @@ public class SecurityConfig{
 
         http.authorizeHttpRequests((authz)->authz
                 .requestMatchers("/hello").permitAll()
+                .requestMatchers("/getRoles").permitAll()
+                .requestMatchers("/delRole/*").permitAll()
+                .requestMatchers("/addRole").permitAll()
+                .requestMatchers("/updateRole").permitAll()
                 .requestMatchers("/authen/login").anonymous()
                 .anyRequest().authenticated()
         );
