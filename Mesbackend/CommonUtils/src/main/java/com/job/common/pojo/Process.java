@@ -49,4 +49,7 @@ public class Process {
      * 修改人
      */
     private String updateUsername;
+
+    //删除状态
+    private int deleteStatus;
 }

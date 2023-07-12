@@ -1,4 +1,4 @@
-package com.job.dispatchservice.linemanager.controller;
+package com.job.dispatchService.linemanager.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -72,7 +72,6 @@ public class LineController {
         //ToDo 调用日志接口
         return Result.success(null,"修改成功");
     }
-
     /**
      * 删除流水线
      * @param lineId
@@ -114,6 +113,9 @@ public class LineController {
         }
         return Result.success(line,"查询成功");
     }
+
+
+
 
 
 }
