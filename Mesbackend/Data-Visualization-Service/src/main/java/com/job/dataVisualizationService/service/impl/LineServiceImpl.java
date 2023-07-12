@@ -8,5 +8,5 @@ import com.job.dataVisualizationService.service.LineService;
 /**
  * @Auther:Liang
  */
-public class LineImpl extends ServiceImpl<LineMapper, Line> implements LineService {
+public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements LineService {
 }

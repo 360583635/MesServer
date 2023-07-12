@@ -8,5 +8,5 @@ import com.job.dataVisualizationService.service.RolesService;
 /**
  * @Auther:Liang
  */
-public class RolesImpl extends ServiceImpl<RolesMapper, Roles> implements RolesService {
+public class RolesServiceImpl extends ServiceImpl<RolesMapper, Roles> implements RolesService {
 }

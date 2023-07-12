@@ -8,5 +8,5 @@ import com.job.dataVisualizationService.service.LogsService;
 /**
  * @Auther:Liang
  */
-public class LogsImpl extends ServiceImpl<LogsMapper, Logs> implements LogsService {
+public class LogsServiceImpl extends ServiceImpl<LogsMapper, Logs> implements LogsService {
 }

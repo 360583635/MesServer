@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,9 +26,9 @@ public class Order implements Serializable {
     private Integer typeName;
     private String productId;
     private Integer orderNumber;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date orderDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date expectDate;
     private String auditor;
     private Integer priority;// 0 无优先级；1 中等优先级； 2 高优先级
