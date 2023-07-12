@@ -33,7 +33,7 @@ public class OrderController {
         return Result.success(orderData,"success");
     }
 
-    @GetMapping("/countone")    //单个数量金额统计
+    @PostMapping("/countone")    //单个数量金额统计
     public Result<OrderData> getCountOne(@RequestBody OrderData order){
         OrderData orderData = orderService.countOneData(order);
         return Result.success(orderData,"success");
@@ -45,18 +45,6 @@ public class OrderController {
         return Result.success(orderData,"success");
 
     }
-
-    @GetMapping("/test")
-    public Object    test(){
-        Order order = new Order();
-        order.setOrderDate(new Date());
-        LambdaQueryWrapper<Order> q = new LambdaQueryWrapper<>();
-        q.le(Order::getOrderDate,"2023-06-30 16:44:18");
-        System.out.println(q.getTargetSql());
-        List<Order> list = orderService.list(q);
-        return list;
-    }
-
 
 
 }
