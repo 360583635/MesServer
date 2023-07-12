@@ -49,26 +49,5 @@ public class TaskSchedulerConfig implements SchedulingConfigurer {
     }
 
 
-    /**
-     * 异步任务使用的默认线程池
-     * @return
-     */
-    @Bean
-    public ThreadPoolTaskExecutor taskExecutor(){
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(20);
-        taskExecutor.setMaxPoolSize(20);
-        taskExecutor.setQueueCapacity(200);
-        taskExecutor.setKeepAliveSeconds(60);
-        taskExecutor.setThreadNamePrefix("自定义-");
-        taskExecutor.setAwaitTerminationSeconds(60);
-        //使用自定义拒绝策略,或者自带的几种拒绝策略
-        taskExecutor.setRejectedExecutionHandler((runable,threadPoolExecutor)->{
-            //TODO 自定义的拒绝策略
-            System.out.println("当前任务执行失败:"+runable);
-        });
-        return taskExecutor;
-    }
-
 
 }
