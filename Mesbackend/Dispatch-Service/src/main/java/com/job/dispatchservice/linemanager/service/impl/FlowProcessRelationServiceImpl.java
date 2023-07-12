@@ -84,12 +84,14 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
                 //下一道工序
                 relation.setNextProcessId(processVoList.get(i + 1).getValue());
                 relation.setNextProcess(processVoList.get(i + 1).getTitle());
+                relation.setProcessType("firstProcess");
             }else if (i + 1 >= processVoList.size()) {//末尾工序
                 //前一道工序
                 relation.setPerProcessId(processVoList.get(i - 1).getValue());
                 relation.setPerProcess(processVoList.get(i - 1).getTitle());
                 relation.setNextProcessId("");
                 relation.setNextProcess("");
+                relation.setProcessType("lastProcess");
             }else {
                 //前一道工序
                 relation.setPerProcessId(processVoList.get(i - 1).getValue());
