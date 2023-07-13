@@ -43,9 +43,12 @@ public class SecurityConfig{
                 .requestMatchers("/hello").permitAll()
                 .requestMatchers("/getRoles").permitAll()
                 .requestMatchers("/delRole/*").permitAll()
+                .requestMatchers("/delUser/*").permitAll()
                 .requestMatchers("/addRole").permitAll()
                 .requestMatchers("/updateRole").permitAll()
+                .requestMatchers("/addUser").permitAll()
                 .requestMatchers("/authen/login").anonymous()
+                .requestMatchers("/updateUser").permitAll()
                 .anyRequest().authenticated()
         );
 
