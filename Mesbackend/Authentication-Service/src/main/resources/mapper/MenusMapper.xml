@@ -6,10 +6,10 @@
             DISTINCT m.`permission`
         FROM
             t_users_roles ur
-                LEFT JOIN `t_roles` r ON ur.`Role_id` = r.`Role_Id`
-                LEFT JOIN `t_menus_roles` rm ON ur.`Role_id` = rm.`Role_id`
-                LEFT JOIN `t_menus` m ON m.`Menu_Id` = rm.`Menu_id`
+                LEFT JOIN `t_roles` r ON ur.`role_id` = r.`role_id`
+                LEFT JOIN `t_menus_roles` rm ON ur.`role_id` = rm.`role_id`
+                LEFT JOIN `t_menus` m ON m.`menu_id` = rm.`menu_id`
         WHERE
-            ur.User_id = #{ID}
+            ur.user_id = #{ID}
     </select>
 </mapper>

@@ -3,12 +3,11 @@ package com.job.dataVisualizationService.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.job.dataVisualizationService.mapper.OrderMapper;
 import com.job.dataVisualizationService.pojo.OrderData;
 import com.job.dataVisualizationService.service.OrderService;
 import com.job.common.pojo.Order;
-import org.apache.ibatis.javassist.expr.NewArray;
+import com.job.dataVisualizationService.utils.NowDM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
@@ -23,16 +22,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private OrderMapper orderMapper;
     @Override
     public OrderData preData() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        String dateString = sdf.format(date);
-        System.out.println("31:========="+dateString);
-        String dayString = dateString.substring(8,8+2);
-        String mmString = dateString.substring(5,5+2);
-        if(dateString.charAt(0) == '0')dayString = dateString.substring(1);
-        int day = Integer.parseInt(dayString);
-        if(mmString.charAt(0) == '0')mmString = mmString.substring(1);
-        int mm = Integer.parseInt(mmString);
+        //得到当前时候的天数
+        int day = NowDM.getNowDM()[0];
+        //得到当前时候的月份
+        int mm = NowDM.getNowDM()[1];
         int[] mPre = new int[]{mm%12+1,(mm+1)%12+1,(mm+2)%12+1,(mm+3)%12+1,(mm+4)%12+1};
         Calendar cEnd = Calendar.getInstance();
         Calendar cPre = Calendar.getInstance();
@@ -171,8 +164,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public OrderData classification(OrderData order) {
         OrderData orderData = new OrderData();
 
-        LambdaQueryWrapper<Order> q1 = new LambdaQueryWrapper<>();
-        q1.select(Order::getTypeName);
+        QueryWrapper<Order> q1 = new QueryWrapper<>();
+        q1.select("DISTINCT(product_name)");
         Long typeCount = orderMapper.selectCount(q1);
 
         String[] type = new String[Math.toIntExact(typeCount)];
@@ -180,17 +173,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         //sql语句
         QueryWrapper<Order> q = new QueryWrapper<>();
-        q.select("product_name","SUM(order_price*order_number)");
+        q.select("product_name","SUM(order_price*order_number) AS orderTotal");
         q.between("order_date",order.getStartTime(),order.getEndTime());
         q.groupBy("product_name");
         List<Order> orders = orderMapper.selectList(q);
+
+        System.out.println(orders);
         int i = 0;
         for (Order order1:orders
              ) {
             type[i] = order1.getProductName();
-            total[i] = (order1.getOrderPrice()*order1.getOrderNumber());
+            order1.getClass();
+            total[i] = order1.getOrderTotal();
             i++;
         }
+        System.out.println(type);
         orderData.setProductType(type);
         orderData.setTotal(total);
         return orderData;
@@ -198,6 +195,62 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public OrderData countOneData(OrderData order) {
-        return null;
+        System.out.println("productname="+order.getProductName());
+        System.out.println("DataNumber="+order.getDataNumber());
+        System.out.println("Separate="+order.getSeparate());
+        OrderData orderData = new OrderData();
+        //格式化时间日期
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String dateString = sdf.format(date);
+        //取年月
+        String dayString = dateString.substring(8,8+2);
+        String mmString = dateString.substring(5,5+2);
+        //月日消0
+        if(dateString.charAt(0) == '0')dayString = dateString.substring(1);
+        int day = Integer.parseInt(dayString);
+        if(mmString.charAt(0) == '0')mmString = mmString.substring(1);
+        int mm = Integer.parseInt(mmString);
+        //获取当前时间
+        //获得结束时间
+        Calendar endTime = Calendar.getInstance();
+        endTime.add(Calendar.DAY_OF_MONTH,-day);
+        Calendar preTime = Calendar.getInstance();
+        //获得开始时间
+        preTime.add(Calendar.DAY_OF_MONTH,-day);
+        preTime.add(Calendar.MONTH,-order.getSeparate());
+        //数量 金额 时间
+        int[] time = new int[order.getDataNumber()];
+        int[] count = new int[order.getDataNumber()];
+        int[] amount = new int[order.getDataNumber()];
+
+        for (int i = 0; i < order.getDataNumber(); i++) {
+            LambdaQueryWrapper<Order> q = new LambdaQueryWrapper<>();
+            q.le(Order::getOrderDate,endTime);
+            System.out.println("endTime="+endTime);
+            q.ge(Order::getOrderDate,preTime);
+            System.out.println("preTime="+preTime);
+            q.eq(Order::getProductName, order.getProductName());
+            System.out.println("productName="+order.getProductName());
+            long count1 = orderMapper.selectCount(q);
+
+            List<Order> orders = orderMapper.selectList(q);
+            System.out.println("orders="+orders);
+            time[i] = --mm;
+            count[i] = (int)count1;
+
+            int total = 0;
+            for (Order order2 :orders
+            ) {
+                total+=order2.getOrderNumber()*order2.getOrderPrice();
+            }
+            endTime.add(Calendar.MONTH,-order.getSeparate());
+            preTime.add(Calendar.MONTH,-order.getSeparate());
+            amount[i] = total;
+        }
+        orderData.setCount(count);
+        orderData.setTime(time);
+        orderData.setAmount(amount);
+        return orderData;
     }
 }

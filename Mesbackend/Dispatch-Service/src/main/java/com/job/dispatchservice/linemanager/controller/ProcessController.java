@@ -1,16 +1,20 @@
-package com.job.dispatchservice.linemanager.controller;
+package com.job.dispatchService.linemanager.controller;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Process;
 //import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 //import com.job.dispatchService.LineManager.pojo.TProcess;
+import com.job.dispatchservice.linemanager.request.ProcessPageReq;
 import com.job.dispatchservice.linemanager.service.FlowProcessRelationService;
 import com.job.dispatchservice.linemanager.service.ProcessService;
 import com.job.dispatchservice.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +35,17 @@ public class ProcessController {
     private FlowProcessRelationService processRelationService;
 
     /**
+     * 工序分页查询
+     * @param req
+     * @return
+     */
+    @PostMapping("/page")
+    public Result page(ProcessPageReq req){
+        IPage result = processService.page(req);
+        return Result.success(result,"查询成功");
+    }
+
+    /**
      * 修改工序
      * @param tProcess
      * @return
@@ -39,7 +54,7 @@ public class ProcessController {
     @ResponseBody
     public Result updateProcess(@RequestBody Process tProcess){
         //获得用户信息
-        String userinf="温帅";
+        String userinf="郭帅比";
         tProcess.setUpdateUsername(userinf);
         DateTime nowTime = DateUtil.date();
         tProcess.setUpdateTime(nowTime);
@@ -57,11 +72,11 @@ public class ProcessController {
     @ResponseBody
     public Result saveProcess(@RequestBody Process tProcess){
         //获得用户信息
-        String userinf="温帅";
+        String userinf="郭帅比";
         tProcess.setUpdateUsername(userinf);
         tProcess.setCreateUsername(userinf);
         DateTime nowTime = DateUtil.date();
-        tProcess.setCreateTime(nowTime);
+        tProcess.setUpdateTime(nowTime);
         processService.saveOrUpdate(tProcess);
         return Result.success();
     }
@@ -86,9 +101,16 @@ public class ProcessController {
             return Result.success();
         }
         return Result.failure("操作失败，请刷新页面重试");
-
     }
 
+    @PostMapping("/query/{procrssName}")
+    @ResponseBody
+    public Result<ProcessPageReq> query(@PathVariable("process") String procrssName,@RequestBody ProcessPageReq req){
+        LambdaQueryWrapper<Process> lambdaQueryWrapper=new LambdaQueryWrapper();
+        lambdaQueryWrapper.like(Process::getProcess,procrssName);
+        ProcessPageReq page = processService.page(req, lambdaQueryWrapper);
+        return Result.success(page,"查询成功");
+    }
     /**
      * 查询全部工序
      */
@@ -98,13 +120,5 @@ public class ProcessController {
         List<Process> list = processService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }
-
-
-    /**
-     * 查询工序
-     * 
-     */
-    // TODO: 2023/7/10  
-
 
 }

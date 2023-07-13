@@ -27,6 +27,40 @@ public class UserController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    /*
+    添加缓存数据分类
+*/
+    @RequestMapping("list")
+    public Result addList(){
+//        redisCache.setCacheMapValue("list","user","用户数据");
+
+        redisCache.addList("order:","订单管理");
+        Map<String,String> map=new HashMap<>();
+        map.put("key","order1");
+        map.put("user","zyx");
+        map.put("password","123456");
+        redisCache.setCacheMap("order:1",map);
+
+        Map<String,String> map1=new HashMap<>();
+        map.put("key","order2");
+        map.put("user","zyx");
+        map.put("password","123456");
+        redisCache.setCacheMap("order:2",map);
+
+        Collection<String> order = redisCache.keys("order"+"*");
+        System.out.println(order);
+
+        Map<String, Object> cacheMap = redisCache.getCacheMap("order:1");
+        System.out.println(cacheMap);
+        return null;
+
+
+    }
+
+
+
+//
+
     //    查找单个数据
     @RequestMapping("/select/{key}")
     public String findById(@PathVariable("key") String key){
@@ -62,6 +96,7 @@ public class UserController {
     }
 
         //    添加数据
+
     @RequestMapping("/add")
     public void add(){
         System.out.println(111);

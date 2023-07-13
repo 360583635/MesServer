@@ -13,47 +13,41 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName("t_flow")
 public class Flow {
-    /**
-     * 流程ID
-     */
+
+   // 流程ID
     private String id;
 
-    /**
-     * 流程
-     */
+
+    //流程
     private String flow;
 
-    /**
-     * 流程描述
-     */
+
+    //流程描述
     private String flowDesc;
 
-    /**
-     * 流程时序绘制
-     */
+
+    //流程时序绘制
     private String process;
 
-    /**
-     * 创建时间
-     */
+
+    //创建时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date createTime;
 
-    /**
-     * 创建人
-     */
+
+    //创建人
     private String createUsername;
 
-    /**
-     * 修改时间
-     */
+
+    //修改时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date updateTime;
 
-    /**
-     * 修改人
-     */
+    //修改人
     private String updateUsername;
+
+    //删除状态
+    private int deleteStatus;
 
     @Override
     public String toString() {

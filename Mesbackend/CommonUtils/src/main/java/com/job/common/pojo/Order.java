@@ -1,6 +1,7 @@
 package com.job.common.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -26,9 +27,9 @@ public class Order implements Serializable {
     private Integer typeName;
     private String productId;
     private Integer orderNumber;
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date orderDate;
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date expectDate;
     private String auditor;
     private Integer priority;// 0 无优先级；1 中等优先级； 2 高优先级
@@ -40,4 +41,7 @@ public class Order implements Serializable {
     private String customTel;
     private Integer isDelete;// 0 未删除；1 删除
     private String productName;
+    //统计订单总金额
+    @TableField(exist = false)
+    private Integer orderTotal;
 }

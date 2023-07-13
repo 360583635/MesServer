@@ -1,6 +1,7 @@
 package com.job.authenticationService.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.job.common.pojo.Users;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class LoginUser implements UserDetails {
  
-    private Users user;
+    private com.job.common.pojo.Users user;
     private List<String > permission;
 
     public LoginUser(Users users, List<String> permissionKeyList) {

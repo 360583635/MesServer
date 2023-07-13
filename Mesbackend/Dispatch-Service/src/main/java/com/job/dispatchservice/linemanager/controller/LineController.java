@@ -1,17 +1,18 @@
-package com.job.dispatchservice.linemanager.controller;
+package com.job.dispatchService.linemanager.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.Line;
 
+import com.job.common.pojo.Order;
 import com.job.common.result.Result;
+import com.job.dispatchservice.linemanager.request.LinePageReq;
 import com.job.dispatchservice.linemanager.service.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,6 +27,19 @@ public class LineController {
 
     @Autowired
     private LineService lineService;
+
+
+
+    /**
+     * 流水线分页查询
+     * @param req
+     * @return
+     */
+    @PostMapping
+    public Result page(LinePageReq req){
+        IPage result = lineService.page(req);
+        return Result.success(result,"查询成功");
+    }
 
     /**
      * 添加流水线
@@ -58,15 +72,13 @@ public class LineController {
         //ToDo 调用日志接口
         return Result.success(null,"修改成功");
     }
-
     /**
      * 删除流水线
      * @param lineId
      * @return
      */
-    @RequestMapping("/removeLine")
-    @ResponseBody
-    public Result removeLine(String lineId){
+    @GetMapping("/removeLine/{lineId}")
+    public Result removeLine(@PathVariable String lineId){
         Line byId = lineService.getById(lineId);
         if(!"0".equals(byId.getStatus())){
             return Result.error("流水线未关闭，无法删除");
@@ -88,6 +100,19 @@ public class LineController {
         return Result.success(list,"查询成功");
     }
 
+    /**
+     * 根据id查询流水线
+     */
+    @GetMapping("/selectLineById/{id}")
+    public Result selectLineById(@PathVariable("id") String id){
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(Line::getId,id);
+        Line line = lineService.getOne(queryWrapper);
+        if(line==null){
+            return Result.error("查询失败");
+        }
+        return Result.success(line,"查询成功");
+    }
 
 
 
