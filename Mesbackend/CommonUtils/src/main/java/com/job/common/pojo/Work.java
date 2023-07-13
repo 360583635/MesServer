@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @TableName("t_work")
 @AllArgsConstructor
@@ -19,6 +21,8 @@ public class Work {
     private Integer wProdNums;
     private String wCreateTime;
     private String WErrorTime;
+    //完成的时间
+    private Date successTime;
     private String wNeedTime;
     private String wEquipmentId;
 }

@@ -49,4 +49,10 @@ public class Process {
      * 修改人
      */
     private String updateUsername;
+
+    //完成工序数量
+    private Integer successCount;
+
+    //异常次数
+    private Integer exceptionCount;
 }
