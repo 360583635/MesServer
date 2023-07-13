@@ -50,6 +50,6 @@ public class Process {
      */
     private String updateUsername;
 
-    //删除状态
-    private int deleteStatus;
+    //删除状态 0: 表示删除 1: 表示未删除
+    private int isDelete;
 }

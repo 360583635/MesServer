@@ -1,7 +1,9 @@
 package com.job.dispatchservice.linemanager.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.job.common.pojo.Flow;
+import com.job.common.pojo.FlowProcessRelation;
 import com.job.dispatchservice.linemanager.dto.FlowDto;
 import com.job.dispatchservice.linemanager.service.FlowProcessRelationService;
 import com.job.dispatchservice.linemanager.service.FlowService;
@@ -96,12 +98,20 @@ public class FlowProcessRelationController {
     @ResponseBody
     public Result deleteByTableNameId(FlowDto req) throws Exception {
         //先删除流程头表
-        flowService.removeById(req.getId());
+        LambdaQueryWrapper<Flow> queryWrapper1 = new LambdaQueryWrapper<>();
+        queryWrapper1
+                .eq(Flow::getIsDelete,1)
+                .eq(Flow::getId,req.getId());
+        Flow flowById = flowService.getOne(queryWrapper1);
+        flowById.setIsDelete(0);
         //删除流程关系表
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("flow_id", req.getId());
-        flowProcessRelationService.remove(queryWrapper);
-        return Result.success();
+        LambdaQueryWrapper<FlowProcessRelation> queryWrapper2 = new LambdaQueryWrapper();
+        queryWrapper2
+                .eq(FlowProcessRelation::getIsDelete,req.getIsDelete())
+                .eq(FlowProcessRelation::getFlowId, req.getId());
+        FlowProcessRelation flowProcessRelation = flowProcessRelationService.getOne(queryWrapper2);
+        flowProcessRelation.setIsDelete(0);
+        return Result.success(null,"删除成功");
     }
 
 }

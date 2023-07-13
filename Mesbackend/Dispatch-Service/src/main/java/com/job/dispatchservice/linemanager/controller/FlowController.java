@@ -48,4 +48,6 @@ public class FlowController {
         List<Flow> list = flowService.list(queryWrapper);
         return Result.success(list);
     }
+
+
 }

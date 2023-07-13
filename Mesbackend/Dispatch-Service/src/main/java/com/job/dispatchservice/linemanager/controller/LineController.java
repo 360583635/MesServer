@@ -1,4 +1,4 @@
-package com.job.dispatchService.linemanager.controller;
+package com.job.dispatchservice.linemanager.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -79,12 +79,15 @@ public class LineController {
      */
     @GetMapping("/removeLine/{lineId}")
     public Result removeLine(@PathVariable String lineId){
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(Line::getIsDelete,1)
+                .eq(Line::getId,lineId);
         Line byId = lineService.getById(lineId);
         if(!"0".equals(byId.getStatus())){
             return Result.error("流水线未关闭，无法删除");
         }
-        lineService.removeById(lineId);
-        //todo 记入日志
+        byId.setIsDelete(0);
         return Result.success(null,"删除成功");
     }
 

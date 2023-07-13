@@ -46,6 +46,7 @@ public class LineTaskController {
     @Autowired
     private WorkService workService;
 
+
     @Async
     public void lineInstance(Line line) throws InterruptedException{
         // TODO: 2023/7/10 流水线实列执行流程
@@ -62,17 +63,20 @@ public class LineTaskController {
             orderQueue.remove(order);
             //查询该订单是否有工单关联
             LambdaQueryWrapper<Work> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(Work::getWOrderId,order.getOrderId());
+            queryWrapper
+                    .eq(Work::getWOrderId,order.getOrderId());
             Work work = workService.getOne(queryWrapper);
-
+            
             flowId = line.getLineFlowId();
             if(work!=null){
                 //该订单曾经被执行过
+                // TODO: 2023/7/13 如何接取该订单异常的那个工序 
                 firstProcessId = work.getWProcessId();
             }else{
                 //该订单未被执行
                 LambdaQueryWrapper<FlowProcessRelation> queryWrapper1 = new LambdaQueryWrapper<>();
                 queryWrapper1
+                        .eq(FlowProcessRelation::getIsDelete,1)
                         .eq(FlowProcessRelation::getFlowId,flowId)
                         .eq(FlowProcessRelation::getSortNum,"0");
                 FlowProcessRelation flowProcessRelation = flowProcessRelationService.getOne(queryWrapper1);
@@ -81,6 +85,7 @@ public class LineTaskController {
             //获取头工序
             LambdaQueryWrapper<FlowProcessRelation> queryWrapper2 = new LambdaQueryWrapper<>();
             queryWrapper2
+                    .eq(FlowProcessRelation::getIsDelete,1)
                     .eq(FlowProcessRelation::getProcessId,firstProcessId)
                     .eq(FlowProcessRelation::getFlowId,flowId);
             firstRelation = flowProcessRelationService.getOne(queryWrapper2);
@@ -102,7 +107,10 @@ public class LineTaskController {
                 }else if("ok".equals(workingStatus)){
                     //如果工单运行成功，获取下一个工序
                     LambdaQueryWrapper<FlowProcessRelation> queryWrapper3 = new LambdaQueryWrapper<>();
-                    queryWrapper3.eq(FlowProcessRelation::getProcessId,relation.getNextProcessId()).eq(FlowProcessRelation::getFlowId,flowId);
+                    queryWrapper3
+                            .eq(FlowProcessRelation::getIsDelete,1)
+                            .eq(FlowProcessRelation::getProcessId,relation.getNextProcessId())
+                            .eq(FlowProcessRelation::getFlowId,flowId);
                     relation = flowProcessRelationService.getOne(queryWrapper3);
                 }
             }
@@ -129,11 +137,14 @@ public class LineTaskController {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单
 
     }
-
-    @Scheduled(initialDelay = 0,fixedDelay = 10000)
+    
+    @Scheduled(initialDelay = 0,fixedDelay = 5000)
+    @Async
     public void lineTask() throws InterruptedException {
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Line::getStatus,"0");
+        queryWrapper
+                .eq(Line::getIsDelete,1)
+                .eq(Line::getStatus,"0");
         List<Line> list = lineService.list(queryWrapper);
         if(list.isEmpty()==false&&list.size()>0){
             for(Line line : list){

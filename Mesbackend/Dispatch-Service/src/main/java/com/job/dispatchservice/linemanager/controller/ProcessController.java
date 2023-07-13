@@ -1,4 +1,4 @@
-package com.job.dispatchService.linemanager.controller;
+package com.job.dispatchservice.linemanager.controller;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -96,9 +96,11 @@ public class ProcessController {
         if(count>0){
             return Result.failure("请先删除与本工序有关的流程");
         }
+        Process byId = processService.getById(processId);
+        byId.setIsDelete(0);
         boolean b = processService.removeById(processId);
         if(b){
-            return Result.success();
+            return Result.success(null,"删除失败");
         }
         return Result.failure("操作失败，请刷新页面重试");
     }
