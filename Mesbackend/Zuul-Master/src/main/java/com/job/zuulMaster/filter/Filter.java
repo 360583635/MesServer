@@ -57,14 +57,15 @@ public class Filter implements GlobalFilter , Ordered {
                     throw new RuntimeException("token非法");
                 }
                 System.out.println(userid);
-                Long id= Long.valueOf(userid);
                 //更具id查找到Usres,然后看Usesde id 是否在Blacklist中，在的化直接返回。
                 List<String > blackList=querys.query();
-                if (blackList.contains(id)){
+                System.out.println(blackList);
+                if (blackList.contains(userid)){
+                    System.out.println("不给访问");
                     return exchange.getResponse().setComplete();
                 }else {
 
-                    List<String > urllist= menusMapper.selectPermsByUserId(id);
+                    List<String > urllist= menusMapper.selectPermsByUserId(userid);
                     for (String s : urllist) {
                         if (path.equals(s)){
                             System.out.println("hjsgfh");

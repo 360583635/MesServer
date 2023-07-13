@@ -17,7 +17,7 @@ public class Users implements Serializable {
     private static final long serialVersionUID = -40356785423868312L;
 
     @TableId
-    private Long id;
+    private Long  id;
 
     private String name;
     private String salt;
@@ -34,5 +34,6 @@ public class Users implements Serializable {
     private int state;
     private Date birth;
     private int Is_delete;
+    private int is_black;
 }
 

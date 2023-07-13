@@ -2,10 +2,10 @@ package com.job.authenticationService.service.impl;
 
 import com.job.authenticationService.pojo.LoginUser;
 import com.job.authenticationService.pojo.ResponseResult;
-import com.job.authenticationService.pojo.Users;
 import com.job.authenticationService.service.LoginService;
 import com.job.authenticationService.utils.JwtUtil;
 import com.job.authenticationService.utils.RedisCache;
+import com.job.common.pojo.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +33,7 @@ public class  LoginServiceImpl implements LoginService {
         System.out.println("12345");
         //AuthenticationManager authenticate进行用户认真
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(users.getName(), users.getPassword());
+        System.out.println(authenticationToken);
         System.out.println("5678");
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
        // Authentication authenticate=authenticationManager.authenticate(authenticationToken);
@@ -61,7 +62,7 @@ public class  LoginServiceImpl implements LoginService {
     public ResponseResult logout() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Long userid = loginUser.getUser().getId();
+        String  userid = loginUser.getUser().getId();
         redisCache.deleteObject("login"+userid);
         return new ResponseResult(200,"退出成功");
     }
