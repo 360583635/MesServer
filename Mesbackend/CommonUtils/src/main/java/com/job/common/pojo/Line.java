@@ -35,4 +35,7 @@ public class Line {
      *
      */
     private String orderCount;
+
+    //异常次数
+    private Integer exceptionCount;
 }
