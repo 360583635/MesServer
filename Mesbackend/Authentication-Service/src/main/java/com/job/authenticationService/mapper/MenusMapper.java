@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 @Mapper
 public interface MenusMapper extends BaseMapper<Menus> {
-    List<String> selectPermsByUserId(Long id);
+    List<String> selectPermsByUserId(String  id);
 
 }

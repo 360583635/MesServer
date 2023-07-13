@@ -7,6 +7,7 @@ import com.job.dataVisualizationService.mapper.OrderMapper;
 import com.job.dataVisualizationService.pojo.OrderData;
 import com.job.dataVisualizationService.service.OrderService;
 import com.job.common.pojo.Order;
+import com.job.dataVisualizationService.utils.NowDM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
@@ -21,15 +22,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private OrderMapper orderMapper;
     @Override
     public OrderData preData() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        String dateString = sdf.format(date);
-        String dayString = dateString.substring(8,8+2);
-        String mmString = dateString.substring(5,5+2);
-        if(dateString.charAt(0) == '0')dayString = dateString.substring(1);
-        int day = Integer.parseInt(dayString);
-        if(mmString.charAt(0) == '0')mmString = mmString.substring(1);
-        int mm = Integer.parseInt(mmString);
+        //得到当前时候的天数
+        int day = NowDM.getNowDM()[0];
+        //得到当前时候的月份
+        int mm = NowDM.getNowDM()[1];
         int[] mPre = new int[]{mm%12+1,(mm+1)%12+1,(mm+2)%12+1,(mm+3)%12+1,(mm+4)%12+1};
         Calendar cEnd = Calendar.getInstance();
         Calendar cPre = Calendar.getInstance();

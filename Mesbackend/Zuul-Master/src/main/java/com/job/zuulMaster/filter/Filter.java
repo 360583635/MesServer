@@ -4,6 +4,7 @@ package com.job.zuulMaster.filter;
 //import com.job.authenticationService.utils.JwtUtil;
 
 //import com.job.zuulMaster.redis.RedisCache;
+import com.job.zuulMaster.utils.Query;
 import com.job.zuulMaster.mapper.MenusMapper;
 import com.job.zuulMaster.utils.JwtUtil;
 import com.mysql.cj.util.StringUtils;
@@ -17,11 +18,12 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
 import java.util.List;
 
 @Component
 public class Filter implements GlobalFilter , Ordered {
+    @Autowired
+    private Query querys;
 
     @Autowired
     private MenusMapper menusMapper;
@@ -55,22 +57,32 @@ public class Filter implements GlobalFilter , Ordered {
                     throw new RuntimeException("token非法");
                 }
                 System.out.println(userid);
-                Long id= Long.valueOf(userid);
-                List<String > urllist= menusMapper.selectPermsByUserId(id);
-                for (String s : urllist) {
-                    if (path.equals(s)){
-                        return chain.filter(exchange);
+                //更具id查找到Usres,然后看Usesde id 是否在Blacklist中，在的化直接返回。
+                List<String > blackList=querys.query();
+                System.out.println(blackList);
+                if (blackList.contains(userid)){
+                    System.out.println("不给访问");
+                    return exchange.getResponse().setComplete();
+                }else {
+
+                    List<String > urllist= menusMapper.selectPermsByUserId(userid);
+                    for (String s : urllist) {
+                        if (path.equals(s)){
+                            System.out.println("hjsgfh");
+                            return chain.filter(exchange);
+                        }
                     }
+                    return exchange.getResponse().setComplete();
                 }
-                return exchange.getResponse().setComplete();
 
             }
 
         }
     }
-
     @Override
     public int getOrder() {
         return 0;
     }
+
+
 }
