@@ -33,4 +33,5 @@ public class Users implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date Birth;
     private Integer isDelete;
+    private Integer isBlack;
 }
