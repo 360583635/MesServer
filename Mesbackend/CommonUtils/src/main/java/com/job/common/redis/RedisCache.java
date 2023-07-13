@@ -18,6 +18,7 @@ public class RedisCache
     @Autowired
     public RedisTemplate redisTemplate;
 
+
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *s
@@ -189,6 +190,12 @@ public class RedisCache
     {
         redisTemplate.opsForHash().put(key, hKey, value);
     }
+
+//    添加数据分类
+    public <T> void addList(final String hKey, final T value){
+        redisTemplate.opsForHash().put("list",hKey,value);
+    }
+
 
     /**
      * 获取Hash中的数据

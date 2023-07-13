@@ -61,9 +61,12 @@ public class FlowProcessRelation {
     private int sortNum;
 
     /**
-     * 工序类型 (首道工序firstOper;最后一道工序lastOper)
+     * 工序类型 (首道工序firstProcess;最后一道工序lastProcess)
      */
-    private String operType;
+    private String processType;
+
+    //删除状态
+    private int deleteStatus;
 
     @Override
     public String toString() {
@@ -78,7 +81,7 @@ public class FlowProcessRelation {
                 ", nextProcess='" + nextProcess + '\'' +
                 ", nextProcessId='" + nextProcessId + '\'' +
                 ", sortNum='" + sortNum + '\'' +
-                ", operType='" + operType + '\'' +
+                ", processType='" + processType + '\'' +
                 '}';
     }
 }

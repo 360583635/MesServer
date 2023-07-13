@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController {
-    @RequestMapping("/authen/hello")
+    @RequestMapping("/hello")
     //@PreAuthorize("hasAuthority('login')")
     public String hello(){
         System.out.println("hhhh");

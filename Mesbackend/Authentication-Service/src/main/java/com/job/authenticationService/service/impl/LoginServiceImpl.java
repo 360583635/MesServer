@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class LoginServiceImpl implements LoginService {
+public class  LoginServiceImpl implements LoginService {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
