@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface UsersMapper extends BaseMapper<Users> {
-    //Users selectOne(LambdaQueryWrapper<Users> queryWrapper);
+    Users selectOne(LambdaQueryWrapper<Users> queryWrapper);
 }
 
