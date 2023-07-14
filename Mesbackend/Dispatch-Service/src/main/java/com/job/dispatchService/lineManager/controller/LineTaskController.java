@@ -52,7 +52,7 @@ public class LineTaskController {
         Thread.currentThread().setName(lineName+lineId);
         //订单队列
         List<Order> orderQueue = new LinkedList<>();
-        if(orderQueue.isEmpty()==false&&line.getStatus().equals("0")){
+        if(orderQueue.isEmpty()==false&&line.getLineStatus().equals("0")){
             Order order = orderQueue.get(0);
             orderQueue.remove(order);
             //查询该订单是否有工单关联
@@ -86,7 +86,7 @@ public class LineTaskController {
             if(firstRelation!=null){
                 //将流水线状态修改为繁忙
                 order.setProductionStatus(2);
-                line.setStatus("2");
+                line.setLineStatus("2");
             }
             FlowProcessRelation relation = firstRelation;
             //遍历工序开始生产
@@ -97,7 +97,7 @@ public class LineTaskController {
                 if("error".equals(workingStatus)){
                     //如果工单运行失败
                     order.setProductionStatus(3);
-                    line.setStatus("3");
+                    line.setLineStatus("3");
                 }else if("ok".equals(workingStatus)){
                     //如果工单运行成功，获取下一个工序
                     LambdaQueryWrapper<FlowProcessRelation> queryWrapper3 = new LambdaQueryWrapper<>();
@@ -119,7 +119,7 @@ public class LineTaskController {
                }else if("ok".equals(workingStatus)){
                    //如果工单运行成功
                    order.setProductionStatus(4);
-                   line.setStatus("0");
+                   line.setLineStatus("0");
                }
            }
         }
@@ -138,7 +138,7 @@ public class LineTaskController {
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
-                .eq(Line::getStatus,"0");
+                .eq(Line::getLineStatus,"0");
         List<Line> list = lineService.list(queryWrapper);
         if(list.isEmpty()==false&&list.size()>0){
             for(Line line : list){

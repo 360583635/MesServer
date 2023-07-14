@@ -49,7 +49,7 @@ public class LineController {
 
         String user="wen"; //获取用户信息
         pipeLine.setOrderCount("0");
-        pipeLine.setStatus("0"); //设置状态为空闲
+        pipeLine.setLineStatus("0"); //设置状态为空闲
         lineService.save(pipeLine);
         //ToDo 调用日志接口
         return Result.success(null,"添加成功");
@@ -81,7 +81,7 @@ public class LineController {
                 .eq(Line::getIsDelete,1)
                 .eq(Line::getId,lineId);
         Line byId = lineService.getById(lineId);
-        if(!"0".equals(byId.getStatus())){
+        if(!"0".equals(byId.getLineStatus())){
             return Result.error("流水线未关闭，无法删除");
         }
         byId.setIsDelete(0);
