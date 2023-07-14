@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @SuppressWarnings("all")
-//@RequestMapping("/work")
+@RequestMapping("/dispatch")
 public class WorkController {
 
     @Autowired
@@ -64,7 +64,7 @@ public class WorkController {
 
     //前端网页数据呈现
     @GetMapping("/search")
-    public Map searchByDatetime(@RequestParam("dateTime") String dateTime){
+    public Map searchByDatetime(@RequestParam(value = "dateTime",required = false) String dateTime){
 
         Map map = new HashMap();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -86,6 +86,7 @@ public class WorkController {
             List pagesList = this.forEachWorks(works);
             map.put("pagesList", pagesList);
         }
+        System.out.println(dateTime == null);
 
         return map;
     }

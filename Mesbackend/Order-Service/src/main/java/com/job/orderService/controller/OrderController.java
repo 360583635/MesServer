@@ -2,9 +2,11 @@ package com.job.orderService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Order;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.OrderMapper;
+import com.job.orderService.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import java.util.List;
 public class OrderController {
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 创建订单
@@ -40,6 +44,7 @@ public class OrderController {
             order.setOrderPrice(null);
             order.setIsDelete(0);
             int i = orderMapper.insert(order);
+
             if (i>0)
             {
                 return Result.success("success");
@@ -71,17 +76,14 @@ public class OrderController {
      * @param order
      * @return
      */
-    @GetMapping("/saveUpdateOrder/{orderId}")
-    public Result<Order> saveUpdateOrder(@PathVariable String orderId, Order order){
-        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-        wrapper.eq(Order::getOrderId,orderId);
-        Order oldOrder = orderMapper.selectOne(wrapper);
+    @GetMapping("/saveUpdateOrder")
+    public Result<Order> saveUpdateOrder(Order order){
+        Order oldOrder = orderService.getById(order.getOrderId());
         Integer status = oldOrder.getProductionStatus();
-        if (status == 0){
-            LambdaQueryWrapper<Order> wrapper1=new LambdaQueryWrapper<>();
-            wrapper1.eq(Order::getOrderId,orderId);
-            int i = orderMapper.update(order, wrapper1);
-            if (i>0){
+        if ("0".equals(status.toString())){
+            System.out.println(order);
+            boolean b = orderService.updateById(order);
+            if (b){
                 return Result.success("success");
             }else {
                 return Result.error("error:保存失败!");
