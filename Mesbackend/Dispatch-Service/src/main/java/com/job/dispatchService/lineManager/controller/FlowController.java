@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.Flow;
 import com.job.common.result.Result;
-import com.job.dispatchService.lineManager.request.FlowPageReq;
-import com.job.dispatchService.lineManager.service.FlowService;
+import com.job.dispatchservice.linemanager.request.FlowPageReq;
+import com.job.dispatchservice.linemanager.service.FlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -47,6 +48,4 @@ public class FlowController {
         List<Flow> list = flowService.list(queryWrapper);
         return Result.success(list);
     }
-
-
 }

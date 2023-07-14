@@ -1,4 +1,4 @@
-package com.job.dispatchService.lineManager.vo;
+package com.job.dispatchservice.linemanager.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
