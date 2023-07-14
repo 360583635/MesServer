@@ -1,27 +1,22 @@
-package com.job.dispatchservice.linemanager.controller;
+package com.job.dispatchService.lineManager.controller;
 
-import cn.hutool.core.util.BooleanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Order;
 import com.job.common.pojo.Work;
-import com.job.dispatchservice.linemanager.service.FlowProcessRelationService;
+import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
+import com.job.dispatchService.lineManager.service.LineService;
+
 import com.job.dispatchservice.linemanager.service.FlowService;
-import com.job.dispatchservice.linemanager.service.LineService;
 import com.job.dispatchservice.work.controller.WorkController;
 import com.job.dispatchservice.work.service.WorkService;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 
-import javax.sound.sampled.BooleanControl;
-import java.time.LocalTime;
 import java.util.LinkedList;
 import java.util.List;
 
