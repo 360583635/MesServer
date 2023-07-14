@@ -49,6 +49,8 @@ public class SecurityConfig{
                 .requestMatchers("/addUser").permitAll()
                 .requestMatchers("/authen/login").anonymous()
                 .requestMatchers("/updateUser").permitAll()
+                .requestMatchers("/update/detail").permitAll()
+                .requestMatchers("/authen/menus/**").permitAll()
                 .anyRequest().authenticated()
         );
 

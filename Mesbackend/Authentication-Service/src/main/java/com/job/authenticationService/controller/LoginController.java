@@ -3,7 +3,9 @@ package com.job.authenticationService.controller;
 import com.job.authenticationService.pojo.ResponseResult;
 import com.job.authenticationService.service.LoginService;
 import com.job.common.pojo.Users;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +32,6 @@ public class LoginController {
     //退出登录
     @RequestMapping("/logout")
     public ResponseResult logout(){
-
         return loginService.logout();
 
     }

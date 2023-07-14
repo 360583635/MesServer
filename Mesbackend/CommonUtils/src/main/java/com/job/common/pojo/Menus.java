@@ -1,5 +1,6 @@
 package com.job.common.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -13,19 +14,20 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Menus {
-    private String MenuID;
-    private String Name;
+    @TableId(value ="menu_id")
+    private String menuID;
+    private String name;
     private String url;
-    private Integer Type;
-    private Integer Sort;
-    private String Remark;
-    private String ParentId;
+    private Integer type;
+    private Integer sort;
+    private String remark;
+    private String parentId;
     private String permission;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date CreateTime;
-    private String CreateUser;
+    private Date createTime;
+    private String createUser;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date UpdateTime;
-    private String UpdateUser;
-    private Integer Is_delete;
+    private Date updateTime;
+    private String updateUser;
+    private Integer is_delete;
 }
