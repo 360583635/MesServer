@@ -8,6 +8,7 @@ import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -178,7 +179,9 @@ public class OrderController {
      * @return
      */
     @GetMapping("/handOrder/{orderId}")
+    @Scheduled(cron = "0 0/5 * ? * ?")
     public Result<Order> handOrder(@PathVariable String orderId){
+
         return Result.success(new Order(),"success");
     }
 

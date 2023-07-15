@@ -2,8 +2,10 @@ package com.job.orderService.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.job.common.pojo.Line;
 import com.job.common.pojo.Order;
 import com.job.orderService.common.result.Result;
+import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Autowired
     private OrderMapper orderMapper;
-
+    @Autowired
+    private LineMapper lineMapper;
 
     /**
      * 创建订单
@@ -143,5 +146,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return Result.error("该状态下的订单无法删除！");
 
         }
+    }
+
+    @Override
+    public Result<Order> handOrder(String orderId) {
+        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getOrderId,orderId);
+        Order order = orderMapper.selectOne(wrapper);
+        Integer status=order.getProductionStatus();
+        String productId = order.getProductId();
+        if (status==0){
+            LambdaQueryWrapper<Line> wrapper1=new LambdaQueryWrapper<>();
+//            wrapper.eq(Line::getLine,productId);
+//            Line line = lineMapper.selectOne(wrapper1);
+
+        }
+        return null;
     }
 }
