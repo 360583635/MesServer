@@ -105,6 +105,7 @@ public class LineTaskController {
                         //如果工单运行失败
                         order.setProductionStatus(3);
                         line.setLineStatus("3");
+                        line.setExceptionCount(line.getExceptionCount()+1);
                         // TODO: 2023/7/15 流水线状态为异常后，实时监控工单异常处理信息
                     } else if ("ok".equals(workingStatus)) {
                         //如果工单运行成功，获取下一个工序

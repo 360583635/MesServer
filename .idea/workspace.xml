@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="347afc61-fb26-4c42-88b8-c41c3f1f936f" name="变更" comment="DispatchService">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/CommonUtils_1_0_SNAPSHOT.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_classic_1_4_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__ch_qos_logback_logback_core_1_4_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__cn_hutool_hutool_captcha_5_3_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__cn_hutool_hutool_core_5_3_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_cloud_spring_cloud_alibaba_commons_2022_0_0_0_RC2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_cloud_spring_cloud_starter_alibaba_nacos_config_2022_0_0_0_RC2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_cloud_spring_cloud_starter_alibaba_nacos_discovery_2022_0_0_0_RC2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_druid_1_1_20.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_druid_1_1_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_druid_spring_boot_starter_1_1_20.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_druid_spring_boot_starter_1_1_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_fastjson2_fastjson2_2_0_11.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_fastjson2_fastjson2_extension_2_0_11.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_fastjson_1_2_33.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_fastjson_1_2_54.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_fastjson_2_0_11.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_nacos_nacos_auth_plugin_2_2_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_nacos_nacos_client_2_2_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_nacos_nacos_encryption_plugin_2_2_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_alibaba_spring_spring_context_support_1_0_11.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_baomidou_mybatis_plus_3_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_baomidou_mybatis_plus_annotation_3_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_baomidou_mybatis_plus_boot_starter_3_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_baomidou_mybatis_plus_core_3_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_baomidou_mybatis_plus_extension_3_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_classmate_1_5_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_15_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_15_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_15_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jdk8_2_15_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jsr310_2_15_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_parameter_names_2_15_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_github_jsqlparser_jsqlparser_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_protobuf_protobuf_java_3_11_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_jayway_jsonpath_json_path_2_8_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_xml_bind_jaxb_core_2_3_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_xml_bind_jaxb_impl_2_3_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_vaadin_external_google_android_json_0_0_20131108_vaadin1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_zaxxer_HikariCP_4_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_zaxxer_HikariCP_5_0_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_15.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_fileupload_commons_fileupload_1_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_github_openfeign_feign_core_12_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_github_openfeign_feign_slf4j_12_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_github_openfeign_form_feign_form_3_8_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_github_openfeign_form_feign_form_spring_3_8_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_0_9_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_lettuce_lettuce_core_6_2_4_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_micrometer_micrometer_commons_1_11_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_micrometer_micrometer_core_1_11_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_micrometer_micrometer_observation_1_11_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_buffer_4_1_91_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_buffer_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_codec_4_1_91_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_codec_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_codec_dns_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_codec_http2_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_codec_http_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_codec_socks_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_common_4_1_91_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_common_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_handler_4_1_91_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_handler_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_handler_proxy_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_resolver_4_1_91_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_resolver_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_resolver_dns_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_resolver_dns_classes_macos_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_resolver_dns_native_macos_osx_x86_64_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_transport_4_1_91_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_transport_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_transport_classes_epoll_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_transport_native_epoll_linux_x86_64_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_transport_native_unix_common_4_1_91_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_netty_netty_transport_native_unix_common_4_1_92_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_projectreactor_addons_reactor_extra_3_5_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_projectreactor_netty_reactor_netty_core_1_1_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_projectreactor_netty_reactor_netty_http_1_1_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_projectreactor_reactor_core_3_4_29.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_projectreactor_reactor_core_3_5_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_prometheus_simpleclient_0_16_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_prometheus_simpleclient_tracer_common_0_16_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_prometheus_simpleclient_tracer_otel_0_16_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_prometheus_simpleclient_tracer_otel_agent_0_16_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_activation_jakarta_activation_api_2_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_annotation_jakarta_annotation_api_2_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_validation_jakarta_validation_api_3_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__jakarta_xml_bind_jakarta_xml_bind_api_4_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_activation_1_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_bind_jaxb_api_2_3_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_13_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__mysql_mysql_connector_java_8_0_28.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_bytebuddy_byte_buddy_1_14_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_bytebuddy_byte_buddy_agent_1_14_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_minidev_accessors_smart_2_4_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_minidev_json_smart_2_4_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_pool2_2_11_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpasyncclient_4_1_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_5_13.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_4_16.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_nio_4_4_16.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_20_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_logging_log4j_log4j_to_slf4j_2_20_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_core_10_1_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_el_10_1_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_websocket_10_1_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apiguardian_apiguardian_api_1_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_aspectj_aspectjweaver_1_9_19.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_assertj_assertj_core_3_24_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_bouncycastle_bcpkix_jdk15on_1_69.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_bouncycastle_bcprov_jdk15on_1_69.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_bouncycastle_bcutil_jdk15on_1_69.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hdrhistogram_HdrHistogram_2_1_12.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hibernate_validator_hibernate_validator_8_0_0_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jboss_logging_jboss_logging_3_5_0_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_5_9_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_api_5_9_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_engine_5_9_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_params_5_9_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_commons_1_9_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_engine_1_9_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_latencyutils_LatencyUtils_2_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mockito_mockito_core_4_8_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mockito_mockito_junit_jupiter_4_8_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mybatis_mybatis_3_5_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mybatis_mybatis_spring_2_0_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_objenesis_objenesis_3_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_opentest4j_opentest4j_1_2_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_9_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_projectlombok_lombok_1_18_26.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_reactivestreams_reactive_streams_1_0_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_skyscreamer_jsonassert_1_5_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_2_0_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_2_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_2_0_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_autoconfigure_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_actuator_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_redis_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_2_5_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_reactor_netty_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_security_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_validation_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_webflux_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_commons_4_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_context_4_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_gateway_server_4_0_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_openfeign_core_4_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_4_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_bootstrap_4_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_gateway_4_0_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_openfeign_4_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_data_spring_data_commons_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_data_spring_data_keyvalue_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_data_spring_data_redis_3_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_retry_spring_retry_2_0_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_config_6_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_core_6_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_crypto_6_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_rsa_1_0_11_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_web_6_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_aop_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_beans_5_3_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_beans_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_5_3_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_support_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_core_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_expression_5_3_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_expression_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_jcl_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_jdbc_5_3_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_jdbc_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_oxm_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_test_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_tx_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_web_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_webflux_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_webmvc_6_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_xmlunit_xmlunit_core_2_9_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_yaml_snakeyaml_1_33.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__wiki_xsx_snowflake_spring_boot_starter_1_2_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_10_15_35_取消提交了变更_[变更]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_11_19_36_取消提交了变更_[变更]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_14_13_56_取消提交了变更_[变更]/Flow.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_14_13_56_取消提交了变更_[变更]/FlowProcessRelation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_14_13_56_取消提交了变更_[变更]/Line.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_14_13_56_取消提交了变更_[变更]/Order.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_14_13_56_取消提交了变更_[变更]/Process.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_14_13_56_取消提交了变更_[变更]/Users.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_14_13_56_取消提交了变更_[变更]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_15_21_15_取消提交了变更_[变更]/Line.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_15_21_15_取消提交了变更_[变更]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_15_21_57_取消提交了变更_[变更]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_15_21_59_取消提交了变更_[变更]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_8_18_49_取消提交了变更_[变更]/FlowPageReq.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_8_18_49_取消提交了变更_[变更]/FlowProcessRelationController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_8_18_49_取消提交了变更_[变更]/FlowProcessRelationServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_8_18_49_取消提交了变更_[变更]/TFlowProcessRelation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_8_18_49_取消提交了变更_[变更]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2023_7_9_16_33_取消提交了变更_[变更]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Authentication-Service/Authentication-Service.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Data-Visualization-Service/Data-Visualization-Service.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/Dispatch-Service.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/test/java/com/job/dispatchService/DispatchServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/bootstrap.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/DispatchService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/common/BasePageReq.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/config/AsyncConfiguration.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/config/RedisConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/config/TaskSchedulerConfig$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/config/TaskSchedulerConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/controller/FlowController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/controller/FlowProcessRelationController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/controller/LineController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/controller/LineTaskController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/controller/ProcessController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/dto/FlowDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/dto/FlowProcessRelationDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/mapper/FlowMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/mapper/FlowProcessRelationMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/mapper/LineMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/mapper/ProcessMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/request/FlowPageReq.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/request/LinePageReq.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/request/ProcessPageReq.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/FlowProcessRelationService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/FlowService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/LineService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/ProcessService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/impl/FlowProcessRelationServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/impl/FlowServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/impl/LineServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/impl/ProcessServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/utils/FastJsonRedisSerializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/utils/RedisCache.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/vo/ProcessVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/config/SnowflakeConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/controller/WorkController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/dao/WorkDAO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/mapper/WFlowMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/mapper/WOrderMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/mapper/WProcessMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/mapper/WorkMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/service/WorkBean.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/service/WorkService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/service/impl/WorkServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/util/DateTimeUtil.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/util/StringAndNumberUtil.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/mapper/dispatch/FlowProcessRelationMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/test-classes/com/job/dispatchservice/DispatchServiceTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Mesbackend.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Order-Service/Order-Service.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Platform-Service/Platform-Service.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Production-Management-Service/Production-Management-Service.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Mesbackend/Zuul-Master/Zuul-Master.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/CommonUtils/src/main/java/com/job/common/pojo/Flow.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/CommonUtils/src/main/java/com/job/common/pojo/Flow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/CommonUtils/src/main/java/com/job/common/pojo/FlowProcessRelation.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/CommonUtils/src/main/java/com/job/common/pojo/FlowProcessRelation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/CommonUtils/src/main/java/com/job/common/pojo/Line.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/CommonUtils/src/main/java/com/job/common/pojo/Line.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/CommonUtils/src/main/java/com/job/common/pojo/Process.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/CommonUtils/src/main/java/com/job/common/pojo/Process.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/DispatchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/DispatchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/FlowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/FlowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/FlowProcessRelationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/FlowProcessRelationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/LineTaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/LineTaskController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/ProcessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/ProcessController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/mapper/FlowProcessRelationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/mapper/FlowProcessRelationMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/service/FlowProcessRelationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/service/FlowProcessRelationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/service/impl/FlowProcessRelationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/service/impl/FlowProcessRelationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/service/impl/LineServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/service/impl/LineServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/vo/ProcessVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/vo/ProcessVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/resources/mapper/dispatch/FlowProcessRelationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/resources/mapper/dispatch/FlowProcessRelationMapper.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="E:/HuoHuDownloads/apache-maven-3.8.6-bin/apache-maven-3.8.6" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="E:\HuoHuDownloads\apache-maven-3.8.6-bin\apache-maven-3.8.6\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectId" id="2SCUfWB19azOUk5J3iAUbWjK1jL" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Workplace/IDEA/Java项目宝塔搭建实战MES-Springboot开源MES智能制造执行系统源码/mesadmin&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;ruby.rails.projectView.checked&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;09a24bf9bbc3c654678fd9b7163ff689&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Workplace\IDEA\MesServer01\Mesbackend\Dispatch-Service\src\main\resources" />
+      <recent name="D:\Workplace\IDEA\MesServer01\Mesbackend\Dispatch-Service\src\main\java\com\job\dispatchService" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.job.dispatchservice" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.job.dispatchService.lineManager.config" />
+      <recent name="com.job.dispatchService.lineManager.utils" />
+      <recent name="com.job.dispatchService.LineManager.utils" />
+      <recent name="com.job.dispatchService.LineManager.config" />
+    </key>
+  </component>
+  <component name="RubyModuleManagerSettings">
+    <option name="blackListedRootsPaths">
+      <list>
+        <option value="$PROJECT_DIR$/Mesbackend/Platform-Service" />
+        <option value="$PROJECT_DIR$/Mesbackend/Authentication-Service" />
+        <option value="$PROJECT_DIR$" />
+        <option value="$PROJECT_DIR$/PojoUtils" />
+        <option value="$PROJECT_DIR$/Mesbackend/Dispatch-Service" />
+        <option value="$PROJECT_DIR$/Mesbackend/Data-Visualization-Service" />
+        <option value="$PROJECT_DIR$/Mesbackend/Order-Service" />
+        <option value="$PROJECT_DIR$/Mesbackend/Zuul-Master" />
+        <option value="$PROJECT_DIR$/Mesbackend/CommonUtils" />
+        <option value="$PROJECT_DIR$/Mesbackend" />
+        <option value="$PROJECT_DIR$/Mesbackend/Production-Management-Service" />
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.DispatchService">
+    <configuration name="com.job.dispatchservice.LineTaskTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.job.dispatchservice.LineTaskTest" />
+      <module name="Dispatch-Service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.job.dispatchService.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DispatchServiceTest.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Dispatch-Service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.job.dispatchService.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.job.dispatchservice" />
+      <option name="MAIN_CLASS_NAME" value="com.job.dispatchService.DispatchServiceTest" />
+      <option name="METHOD_NAME" value="test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DispatchTest.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Dispatch-Service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.job.dispatchservice.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.job.dispatchservice.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.job.dispatchservice.controller.DispatchTest" />
+      <option name="METHOD_NAME" value="test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LineTaskTest.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Dispatch-Service" />
+      <option name="PACKAGE_NAME" value="com.job.dispatchservice" />
+      <option name="MAIN_CLASS_NAME" value="com.job.dispatchservice.LineTaskTest" />
+      <option name="METHOD_NAME" value="test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DispatchService" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="Dispatch-Service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.job.dispatchService.DispatchService" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.job.dispatchService.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.DispatchService" />
+        <item itemvalue="JUnit.DispatchServiceTest.test" />
+        <item itemvalue="JUnit.DispatchTest.test" />
+        <item itemvalue="JUnit.LineTaskTest.test" />
+        <item itemvalue="应用程序.com.job.dispatchservice.LineTaskTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="347afc61-fb26-4c42-88b8-c41c3f1f936f" name="变更" comment="" />
+      <created>1688650159876</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1688650159876</updated>
+      <workItem from="1688650161930" duration="990000" />
+      <workItem from="1688705527709" duration="10078000" />
+      <workItem from="1688719409403" duration="645000" />
+      <workItem from="1688812674010" duration="3825000" />
+      <workItem from="1688891501580" duration="3762000" />
+      <workItem from="1688895811220" duration="593000" />
+      <workItem from="1688969857324" duration="9637000" />
+      <workItem from="1688991029261" duration="10484000" />
+      <workItem from="1689075183865" duration="8203000" />
+      <workItem from="1689084162578" duration="5380000" />
+      <workItem from="1689145176541" duration="7303000" />
+      <workItem from="1689212959111" duration="6667000" />
+      <workItem from="1689236383699" duration="4041000" />
+      <workItem from="1689245165754" duration="1234000" />
+      <workItem from="1689311276301" duration="1349000" />
+      <workItem from="1689314523731" duration="1275000" />
+      <workItem from="1689399498753" duration="2078000" />
+      <workItem from="1689427976655" duration="7514000" />
+    </task>
+    <task id="LOCAL-00001" summary="DispatchService">
+      <created>1688651004549</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1688651004549</updated>
+    </task>
+    <task id="LOCAL-00002" summary="DispatchService">
+      <created>1688651148063</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1688651148063</updated>
+    </task>
+    <task id="LOCAL-00003" summary="DispatchService">
+      <created>1688705846454</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1688705846454</updated>
+    </task>
+    <task id="LOCAL-00004" summary="DispatchService">
+      <created>1688708539708</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1688708539708</updated>
+    </task>
+    <task id="LOCAL-00005" summary="DispatchService">
+      <created>1688717647502</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1688717647502</updated>
+    </task>
+    <task id="LOCAL-00006" summary="DispatchService">
+      <created>1688718928470</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1688718928470</updated>
+    </task>
+    <task id="LOCAL-00007" summary="DispatchService">
+      <created>1688814599928</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1688814599928</updated>
+    </task>
+    <task id="LOCAL-00008" summary="DispatchService">
+      <created>1688892600129</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1688892600129</updated>
+    </task>
+    <task id="LOCAL-00009" summary="DispatchService">
+      <created>1688894386125</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1688894386125</updated>
+    </task>
+    <task id="LOCAL-00010" summary="DispatchService">
+      <created>1688895256222</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1688895256222</updated>
+    </task>
+    <task id="LOCAL-00011" summary="DispatchService">
+      <created>1688896369595</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1688896369595</updated>
+    </task>
+    <task id="LOCAL-00012" summary="DispatchService">
+      <created>1688970424338</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1688970424338</updated>
+    </task>
+    <task id="LOCAL-00013" summary="DispatchService">
+      <created>1688970590313</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1688970590313</updated>
+    </task>
+    <task id="LOCAL-00014" summary="DispatchService">
+      <created>1688973166614</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1688973166614</updated>
+    </task>
+    <task id="LOCAL-00015" summary="DispatchService">
+      <created>1688974716552</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1688974716552</updated>
+    </task>
+    <task id="LOCAL-00016" summary="DispatchService">
+      <created>1689075497523</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1689075497523</updated>
+    </task>
+    <task id="LOCAL-00017" summary="DispatchService">
+      <created>1689083857287</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1689083857287</updated>
+    </task>
+    <task id="LOCAL-00018" summary="DispatchService">
+      <created>1689090530162</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1689090530162</updated>
+    </task>
+    <task id="LOCAL-00019" summary="DispatchService">
+      <created>1689145250936</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1689145250936</updated>
+    </task>
+    <task id="LOCAL-00020" summary="DispatchService">
+      <created>1689152488793</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1689152488793</updated>
+    </task>
+    <task id="LOCAL-00021" summary="DispatchService">
+      <created>1689152526475</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1689152526475</updated>
+    </task>
+    <task id="LOCAL-00022" summary="DispatchService">
+      <created>1689239439506</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1689239439506</updated>
+    </task>
+    <task id="LOCAL-00023" summary="DispatchService">
+      <created>1689315308060</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1689315308061</updated>
+    </task>
+    <task id="LOCAL-00024" summary="DispatchService">
+      <created>1689315773792</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1689315773792</updated>
+    </task>
+    <task id="LOCAL-00025" summary="DispatchService">
+      <created>1689434855227</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1689434855227</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="DispatchService" />
+    <option name="LAST_COMMIT_MESSAGE" value="DispatchService" />
+  </component>
+</project>
