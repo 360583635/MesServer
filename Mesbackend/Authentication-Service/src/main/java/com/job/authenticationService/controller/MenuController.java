@@ -5,6 +5,7 @@ import com.job.authenticationService.config.GetUserid;
 import com.job.authenticationService.mapper.MenusMapper;
 import com.job.authenticationService.pojo.LoginUser;
 import com.job.authenticationService.pojo.ResponseResult;
+import com.job.authenticationService.pojo.Result;
 import com.job.authenticationService.service.MenusService;
 import com.job.authenticationService.service.UsersService;
 import com.job.authenticationService.service.impl.MenusServiceImp;
@@ -12,7 +13,7 @@ import com.job.authenticationService.utils.JwtUtil;
 import com.job.common.pojo.Menus;
 import com.job.common.pojo.Roles;
 import com.job.common.pojo.Users;
-import com.job.common.result.Result;
+
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.User;
@@ -102,6 +103,7 @@ public class MenuController {
         Menus menus=menusService.getById(menusid);
         menus.setIs_delete(0);
         int i=menusMapper.updateById(menus);
+        System.out.println(i);
         if (i>0){
             return Result.success(null,"删除成功");
         }else {
@@ -173,18 +175,20 @@ public class MenuController {
      */
     @RequestMapping("/showmenus")
     public Result showmenus(){
-        String s= GetUserid.getID();
-        //System.out.println("10001");
-        System.out.println(s);
+//        String s= GetUserid.getID();
+//        //System.out.println("10001");
+//        System.out.println(s);
         LambdaQueryWrapper<Menus> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Menus::getIs_delete,1);
-        List<Menus> list= menusService.list(wrapper);
-        System.out.println(list);
-        if (list.size()>0){
-            return Result.success(list,"查询成功");
-        }else {
-            return Result.error("查询失败");
-        }
+        List<Menus> menuslist= menusService.list(wrapper);
+       // System.out.println(menuslist);
+        return Result.success(menuslist,"展示成功");
+        //return Result.success(list,"查询成功");
+//        if (list.size()>0){
+//            return Result.success(list,"查询成功");
+//        }else {
+//            return Result.error("查询失败");
+//        }
     }
 
     /**

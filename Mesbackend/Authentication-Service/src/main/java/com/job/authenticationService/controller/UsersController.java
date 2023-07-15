@@ -1,16 +1,17 @@
 package com.job.authenticationService.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.job.authenticationService.mapper.RolesMapper;
 import com.job.authenticationService.mapper.UsersMapper;
+import com.job.authenticationService.pojo.Result;
+import com.job.authenticationService.service.MenusService;
+import com.job.authenticationService.service.RolesService;
 import com.job.authenticationService.service.UsersRolesService;
 import com.job.authenticationService.service.UsersService;
 import com.job.authenticationService.utils.JwtUtil;
-import com.job.common.pojo.MenusRoles;
-import com.job.common.pojo.Roles;
-import com.job.common.pojo.Users;
-import com.job.common.pojo.UsersRoles;
-import com.job.common.result.Result;
+import com.job.common.pojo.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.User;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 import java.util.List;
 
-//@RequestMapping("/authen")
+@RequestMapping("/authen")
 @RestController
 public class UsersController {
     @Autowired
@@ -36,6 +37,61 @@ public class UsersController {
     @Autowired
     private UsersMapper usersMapper;
 
+    @Autowired
+    private RolesService rolesService;
+
+    @Autowired
+    private MenusService menusService;
+
+    /**
+     * 查询角色
+     * @return
+     */
+    @RequestMapping("/showrole")
+    public  Result showrole(){
+        LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Roles::getIsDelete,1);
+        List<Roles> roleslist=rolesService.list(wrapper);
+        System.out.println(roleslist);
+        if (roleslist.size()>0){
+            return Result.success(roleslist,"查询角色成功");
+        }else {
+            return Result.error("查询失败");
+        }
+
+    }
+
+    /**
+     * 查询所有用户
+     */
+    @RequestMapping("/showUser")
+    public Result showUser(){
+        LambdaQueryWrapper<Users> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Users::getIsDelete,1);
+        List<Users> usersList=usersService.list(wrapper);
+        System.out.println(usersList);
+        if (usersList.size()>0){
+            return Result.success(usersList,"查询用户成功");
+        }else {
+            return Result.error("查询失败");
+        }
+    }
+
+    /**
+     * 查询所有权限
+     */
+    @RequestMapping("/showmenus")
+    public Result showmenus(){
+        LambdaQueryWrapper<Menus> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Menus::getIs_delete,1);
+        List<Menus> menusList=menusService.list(wrapper);
+        System.out.println(menusList);
+        if (menusList.size()>0){
+            return Result.success(menusList,"查询权限成功");
+        }else {
+            return Result.error("查询失败");
+        }
+    }
     /**
      * 添加员工用户
      * @param name
@@ -179,7 +235,7 @@ public class UsersController {
      * @param UserId
      * @return
      */
-    @RequestMapping("/showdetail/{Userid}")
+    @RequestMapping("/showdetail/{UserId}")
     public Result showdetail(@PathVariable("UserId") String UserId){
         Users users=usersService.getById(UserId);
         if (users!=null){
