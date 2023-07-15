@@ -1,9 +1,10 @@
 package com.job.platformService.controller;
 
-import com.job.common.result.Result;
 import com.job.platformService.config.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import  com.job.platformService.result.Result;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,17 @@ public class DataShowController {
     /*
     查找数据
      */
+    //    查找单个数据
+    @RequestMapping("/selectAll")
+    public Result findByIds(){
+        Map<String, Object> list = redisCache.getCacheMap("list");
+        System.out.println(list);
+        Result result=new Result();
+        result.setData(list);
+        result.setCode(200);
+        result.setMsg("查询成功");
+        return result;
+    }
 
     @RequestMapping("select")
     public Result select(@RequestParam(value = "id", required = false) String id,

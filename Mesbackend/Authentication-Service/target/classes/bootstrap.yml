@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: AUTHENTICATIONSERVICE
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      server-addr: 116.205.138.253:8848
+      config:
+        file-extension: properties
