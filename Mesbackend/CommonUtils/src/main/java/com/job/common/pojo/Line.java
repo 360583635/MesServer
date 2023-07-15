@@ -1,5 +1,6 @@
 package com.job.common.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,8 @@ public class Line {
     /**
      * 流水线所属流程
      */
-    private String lineFlow;
+    @TableField("line_flow")
+    private String lineFlowId;
     /**
      * 状态
      * 0 待生产；1 停机；2 生产中；3 生产异常；4 生产完成

@@ -1,14 +1,14 @@
-package com.job.dispatchservice.work.controller;
+package com.job.dispatchService.work.controller;
 
 import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
-import com.job.dispatchservice.work.mapper.WFlowMapper;
-import com.job.dispatchservice.work.mapper.WOrderMapper;
-import com.job.dispatchservice.work.mapper.WProcessMapper;
-import com.job.dispatchservice.work.service.WorkService;
-import com.job.dispatchservice.work.util.DateTimeUtil;
-import com.job.dispatchservice.work.util.StringAndNumberUtil;
+import com.job.dispatchService.work.mapper.WFlowMapper;
+import com.job.dispatchService.work.mapper.WOrderMapper;
+import com.job.dispatchService.work.mapper.WProcessMapper;
+import com.job.dispatchService.work.service.WorkService;
+import com.job.dispatchService.work.util.DateTimeUtil;
+import com.job.dispatchService.work.util.StringAndNumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wiki.xsx.core.snowflake.config.Snowflake;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @SuppressWarnings("all")
-//@RequestMapping("/work")
+@RequestMapping("/dispatch")
 public class WorkController {
 
     @Autowired
@@ -64,7 +64,7 @@ public class WorkController {
 
     //前端网页数据呈现
     @GetMapping("/search")
-    public Map searchByDatetime(@RequestParam("dateTime") String dateTime){
+    public Map searchByDatetime(@RequestParam(value = "dateTime",required = false) String dateTime){
 
         Map map = new HashMap();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -86,6 +86,7 @@ public class WorkController {
             List pagesList = this.forEachWorks(works);
             map.put("pagesList", pagesList);
         }
+        System.out.println(dateTime == null);
 
         return map;
     }

@@ -6,6 +6,8 @@ import com.job.authenticationService.service.LoginService;
 import com.job.authenticationService.utils.JwtUtil;
 import com.job.authenticationService.utils.RedisCache;
 import com.job.common.pojo.Users;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.net.http.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -46,6 +49,7 @@ public class  LoginServiceImpl implements LoginService {
 
         //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
         LoginUser loignUser = (LoginUser) authenticate.getPrincipal();
+        System.out.println(loignUser);
         String userid = loignUser.getUser().getId().toString();
         String jwt = JwtUtil.createJWT(userid);
         Map<String, String> map = new HashMap<>();

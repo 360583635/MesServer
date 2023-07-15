@@ -1,4 +1,4 @@
-package com.job.dispatchservice.work.config;
+package com.job.dispatchService.work.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
