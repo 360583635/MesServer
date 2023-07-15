@@ -35,6 +35,11 @@ public class RoleController {
 
 
 //    查询所有可用用户角色
+
+    /**
+     * 查询所有可用用户角色
+     * @return
+     */
     @RequestMapping("/getRoles")
     public Result<Roles> getAllRoles(){
         LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
@@ -51,7 +56,11 @@ public class RoleController {
         return null;
     }
 
-//    删除某个用户角色
+    /**
+     * 删除某个用户角色
+     * @param RoleId
+     * @return
+     */
     @RequestMapping("/delRole/{RoleId}")
     public Result<Roles> deleteRole(@PathVariable("RoleId") String RoleId){
         Roles roles=rolesService.getById(RoleId);
@@ -73,6 +82,13 @@ public class RoleController {
     }
 
 //    添加某个用户角色
+
+    /**
+     * 添加某个用户角色
+     * @param role_name
+     * @param options
+     * @return
+     */
     @RequestMapping("/addRole")
     public Result<Roles> addRole(@RequestParam(value = "role_name") String role_name,
                                  @RequestParam(value = "option") List<String> options){
@@ -108,6 +124,14 @@ public class RoleController {
 
 
     //    修改某个用户角色
+
+    /**
+     * 修改某个用户角色
+     * @param role_name
+     * @param role_id
+     * @param options
+     * @return
+     */
     @RequestMapping("/updateRole")
     public Result<Roles> updateRole(@RequestParam(value = "role_name") String role_name,
                                     @RequestParam(value = "role_id") String role_id,

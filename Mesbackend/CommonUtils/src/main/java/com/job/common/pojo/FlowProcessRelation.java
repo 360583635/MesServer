@@ -65,8 +65,8 @@ public class FlowProcessRelation {
      */
     private String processType;
 
-    //删除状态 0: 表示删除 1: 表示未删除
-    private int isDelete;
+    //删除状态
+    private int deleteStatus;
 
     @Override
     public String toString() {

@@ -6,7 +6,6 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -233,6 +232,12 @@ public class RedisCache
     {
         return redisTemplate.opsForHash().multiGet(key, hKeys);
     }
+
+    public <T> List<T> getMultiDatas(final Collection<String> keys){
+        return redisTemplate.opsForValue().multiGet(keys);
+    }
+
+
 
     /**
      * 获得缓存的基本对象列表

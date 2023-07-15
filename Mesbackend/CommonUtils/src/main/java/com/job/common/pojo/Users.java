@@ -33,7 +33,7 @@ public class Users implements Serializable {
     private String UpdateUser;
     private Integer State;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date Birth;
+    private String Birth;
     private Integer isDelete;
     private Integer isBlack;
 }

@@ -1,13 +1,10 @@
 package com.job.dispatchService.lineManager.controller;
-import com.job.common.result.Result;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.job.common.pojo.Flow;
-import com.job.common.pojo.FlowProcessRelation;
-import com.job.dispatchService.lineManager.dto.FlowDto;
+import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
-import com.job.dispatchService.lineManager.service.FlowService;
-import com.job.dispatchService.lineManager.service.ProcessService;
-import com.job.dispatchService.lineManager.vo.ProcessVo;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -28,13 +25,13 @@ public class FlowProcessRelationController {
      * 工序基础数据服务
      */
     @Autowired
-    public ProcessService processService;
+    public com.job.dispatchservice.linemanager.service.ProcessService processService;
 
     /**
      * 流程基础数据服务
      */
     @Autowired
-    public FlowService flowService;
+    public com.job.dispatchservice.linemanager.service.FlowService flowService;
 
     /**
      * 流程与工序基础数据服务
@@ -63,14 +60,14 @@ public class FlowProcessRelationController {
      */
     @GetMapping("/add-or-update-ui")
     public String addOrUpdateUI(Model model, Flow record) throws Exception {
-        List<ProcessVo> allProcessVos = flowProcessRelationService.allProcessViewServer();
+        List<com.job.dispatchservice.linemanager.vo.ProcessVo> allProcessVos = flowProcessRelationService.allProcessViewServer();
         //全部工序
         model.addAttribute("allProcess",allProcessVos);
         if(StringUtils.isNotEmpty(record.getId())){
             Flow flowbyId = flowService.getById(record.getId());
             //当前流程信息
             model.addAttribute("flow",flowbyId);
-            List<ProcessVo> currentProcessVo = flowProcessRelationService.currentProcessViewServer(record.getId());
+            List<com.job.dispatchservice.linemanager.vo.ProcessVo> currentProcessVo = flowProcessRelationService.currentProcessViewServer(record.getId());
             model.addAttribute("currentProcess",currentProcessVo);
         }
         return "";
@@ -94,22 +91,14 @@ public class FlowProcessRelationController {
      */
     @PostMapping("/delete")
     @ResponseBody
-    public Result deleteByTableNameId(FlowDto req) throws Exception {
+    public Result deleteByTableNameId(com.job.dispatchservice.linemanager.dto.FlowDto req) throws Exception {
         //先删除流程头表
-        LambdaQueryWrapper<Flow> queryWrapper1 = new LambdaQueryWrapper<>();
-        queryWrapper1
-                .eq(Flow::getIsDelete,1)
-                .eq(Flow::getId,req.getId());
-        Flow flowById = flowService.getOne(queryWrapper1);
-        flowById.setIsDelete(0);
+        flowService.removeById(req.getId());
         //删除流程关系表
-        LambdaQueryWrapper<FlowProcessRelation> queryWrapper2 = new LambdaQueryWrapper();
-        queryWrapper2
-                .eq(FlowProcessRelation::getIsDelete,req.getIsDelete())
-                .eq(FlowProcessRelation::getFlowId, req.getId());
-        FlowProcessRelation flowProcessRelation = flowProcessRelationService.getOne(queryWrapper2);
-        flowProcessRelation.setIsDelete(0);
-        return Result.success(null,"删除成功");
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("flow_id", req.getId());
+        flowProcessRelationService.remove(queryWrapper);
+        return Result.success();
     }
 
 }
