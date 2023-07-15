@@ -36,6 +36,14 @@ public class UsersController {
     @Autowired
     private UsersMapper usersMapper;
 
+    /**
+     * 添加员工用户
+     * @param name
+     * @param password
+     * @param state
+     * @param options
+     * @return
+     */
     @RequestMapping("/addUser")
     public Result<Users> addUser(@RequestParam(value = "name") String name,
                                  @RequestParam(value = "password") String password,
@@ -76,6 +84,13 @@ public class UsersController {
         return result;
     }
 
+    /**
+     * 修改用户信息
+     * @param id
+     * @param state
+     * @param options
+     * @return
+     */
 
     @RequestMapping("/updateUser")
     public Result<Users> addUser(@RequestParam(value = "id") String id,
@@ -114,6 +129,12 @@ public class UsersController {
 
     }
 
+    /**
+     * 删除某个用户角色
+     * @param UserId
+     * @param request
+     * @return
+     */
     //    删除某个用户角色
     @RequestMapping("/delUser/{UserId}")
     public Result<Roles> deleteRole(@PathVariable("UserId") String UserId, HttpServletRequest request){
