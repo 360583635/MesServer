@@ -50,6 +50,9 @@ public class Process {
      */
     private String updateUsername;
 
-    //删除状态 0: 表示删除 1: 表示未删除
-    private int isDelete;
+    //完成工序数量
+    private Integer successCount;
+
+    //异常次数
+    private Integer exceptionCount;
 }
