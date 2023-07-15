@@ -229,25 +229,8 @@ public class UserController {
     }
 
 
-    @RequestMapping("ca1")
-    public void exportCacheDataAsCSV(String filePath) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("D:\\导出数据\\1\\2.csv"))) {
-            redisTemplate.execute((RedisCallback<Void>) connection -> {
-                Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions().match("*").count(1000).build());
-                while (cursor.hasNext()) {
-                    byte[] keyBytes = cursor.next();
-                    byte[] valueBytes = connection.get(keyBytes);
-                    String key = new String(keyBytes);
-                    String value = new String(valueBytes);
-                    writer.write(key + "," + value + "\n");
-                }
-                cursor.close();
-                return null;
-            });
-        } catch (IOException e) {
-            throw new RuntimeException("Error while creating file writer", e);
-        }
-    }
+
+
 
 
 
