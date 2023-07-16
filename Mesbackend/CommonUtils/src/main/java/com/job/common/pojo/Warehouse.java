@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@TableName("t_warehouse       ")
+@TableName("t_warehouse")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Warehouse {

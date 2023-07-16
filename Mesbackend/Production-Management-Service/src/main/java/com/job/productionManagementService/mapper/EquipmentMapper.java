@@ -1,4 +1,4 @@
 package com.job.productionManagementService.mapper;
 
-public interface warehouse {
+public interface EquipmentMapper {
 }
