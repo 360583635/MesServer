@@ -51,6 +51,7 @@ public class SecurityConfig{
                 .requestMatchers("/updateUser").permitAll()
                 .requestMatchers("/update/detail").permitAll()
                 .requestMatchers("/authen/menus/**").permitAll()
+                .requestMatchers("/authen/**").permitAll()
                 .anyRequest().authenticated()
         );
 

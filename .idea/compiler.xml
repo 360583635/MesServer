@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Order-Service" />
+        <module name="Authentication-Service" />
+        <module name="Platform-Service" />
+        <module name="Dispatch-Service" />
+        <module name="CommonUtils" />
+        <module name="Zuul-Master" />
+        <module name="Production-Management-Service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Authentication-Service" target="17" />
+      <module name="CommonUtils" target="17" />
+      <module name="Dispatch-Service" target="17" />
+      <module name="Mesbackend" target="17" />
+      <module name="Order-Service" target="17" />
+      <module name="Platform-Service" target="17" />
+      <module name="Production-Management-Service" target="17" />
+      <module name="Zuul-Master" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Authentication-Service" options="-parameters" />
+      <module name="Dispatch-Service" options="-parameters" />
+      <module name="Order-Service" options="-parameters" />
+      <module name="Platform-Service" options="-parameters" />
+      <module name="Production-Management-Service" options="-parameters" />
+      <module name="Zuul-Master" options="-parameters" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,419 @@
+Index: Mesbackend/Dispatch-Service/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <parent>\r\n        <artifactId>Mesbackend</artifactId>\r\n        <groupId>com.job</groupId>\r\n        <version>1.0-SNAPSHOT</version>\r\n    </parent>\r\n    <modelVersion>4.0.0</modelVersion>\r\n    <groupId>com.job</groupId>\r\n    <artifactId>Dispatch-Service</artifactId>\r\n    <version>1.0-SNAPSHOT</version>\r\n\r\n    <properties>\r\n        <maven.compiler.source>17</maven.compiler.source>\r\n        <maven.compiler.target>17</maven.compiler.target>\r\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\r\n    </properties>\r\n\r\n    <dependencies>\r\n        <!-- https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-discovery -->\r\n        <dependency>\r\n            <groupId>com.alibaba.cloud</groupId>\r\n            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>\r\n            <!--            <version>2022.0.0.0-RC2</version>-->\r\n        </dependency>\r\n        <!-- https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-config -->\r\n        <dependency>\r\n            <groupId>com.alibaba.cloud</groupId>\r\n            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>\r\n            <!--            <version>2022.0.0.0-RC2</version>-->\r\n        </dependency>\r\n        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap -->\r\n        <dependency>\r\n            <groupId>org.springframework.cloud</groupId>\r\n            <artifactId>spring-cloud-starter-bootstrap</artifactId>\r\n            <!--            <version>4.0.3</version>-->\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-web</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.cloud</groupId>\r\n            <artifactId>spring-cloud-starter-openfeign</artifactId>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>wiki.xsx</groupId>\r\n            <artifactId>snowflake-spring-boot-starter</artifactId>\r\n            <version>1.2.3</version>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>cn.hutool</groupId>\r\n            <artifactId>hutool-captcha</artifactId>\r\n            <version>5.3.9</version>\r\n        </dependency>\r\n\r\n\r\n        <dependency>\r\n            <groupId>org.springframework.boot</groupId>\r\n            <artifactId>spring-boot-starter-data-redis</artifactId>\r\n        </dependency>\r\n        <!--fastjosn依赖-->\r\n        <dependency>\r\n            <groupId>com.alibaba</groupId>\r\n            <artifactId>fastjson</artifactId>\r\n            <version>1.2.33</version>\r\n        </dependency>\r\n\r\n        <!--<dependency>\r\n            <groupId>com.baomidou</groupId>\r\n            <artifactId>mybatis-plus</artifactId>\r\n            <version>3.5.1</version>\r\n        </dependency>\r\n-->\r\n    </dependencies>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/pom.xml b/Mesbackend/Dispatch-Service/pom.xml
+--- a/Mesbackend/Dispatch-Service/pom.xml	(revision f82da62adc9ceb611d9f6aa5d5b18c6f770ac6b8)
++++ b/Mesbackend/Dispatch-Service/pom.xml	(date 1688995428849)
+@@ -78,5 +78,19 @@
+             <version>3.5.1</version>
+         </dependency>
+ -->
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-aop</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.retry</groupId>
++            <artifactId>spring-retry</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>junit</groupId>
++            <artifactId>junit</artifactId>
++            <scope>test</scope>
++        </dependency>
++
+     </dependencies>
+ </project>
+\ No newline at end of file
+Index: Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/LineController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.job.dispatchservice.linemanager.controller;\r\n\r\nimport com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;\r\nimport com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;\r\nimport com.job.common.pojo.Line;\r\n\r\nimport com.job.common.result.Result;\r\nimport com.job.dispatchservice.linemanager.service.LineService;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.ResponseBody;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\nimport java.util.List;\r\n\r\n/**\r\n * @author 庸俗可耐\r\n * @create 2023-07-06-18:06\r\n * @description\r\n */\r\n\r\n@RestController\r\n@RequestMapping(\"/dispatch/line\")\r\npublic class LineController {\r\n\r\n    @Autowired\r\n    private LineService lineService;\r\n\r\n    /**\r\n     * 添加流水线\r\n     * @param pipeLine\r\n     * @return\r\n     */\r\n    @RequestMapping(\"/saveLine\")\r\n    @ResponseBody\r\n    public Result saveLine(@RequestBody Line pipeLine){\r\n\r\n        String user=\"wen\"; //获取用户信息\r\n        pipeLine.setOrderCount(\"0\");\r\n        pipeLine.setStatus(\"0\"); //设置状态为空闲\r\n        lineService.save(pipeLine);\r\n        //ToDo 调用日志接口\r\n        return Result.success(null,\"添加成功\");\r\n    }\r\n\r\n    /**\r\n     * 修改流水线\r\n     * @param pipeLine\r\n     * @return\r\n     */\r\n    @RequestMapping(\"/updateLine\")\r\n    @ResponseBody\r\n    public Result updateLine(@RequestBody Line pipeLine){\r\n        UpdateWrapper updateWrapper=new UpdateWrapper();\r\n        String user=\"wen\";//获取当前用户信息\r\n        lineService.updateById(pipeLine);\r\n        //ToDo 调用日志接口\r\n        return Result.success(null,\"修改成功\");\r\n    }\r\n\r\n    /**\r\n     * 删除流水线\r\n     * @param lineId\r\n     * @return\r\n     */\r\n    @RequestMapping(\"/removeLine\")\r\n    @ResponseBody\r\n    public Result removeLine(String lineId){\r\n        Line byId = lineService.getById(lineId);\r\n        if(!\"0\".equals(byId.getStatus())){\r\n            return Result.error(\"流水线未关闭，无法删除\");\r\n        }\r\n        lineService.removeById(lineId);\r\n        //todo 记入日志\r\n        return Result.success(null,\"删除成功\");\r\n    }\r\n\r\n    /**\r\n     * 查询全部流水线\r\n     * @return\r\n     */\r\n    @RequestMapping(\"/list\")\r\n    @ResponseBody\r\n    public Result list(){\r\n        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();\r\n        List<Line> list = lineService.list(queryWrapper);\r\n        return Result.success(list,\"查询成功\");\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/LineController.java b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/LineController.java
+--- a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/LineController.java	(revision f82da62adc9ceb611d9f6aa5d5b18c6f770ac6b8)
++++ b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/LineController.java	(date 1688992287934)
+@@ -2,15 +2,14 @@
+ 
+ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
++import com.baomidou.mybatisplus.core.metadata.IPage;
+ import com.job.common.pojo.Line;
+ 
+ import com.job.common.result.Result;
++import com.job.dispatchservice.linemanager.request.LinePageReq;
+ import com.job.dispatchservice.linemanager.service.LineService;
+ import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.web.bind.annotation.RequestBody;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-import org.springframework.web.bind.annotation.ResponseBody;
+-import org.springframework.web.bind.annotation.RestController;
++import org.springframework.web.bind.annotation.*;
+ 
+ import java.util.List;
+ 
+@@ -27,6 +26,17 @@
+     @Autowired
+     private LineService lineService;
+ 
++    /**
++     * 流水线分页查询
++     * @param req
++     * @return
++     */
++    @PostMapping
++    public Result page(LinePageReq req){
++        IPage result = lineService.page(req);
++        return Result.success(result,"查询成功");
++    }
++
+     /**
+      * 添加流水线
+      * @param pipeLine
+@@ -64,9 +74,8 @@
+      * @param lineId
+      * @return
+      */
+-    @RequestMapping("/removeLine")
+-    @ResponseBody
+-    public Result removeLine(String lineId){
++    @GetMapping("/removeLine/{lineId}")
++    public Result removeLine(@PathVariable String lineId){
+         Line byId = lineService.getById(lineId);
+         if(!"0".equals(byId.getStatus())){
+             return Result.error("流水线未关闭，无法删除");
+@@ -90,7 +99,4 @@
+ 
+ 
+ 
+-
+-
+-
+ }
+Index: Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/ProcessController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.job.dispatchservice.linemanager.controller;\r\n\r\nimport cn.hutool.core.date.DateTime;\r\nimport cn.hutool.core.date.DateUtil;\r\nimport com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;\r\nimport com.job.common.pojo.FlowProcessRelation;\r\nimport com.job.common.pojo.Process;\r\n//import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;\r\n//import com.job.dispatchService.LineManager.pojo.TProcess;\r\nimport com.job.dispatchservice.linemanager.service.FlowProcessRelationService;\r\nimport com.job.dispatchservice.linemanager.service.ProcessService;\r\nimport com.job.dispatchservice.common.Result;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.*;\r\n\r\nimport java.util.List;\r\n\r\n/**\r\n * @author 庸俗可耐\r\n * @create 2023-07-06-18:05\r\n * @description\r\n */\r\n@RestController\r\n@RequestMapping(\"/dispatch/process\")\r\npublic class ProcessController {\r\n\r\n    @Autowired\r\n    private ProcessService processService;\r\n\r\n    @Autowired\r\n    private FlowProcessRelationService processRelationService;\r\n\r\n    /**\r\n     * 修改工序\r\n     * @param tProcess\r\n     * @return\r\n     */\r\n    @PostMapping(\"/update\")\r\n    @ResponseBody\r\n    public Result updateProcess(@RequestBody Process tProcess){\r\n        //获得用户信息\r\n        String userinf=\"温帅\";\r\n        tProcess.setUpdateUsername(userinf);\r\n        DateTime nowTime = DateUtil.date();\r\n        tProcess.setUpdateTime(nowTime);\r\n        processService.updateById(tProcess);\r\n        return Result.success();\r\n\r\n    }\r\n\r\n    /**\r\n     * 增加工序\r\n     * @param tProcess\r\n     * @return\r\n     */\r\n    @PostMapping(\"/save\")\r\n    @ResponseBody\r\n    public Result saveProcess(@RequestBody Process tProcess){\r\n        //获得用户信息\r\n        String userinf=\"温帅\";\r\n        tProcess.setUpdateUsername(userinf);\r\n        tProcess.setCreateUsername(userinf);\r\n        DateTime nowTime = DateUtil.date();\r\n        tProcess.setCreateTime(nowTime);\r\n        processService.saveOrUpdate(tProcess);\r\n        return Result.success();\r\n    }\r\n\r\n    /**\r\n     * 删除工序\r\n     * @param processId\r\n     * @return\r\n     */\r\n    @PostMapping(\"/remove\")\r\n    @ResponseBody\r\n    public Result removePeocess(String processId){\r\n        LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper();\r\n        queryWrapper.eq(FlowProcessRelation::getProcessId,processId);\r\n        long count = processRelationService.count(queryWrapper);\r\n//        List<TFlowProcessRelation> list = processRelationService.list(queryWrapper);\r\n        if(count>0){\r\n            return Result.failure(\"请先删除与本工序有关的流程\");\r\n        }\r\n        boolean b = processService.removeById(processId);\r\n        if(b){\r\n            return Result.success();\r\n        }\r\n        return Result.failure(\"操作失败，请刷新页面重试\");\r\n\r\n    }\r\n\r\n    /**\r\n     * 查询全部工序\r\n     */\r\n    @GetMapping(\"/list\")\r\n    public Result list(){\r\n        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();\r\n        List<Process> list = processService.list(queryWrapper);\r\n        return Result.success(list,\"查询成功\");\r\n    }\r\n\r\n\r\n    /**\r\n     * 查询工序\r\n     * \r\n     */\r\n    // TODO: 2023/7/10  \r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/ProcessController.java b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/ProcessController.java
+--- a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/ProcessController.java	(revision f82da62adc9ceb611d9f6aa5d5b18c6f770ac6b8)
++++ b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/linemanager/controller/ProcessController.java	(date 1688976643204)
+@@ -3,10 +3,12 @@
+ import cn.hutool.core.date.DateTime;
+ import cn.hutool.core.date.DateUtil;
+ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
++import com.baomidou.mybatisplus.core.metadata.IPage;
+ import com.job.common.pojo.FlowProcessRelation;
+ import com.job.common.pojo.Process;
+ //import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
+ //import com.job.dispatchService.LineManager.pojo.TProcess;
++import com.job.dispatchservice.linemanager.request.ProcessPageReq;
+ import com.job.dispatchservice.linemanager.service.FlowProcessRelationService;
+ import com.job.dispatchservice.linemanager.service.ProcessService;
+ import com.job.dispatchservice.common.Result;
+@@ -30,6 +32,17 @@
+     @Autowired
+     private FlowProcessRelationService processRelationService;
+ 
++    /**
++     * 工序分页查询
++     * @param req
++     * @return
++     */
++    @PostMapping("/page")
++    public Result page(ProcessPageReq req){
++        IPage result = processService.page(req);
++        return Result.success(result,"查询成功");
++    }
++
+     /**
+      * 修改工序
+      * @param tProcess
+Index: Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/DispatchService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.job.dispatchservice;\r\n\r\nimport org.mybatis.spring.annotation.MapperScan;\r\nimport org.springframework.boot.SpringApplication;\r\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\r\nimport org.springframework.cloud.client.discovery.EnableDiscoveryClient;\r\nimport org.springframework.scheduling.annotation.EnableAsync;\r\n\r\n/**\r\n * @Author 菜狗\r\n */\r\n@SpringBootApplication(scanBasePackages = \"com.job.dispatchservice\")\r\n@EnableDiscoveryClient\r\n@EnableAsync(proxyTargetClass = true)\r\n//@EnableFeignClients\r\n@MapperScan(\"com.job.dispatchService.**.mapper*\")\r\npublic class DispatchService {\r\n    public static void main(String[] args) {\r\n        SpringApplication.run(DispatchService.class,args);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/DispatchService.java b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/DispatchService.java
+--- a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/DispatchService.java	(revision f82da62adc9ceb611d9f6aa5d5b18c6f770ac6b8)
++++ b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchservice/DispatchService.java	(date 1688998761405)
+@@ -4,16 +4,19 @@
+ import org.springframework.boot.SpringApplication;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
+ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
++import org.springframework.context.ApplicationContext;
+ import org.springframework.scheduling.annotation.EnableAsync;
++import org.springframework.scheduling.annotation.EnableScheduling;
+ 
+ /**
+  * @Author 菜狗
+  */
+ @SpringBootApplication(scanBasePackages = "com.job.dispatchservice")
+ @EnableDiscoveryClient
+-@EnableAsync(proxyTargetClass = true)
++@EnableScheduling
++@EnableAsync
+ //@EnableFeignClients
+-@MapperScan("com.job.dispatchService.**.mapper*")
++@MapperScan("com.job.dispatchservice.**.mapper*")
+ public class DispatchService {
+     public static void main(String[] args) {
+         SpringApplication.run(DispatchService.class,args);
+Index: Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/controller/LineTaskController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/controller/LineTaskController.java b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/controller/LineTaskController.java
+new file mode 100644
+--- /dev/null	(date 1689001531787)
++++ b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/controller/LineTaskController.java	(date 1689001531787)
+@@ -0,0 +1,41 @@
++package com.job.dispatchservice.linemanager.controller;
++
++import com.job.dispatchservice.linemanager.service.LineService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.scheduling.annotation.Async;
++import org.springframework.scheduling.annotation.Scheduled;
++import org.springframework.stereotype.Component;
++import org.springframework.stereotype.Controller;
++
++import java.time.LocalTime;
++
++/**
++ * @author 庸俗可耐
++ * @create 2023-07-10-20:30
++ * @description
++ */
++@Component
++public class LineTaskController {
++
++    @Autowired
++    private LineService lineService;
++
++    @Async
++    public void lineTask(){
++        // TODO: 2023/7/10 流水线实列执行流程
++    }
++
++    @Async
++    @Scheduled(initialDelay = 0,fixedDelay = 3000)
++    public void queryOrders() throws InterruptedException {
++        // TODO: 2023/7/10 每隔3秒执行一次查询订单
++        System.out.println("线程:"+Thread.currentThread().getName()+",当前执行时间:"+ LocalTime.now());
++        Thread.sleep(5000);
++    }
++
++    public void test() throws InterruptedException {
++        for(int i=0;i<5;i++){
++            queryOrders();
++        }
++    }
++}
+Index: Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/config/AsyncConfiguration.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/config/AsyncConfiguration.java b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/config/AsyncConfiguration.java
+new file mode 100644
+--- /dev/null	(date 1688994707612)
++++ b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/config/AsyncConfiguration.java	(date 1688994707612)
+@@ -0,0 +1,61 @@
++package com.job.dispatchservice.linemanager.config;
++
++import org.apache.logging.log4j.LogManager;
++import org.apache.logging.log4j.Logger;
++import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++import org.springframework.scheduling.annotation.AsyncConfigurer;
++import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
++
++
++import java.util.concurrent.Executor;
++import java.util.concurrent.ThreadPoolExecutor;
++
++/**
++ * @author 庸俗可耐
++ * @create 2023-07-10-20:58
++ * @description
++ */
++@Configuration
++public class AsyncConfiguration implements AsyncConfigurer {
++
++    private static final Logger LOGGER = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
++
++    /**
++     * 异步任务使用的默认线程池
++     * @return
++     */
++    @Bean
++    public ThreadPoolTaskExecutor executor(){
++        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
++        //核销线程数
++        taskExecutor.setCorePoolSize(10);
++        //线程池维护线程的最大数量,只有在缓冲队列满了之后才会申请超过核心线程数的线程
++        taskExecutor.setMaxPoolSize(10);
++        //缓存队列
++        taskExecutor.setQueueCapacity(200);
++        //允许的空闲时间,当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
++        taskExecutor.setKeepAliveSeconds(60);
++        //异步方法内部线程名称
++        taskExecutor.setThreadNamePrefix("async-");
++        taskExecutor.setAwaitTerminationSeconds(60);
++        //使用自定义拒绝策略,或者自带的几种拒绝策略
++        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
++        taskExecutor.initialize();
++        return taskExecutor;
++    }
++
++    //指定默认线程池
++    public Executor getAsyncExecutor() {
++        return executor();
++    }
++
++    //线程异常处理
++    @Override
++    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
++
++        return (ex , method , params) ->
++                LOGGER.error("线程池执行任务发送未知错误,执行方法：{}",method.getName(),ex);
++    }
++}
+Index: Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/config/TaskSchedulerConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/config/TaskSchedulerConfig.java b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/config/TaskSchedulerConfig.java
+new file mode 100644
+--- /dev/null	(date 1688993881858)
++++ b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/config/TaskSchedulerConfig.java	(date 1688993881858)
+@@ -0,0 +1,74 @@
++package com.job.dispatchservice.linemanager.config;
++
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++import org.springframework.scheduling.annotation.EnableScheduling;
++import org.springframework.scheduling.annotation.SchedulingConfigurer;
++import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
++import org.springframework.scheduling.config.ScheduledTaskRegistrar;
++
++import java.util.concurrent.RejectedExecutionHandler;
++import java.util.concurrent.ScheduledThreadPoolExecutor;
++import java.util.concurrent.ThreadPoolExecutor;
++
++/**
++ * @author 庸俗可耐
++ * @create 2023-07-10-16:21
++ * @description
++ */
++@Configuration
++//该注解可以启动TaskScheduling,实现SchedulingConfigurer是为了对你的定时任务有一些个性化的设置
++@EnableScheduling
++public class TaskSchedulerConfig implements SchedulingConfigurer {
++    @Override
++    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
++        //实现定时任务必须要有线程池,这里即传入一个线程池,是一个自定义方法,在下面实现
++        taskRegistrar.setScheduler(schedulerThreadPool());
++    }
++
++
++    /**
++     * 定时任务中的线程池
++     * @return
++     */
++    //里面标注方法的意思就是在这个bean destroy的时候,调用ScheduledThreadPoolExecutor类的shutdown方法优雅的关闭线程池
++    @Bean(destroyMethod = "shutdown")
++    public ScheduledThreadPoolExecutor schedulerThreadPool() {
++               /*ScheduledThreadPoolExecutor这个类是实现了定时任务的线程池
++               Runtime类解析,每一个java运行程序都有一个Runtime类实例,使当前运行程序能够与运行环境相关联,getRuntime方法返回当前
++                运行程序的Runtime对象,avaliableProcessors方法返回可用处理器的数目,用返回的处理器的数目充当corePoolSize
++                */
++        return new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
++                new RejectedExecutionHandler() {
++                    @Override
++                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
++                        System.out.println("当前任务执行失败"+r);
++                    }
++                });
++
++    }
++
++
++    /**
++     * 异步任务使用的默认线程池
++     * @return
++     */
++    @Bean
++    public ThreadPoolTaskExecutor taskExecutor(){
++        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
++        taskExecutor.setCorePoolSize(20);
++        taskExecutor.setMaxPoolSize(20);
++        taskExecutor.setQueueCapacity(200);
++        taskExecutor.setKeepAliveSeconds(60);
++        taskExecutor.setThreadNamePrefix("自定义-");
++        taskExecutor.setAwaitTerminationSeconds(60);
++        //使用自定义拒绝策略,或者自带的几种拒绝策略
++        taskExecutor.setRejectedExecutionHandler((runable,threadPoolExecutor)->{
++            //TODO 自定义的拒绝策略
++            System.out.println("当前任务执行失败:"+runable);
++        });
++        return taskExecutor;
++    }
++
++
++}
+Index: Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/request/ProcessPageReq.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/request/ProcessPageReq.java b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/request/ProcessPageReq.java
+new file mode 100644
+--- /dev/null	(date 1688976643102)
++++ b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/request/ProcessPageReq.java	(date 1688976643102)
+@@ -0,0 +1,11 @@
++package com.job.dispatchservice.linemanager.request;
++
++import com.job.dispatchservice.common.BasePageReq;
++
++/**
++ * @author 庸俗可耐
++ * @create 2023-07-10-15:51
++ * @description
++ */
++public class ProcessPageReq extends BasePageReq {
++}
+Index: Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/request/LinePageReq.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/request/LinePageReq.java b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/request/LinePageReq.java
+new file mode 100644
+--- /dev/null	(date 1688976643077)
++++ b/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/linemanager/request/LinePageReq.java	(date 1688976643077)
+@@ -0,0 +1,11 @@
++package com.job.dispatchservice.linemanager.request;
++
++import com.job.dispatchservice.common.BasePageReq;
++
++/**
++ * @author 庸俗可耐
++ * @create 2023-07-10-15:50
++ * @description
++ */
++public class LinePageReq extends BasePageReq {
++}

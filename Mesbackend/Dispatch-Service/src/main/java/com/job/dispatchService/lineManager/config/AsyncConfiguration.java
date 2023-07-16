@@ -1,4 +1,4 @@
-package com.job.dispatchservice.linemanager.config;
+package com.job.dispatchService.lineManager.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
