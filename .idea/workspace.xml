@@ -5,8 +5,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="347afc61-fb26-4c42-88b8-c41c3f1f936f" name="变更" comment="DispatchService">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/CommonUtils_1_0_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/CommonUtils_1_0_SNAPSHOT.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/CommonUtils/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/CommonUtils/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/config/AsyncConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/config/AsyncConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/config/TaskSchedulerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/config/TaskSchedulerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/LineTaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/src/main/java/com/job/dispatchService/lineManager/controller/LineTaskController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/bootstrap.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/common/BasePageReq.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/mapper/FlowMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/mapper/LineMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/mapper/ProcessMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/request/FlowPageReq.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/request/LinePageReq.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/request/ProcessPageReq.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/FlowService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/LineService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/ProcessService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/impl/FlowServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/lineManager/service/impl/ProcessServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/config/SnowflakeConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/controller/WorkController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/dao/WorkDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/mapper/WFlowMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/mapper/WOrderMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/mapper/WProcessMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/mapper/WorkMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/service/WorkBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/service/WorkService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/service/impl/WorkServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/util/DateTimeUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/com/job/dispatchService/work/util/StringAndNumberUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/classes/mapper/dispatch/FlowProcessRelationMapper.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/target/test-classes/com/job/dispatchservice/DispatchServiceTest.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +58,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="MIXED" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -48,35 +82,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Workplace/IDEA/Java项目宝塔搭建实战MES-Springboot开源MES智能制造执行系统源码/mesadmin&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;ruby.rails.projectView.checked&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;09a24bf9bbc3c654678fd9b7163ff689&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/Workplace/IDEA/Java项目宝塔搭建实战MES-Springboot开源MES智能制造执行系统源码/mesadmin",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "问题",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "ruby.rails.projectView.checked": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "spring.configuration.checksum": "3d2d453d471126a0e85e547735e99f5d",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Workplace\IDEA\MesServer01\Mesbackend\Dispatch-Service\src\main\resources" />
@@ -181,9 +216,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.DispatchService" />
-        <item itemvalue="JUnit.DispatchServiceTest.test" />
-        <item itemvalue="JUnit.DispatchTest.test" />
         <item itemvalue="JUnit.LineTaskTest.test" />
+        <item itemvalue="JUnit.DispatchTest.test" />
+        <item itemvalue="JUnit.DispatchServiceTest.test" />
         <item itemvalue="应用程序.com.job.dispatchservice.LineTaskTest" />
       </list>
     </recent_temporary>
@@ -214,7 +249,8 @@
       <workItem from="1689314523731" duration="1275000" />
       <workItem from="1689399498753" duration="2078000" />
       <workItem from="1689427976655" duration="7740000" />
-      <workItem from="1689487157942" duration="1255000" />
+      <workItem from="1689487157942" duration="2953000" />
+      <workItem from="1689490173340" duration="1837000" />
     </task>
     <task id="LOCAL-00001" summary="DispatchService">
       <created>1688651004549</created>
@@ -398,7 +434,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689436438327</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="DispatchService">
+      <created>1689488704165</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1689488704165</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

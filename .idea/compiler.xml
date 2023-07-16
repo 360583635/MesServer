@@ -19,7 +19,6 @@
     <bytecodeTargetLevel>
       <module name="Authentication-Service" target="17" />
       <module name="CommonUtils" target="17" />
-      <module name="Data-Visualization-Service" target="17" />
       <module name="Dispatch-Service" target="17" />
       <module name="Mesbackend" target="17" />
       <module name="Order-Service" target="17" />
@@ -31,7 +30,6 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Authentication-Service" options="-parameters" />
-      <module name="Data-Visualization-Service" options="-parameters" />
       <module name="Dispatch-Service" options="-parameters" />
       <module name="Order-Service" options="-parameters" />
       <module name="Platform-Service" options="-parameters" />
