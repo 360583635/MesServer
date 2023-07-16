@@ -17,8 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 //@EnableFeignClients
 @MapperScan("com.job.dispatchService.**.mapper*")
-public class
-DispatchService {
+public class DispatchService {
     public static void main(String[] args) {
         SpringApplication.run(DispatchService.class,args);
     }
