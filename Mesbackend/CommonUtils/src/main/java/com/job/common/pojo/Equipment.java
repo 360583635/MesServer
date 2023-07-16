@@ -36,4 +36,8 @@ public class Equipment {
      * 单位时间内可处理的数量
      */
     private  String  maximumLoad;
+    /**
+     * 工序Id
+     */
+    private String processId;
 }
