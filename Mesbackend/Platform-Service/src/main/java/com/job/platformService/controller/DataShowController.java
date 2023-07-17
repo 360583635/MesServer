@@ -22,7 +22,7 @@ public class DataShowController {
     /*
     查找数据
      */
-    //    查找数据分类
+    //    首页 查找数据分类
     @RequestMapping("/selectAll")
     public Result findByIds(){
         Map<String, Object> list = redisCache.getCacheMap("list");
