@@ -7,7 +7,7 @@
         <result column="process" property="title" jdbcType="VARCHAR"/>
     </resultMap>
     <!--查询编码规则明细分页信息-->
-    <select id="queryOperRelationByFlowId" parameterType="string"
+    <select id="queryProcessRelationByFlowId" parameterType="string"
             resultMap="ResultVoMap">
         SELECT
         process_id,

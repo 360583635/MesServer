@@ -17,7 +17,7 @@ public interface FlowProcessRelationMapper extends BaseMapper<FlowProcessRelatio
      * @param flowId 流程关联ID
      * @return 工序关系集合
      */
-    List<ProcessVo> queryOperRelationByFlowId(@Param("flowId") String flowId);
+    List<ProcessVo> queryProcessRelationByFlowId(@Param("flowId") String flowId);
 
     /**
      * 删除流程下挂的全部工序

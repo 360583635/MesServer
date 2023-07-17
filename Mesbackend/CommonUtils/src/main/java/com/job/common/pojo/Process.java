@@ -55,4 +55,6 @@ public class Process {
 
     //异常次数
     private Integer exceptionCount;
+
+    private Integer isDelete;
 }
