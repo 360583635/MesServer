@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Mesbackend/Authentication-Service/Authentication-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Authentication-Service/Authentication-Service.iml" />
       <module fileurl="file://$PROJECT_DIR$/Mesbackend/CommonUtils/CommonUtils.iml" filepath="$PROJECT_DIR$/Mesbackend/CommonUtils/CommonUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mesbackend/Data-Visualization-Service/Data-Visualization-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Data-Visualization-Service/Data-Visualization-Service.iml" />
       <module fileurl="file://$PROJECT_DIR$/Mesbackend/Dispatch-Service/Dispatch-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Dispatch-Service/Dispatch-Service.iml" />
       <module fileurl="file://$PROJECT_DIR$/Mesbackend/Mesbackend.iml" filepath="$PROJECT_DIR$/Mesbackend/Mesbackend.iml" />
       <module fileurl="file://$PROJECT_DIR$/Mesbackend/Order-Service/Order-Service.iml" filepath="$PROJECT_DIR$/Mesbackend/Order-Service/Order-Service.iml" />

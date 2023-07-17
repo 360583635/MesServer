@@ -66,7 +66,6 @@ public class UserController {
     public String findById(@PathVariable("key") String key){
         System.out.println(key);
         Object obj = key; // 要获取数据类型的对象
-
         if (obj instanceof Integer) {
             System.out.println("数据类型：Integer");
         } else if (obj instanceof String) {
@@ -96,7 +95,6 @@ public class UserController {
     }
 
         //    添加数据
-
     @RequestMapping("/add")
     public void add(){
         System.out.println(111);
@@ -115,17 +113,7 @@ public class UserController {
         redisCache.setCacheObject("user:3",user2);
     }
 
-    //    删除单个缓存数据
-    @RequestMapping("delete/{key}")
-    public String deteById(@PathVariable("key") String key){
-        boolean b = redisCache.deleteObject(key);
-        if (b) {
-            return "Key deleted successfully";
-        } else {
-            return "Key not found or deletion failed";
-        }
 
-    }
 
 //    删除多个数据
     @PostMapping("deletes")

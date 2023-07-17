@@ -3,12 +3,15 @@ package com.job.dispatchService.work.controller;
 import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
+import com.job.dispatchService.work.config.StateConfig;
 import com.job.dispatchService.work.mapper.WFlowMapper;
 import com.job.dispatchService.work.mapper.WOrderMapper;
 import com.job.dispatchService.work.mapper.WProcessMapper;
 import com.job.dispatchService.work.service.WorkService;
 import com.job.dispatchService.work.util.DateTimeUtil;
 import com.job.dispatchService.work.util.StringAndNumberUtil;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wiki.xsx.core.snowflake.config.Snowflake;
@@ -64,7 +67,16 @@ public class WorkController {
 
     //前端网页数据呈现
     @GetMapping("/search")
+//    @HystrixCommand(fallbackMethod = "searchByDatetime_fallback", commandProperties = {
+//            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+//    })
     public Map searchByDatetime(@RequestParam(value = "dateTime",required = false) String dateTime){
+
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         Map map = new HashMap();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -81,14 +93,17 @@ public class WorkController {
             List<Work> works = workService.getWorkListByDateTime(dateTime);
             List pagesList = this.forEachWorks(works);
             map.put("pagesList", pagesList);
-        }else if(dateTime != null && dateTime.isEmpty()){
+        }else if((dateTime != null && dateTime.isEmpty()) || dateTime == null){
             List<Work> works = workService.getAllWorkList();
             List pagesList = this.forEachWorks(works);
             map.put("pagesList", pagesList);
         }
-        System.out.println(dateTime == null);
 
         return map;
+    }
+
+    public Object searchByDatetime_fallback(@RequestParam(value = "dateTime",required = false) String dateTime){
+        return "从数据库中多次查询数据失败，请稍后再试......";
     }
 
     public List forEachWorks(List<Work> works){
@@ -102,7 +117,7 @@ public class WorkController {
             Process process = processMapper.selectById(work.getWProcessId());
             hashMap.put("processName", process.getProcess());
             hashMap.put("flowName", "流水线1");
-            if("3".equals(work.getWState())){
+            if(StateConfig.EXCEPTION_STATE.equals(work.getWState())){
                 hashMap.put("finish", "异常");
                 hashMap.put("errorTime", work.getWErrorTime());
             }else {

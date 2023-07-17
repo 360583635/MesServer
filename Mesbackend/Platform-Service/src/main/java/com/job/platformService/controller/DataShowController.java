@@ -22,7 +22,7 @@ public class DataShowController {
     /*
     查找数据
      */
-    //    查找单个数据
+    //    查找数据分类
     @RequestMapping("/selectAll")
     public Result findByIds(){
         Map<String, Object> list = redisCache.getCacheMap("list");
@@ -37,38 +37,94 @@ public class DataShowController {
     @RequestMapping("select")
     public Result select(@RequestParam(value = "id", required = false) String id,
                          @RequestParam(value = "option") String option) {
-        String Id=option+id;
-        System.out.println(Id);
+        String Id=option+id;//order:1
+        System.out.println(id);
         Collection<String> keys = redisCache.keys( option + "*");
         System.out.println(keys);
-        List<Map<String, Object>> resultList = new ArrayList<>();
+//        List<Map<String, Object>> resultList = new ArrayList<>();
         Result result = new Result();
-        if (Id == null) {
-            for (String key : keys) {
-                System.out.println(key);
-                Map<String, Object> cacheMap = redisCache.getCacheMap(key);
-                System.out.println(cacheMap);
-                resultList.add(cacheMap);
+        if (id == null) {
+//            for (String key : keys) {
+//                System.out.println(key);
+//                Map<String, Object> cacheMap = redisCache.getCacheMap(key);
+//                System.out.println(cacheMap);
+//                resultList.add(cacheMap);
+//                result.setCode(200);
+//                result.setMsg("获取成功");
+//                result.setData(resultList);
+//                return result;
                 result.setCode(200);
                 result.setMsg("获取成功");
-                result.setData(resultList);
+                result.setData(keys);
                 return result;
-            }
+
         } else {
-            for (String key : keys) {
-                while (Id.equals(key)) {
-                    Map<String, Object> cacheMap = redisCache.getCacheMap(key);
-                    System.out.println(cacheMap);
-                    resultList.add(cacheMap);
-                    result.setCode(200);
-                    result.setMsg("获取成功");
-                    result.setData(resultList);
-                    return result;
-                }
+//            for (String key : keys) {
+//                while (Id.equals(key)) {
+//                    Map<String, Object> cacheMap = redisCache.getCacheMap(key);
+//                    System.out.println(cacheMap);
+//                    resultList.add(cacheMap);
+//                    result.setCode(200);
+//                    result.setMsg("获取成功");
+//                    result.setData(resultList);
+//                    return result;
+//                }
+                for (String key : keys) {
+                    while (Id.equals(key)) {
+                        result.setCode(200);
+                        result.setMsg("获取成功");
+                        result.setData(key);
+                        return result;
+                    }
             }
         }
         return result;
+    }
 
+    //    查找单个数据
+    @RequestMapping("/select/{key}")
+    public Result findById(@PathVariable(value = "key") String key){
+        System.out.println(key);
+        Map<String, Object> cacheMap = redisCache.getCacheMap(key);
+        System.out.println(cacheMap);
+        Result result=new Result();
+        result.setData(cacheMap);
+        result.setCode(200);
+        return result;
+    }
+
+
+
+    //    删除单个缓存数据
+    @RequestMapping("delete/{key}")
+    public Result deteById(@PathVariable("key") String key){
+        System.out.println(key);
+        boolean b = redisCache.deleteObject(key);
+        Result result=new Result();
+        if (b) {
+            result.setMsg("删除成功");
+            result.setCode(200);
+        } else {
+            result.setMsg("删除失败");
+            result.setCode(404);
+        }
+        return result;
+    }
+
+
+    //    设置单个缓存数据过期时间
+    @RequestMapping("expire/{key}")
+    public Result expireById(@PathVariable("key") String key){
+        boolean b = redisCache.expire(key, 0);
+        Result result=new Result();
+        if (b) {
+            result.setMsg("设置过期成功");
+            result.setCode(200);
+        } else {
+            result.setMsg("设置过期失败");
+            result.setCode(404);
+        }
+        return result;
     }
 
 }
