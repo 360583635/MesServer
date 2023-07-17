@@ -30,8 +30,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private FlowMapper flowMapper;
     @Autowired
     private LineMapper lineMapper;
-    @Autowired
-    private RedisCache redisCache;
+
 
     /**
      * 创建订单
@@ -57,6 +56,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setIsDelete(0);
             int i = orderMapper.insert(order);
             //存入redis
+            RedisCache redisCache=new RedisCache();
             Map<String,Object> map=new HashMap<>();
             map.put("orderId",order.getOrderId());
             map.put("productionStatus",order.getProductionStatus());
@@ -190,7 +190,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 order.setProductLine(lineId);
                 order.setProductionStatus(1);
                 //TODO 修改redis里面的数据
-
+                RedisCache redisCache=new RedisCache();
                 return Result.success("流水线派发成功！");
             }else {
                 return Result.error("未匹配到流水线，派发失败！");
