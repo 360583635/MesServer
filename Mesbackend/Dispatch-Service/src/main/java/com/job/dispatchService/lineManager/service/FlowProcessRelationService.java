@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.dto.FlowDto;
-import com.job.dispatchService.lineManager.dto.FlowDto;
-import com.job.dispatchservice.linemanager.vo.ProcessVo;
+import com.job.dispatchService.lineManager.vo.ProcessVo;
 
 import java.util.List;
 

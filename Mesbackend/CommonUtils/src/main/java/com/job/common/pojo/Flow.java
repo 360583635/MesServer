@@ -47,7 +47,7 @@ public class Flow {
     private String updateUsername;
 
     //删除状态
-    private int deleteStatus;
+    private Integer isDelete;
 
     @Override
     public String toString() {

@@ -41,7 +41,5 @@ public class Line {
     //异常次数
     private Integer exceptionCount;
 
-    private int isDelete;
-
-
+    private Integer isDelete;
 }

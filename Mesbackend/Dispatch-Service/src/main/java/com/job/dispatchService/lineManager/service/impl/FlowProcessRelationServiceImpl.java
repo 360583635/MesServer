@@ -7,9 +7,10 @@ import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.dto.FlowDto;
 import com.job.dispatchService.lineManager.mapper.FlowProcessRelationMapper;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
+
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.ProcessService;
-import com.job.dispatchservice.linemanager.vo.ProcessVo;
+import com.job.dispatchService.lineManager.vo.ProcessVo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,6 +150,6 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
      */
     @Override
     public List<ProcessVo> currentProcessViewServer(String flowId) throws Exception {
-        return flowProcessRelationMapper.queryOperRelationByFlowId(flowId);
+        return flowProcessRelationMapper.queryProcessRelationByFlowId(flowId);
     }
 }

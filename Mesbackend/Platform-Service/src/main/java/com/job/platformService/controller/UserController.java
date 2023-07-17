@@ -66,7 +66,6 @@ public class UserController {
     public String findById(@PathVariable("key") String key){
         System.out.println(key);
         Object obj = key; // 要获取数据类型的对象
-
         if (obj instanceof Integer) {
             System.out.println("数据类型：Integer");
         } else if (obj instanceof String) {
@@ -96,7 +95,6 @@ public class UserController {
     }
 
         //    添加数据
-
     @RequestMapping("/add")
     public void add(){
         System.out.println(111);
@@ -115,17 +113,7 @@ public class UserController {
         redisCache.setCacheObject("user:3",user2);
     }
 
-    //    删除单个缓存数据
-    @RequestMapping("delete/{key}")
-    public String deteById(@PathVariable("key") String key){
-        boolean b = redisCache.deleteObject(key);
-        if (b) {
-            return "Key deleted successfully";
-        } else {
-            return "Key not found or deletion failed";
-        }
 
-    }
 
 //    删除多个数据
     @PostMapping("deletes")
@@ -229,25 +217,8 @@ public class UserController {
     }
 
 
-    @RequestMapping("ca1")
-    public void exportCacheDataAsCSV(String filePath) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("D:\\导出数据\\1\\2.csv"))) {
-            redisTemplate.execute((RedisCallback<Void>) connection -> {
-                Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions().match("*").count(1000).build());
-                while (cursor.hasNext()) {
-                    byte[] keyBytes = cursor.next();
-                    byte[] valueBytes = connection.get(keyBytes);
-                    String key = new String(keyBytes);
-                    String value = new String(valueBytes);
-                    writer.write(key + "," + value + "\n");
-                }
-                cursor.close();
-                return null;
-            });
-        } catch (IOException e) {
-            throw new RuntimeException("Error while creating file writer", e);
-        }
-    }
+
+
 
 
 

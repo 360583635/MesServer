@@ -21,5 +21,6 @@ public class UsersRoles {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     private Date UpdateTime;
     private String UpdateUser;
+
     private Integer IsDelete;
 }

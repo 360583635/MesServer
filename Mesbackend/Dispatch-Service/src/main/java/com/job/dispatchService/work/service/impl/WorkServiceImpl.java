@@ -7,11 +7,14 @@ import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
 
+import com.job.dispatchService.work.config.StateConfig;
 import com.job.dispatchService.work.mapper.WOrderMapper;
 import com.job.dispatchService.work.mapper.WProcessMapper;
 import com.job.dispatchService.work.mapper.WorkMapper;
 import com.job.dispatchService.work.service.WorkBean;
 import com.job.dispatchService.work.service.WorkService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wiki.xsx.core.snowflake.config.Snowflake;
@@ -49,7 +52,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
 
         //雪花算法生产工单id、设置状态（创建工单）、工序id、订单id、生产数量、创建时间、设备id
         work.setWId(String.valueOf(snowflake.nextId()));
-        work.setWState("1");
+        work.setWState(StateConfig.CREATE_STATE);
         work.setWProcessId(processId);
         work.setWOrderId(orderId);
         work.setWProdNums(0);
@@ -102,7 +105,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
             }
             if(flag){
                 //修改状态 2 生产中
-                work.setWState("2");
+                work.setWState(StateConfig.WORKING_STATE);
                 int update = workMapper.update(work, queryWrapper);
                 if(update == 0){
                     return "error";
@@ -135,8 +138,9 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         //生产完成，状态改为 4（正常生产）
         while (count == orderNumber){
             UpdateWrapper<Work> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.set("w_state", "4")
+            updateWrapper.set("w_state", StateConfig.FINISH_STATE)
                     .set("w_prod_nums", count)
+                    .set("success_time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
                     .eq("w_id", workId);
             boolean update = update(updateWrapper);
             if(update){
@@ -165,7 +169,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
                     updateWrapper.set("w_error_time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                                     .format(new Date()))
                             .set("w_prod_nums", prodNum)
-                            .set("w_state", "3")
+                            .set("w_state", StateConfig.EXCEPTION_STATE)
                             .eq("w_id", workId);
                     boolean update = update(null, updateWrapper);
                     while (!update){
@@ -180,11 +184,24 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         return "ok";
     }
 
+    //服务熔断
+//    @HystrixCommand(fallbackMethod = "getWorkListByDateTime_fallback", commandProperties = {
+//            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),//是否开启断路器
+//            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),//请求次数
+//            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),//时间窗口期
+//            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "60")//失败率达到多少后跳闸
+//    })
     public List<Work> getWorkListByDateTime(String dateTime){
+//        int a = 1/0;
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.gt("w_create_time", dateTime);
         List<Work> works = workMapper.selectList(queryWrapper);
         return works;
+    }
+
+    public String getWorkListByDateTime_fallback(String dateTime){
+        System.out.println("=======================");
+        return "从数据库中多次查询数据失败，请稍后再试......";
     }
 
     public List<Work> getAllWorkList(){

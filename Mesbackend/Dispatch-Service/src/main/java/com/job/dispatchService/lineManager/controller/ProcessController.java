@@ -9,9 +9,8 @@ import com.job.common.pojo.Process;
 //import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 //import com.job.dispatchService.LineManager.pojo.TProcess;
 import com.job.common.result.Result;
+import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
-
-import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +40,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping("/page")
-    public Result page(com.job.dispatchService.lineManager.request.ProcessPageReq req){
+    public Result page(ProcessPageReq req){
         IPage result = processService.page(req);
         return Result.success(result,"查询成功");
     }
@@ -106,10 +105,10 @@ public class ProcessController {
 
     @PostMapping("/query/{procrssName}")
     @ResponseBody
-    public Result<com.job.dispatchService.lineManager.request.ProcessPageReq> query(@PathVariable("process") String procrssName, @RequestBody com.job.dispatchService.lineManager.request.ProcessPageReq req){
+    public Result<ProcessPageReq> query(@PathVariable("process") String procrssName, @RequestBody ProcessPageReq req){
         LambdaQueryWrapper<Process> lambdaQueryWrapper=new LambdaQueryWrapper();
         lambdaQueryWrapper.like(Process::getProcess,procrssName);
-        com.job.dispatchService.lineManager.request.ProcessPageReq page = processService.page(req, lambdaQueryWrapper);
+        ProcessPageReq page = processService.page(req, lambdaQueryWrapper);
         return Result.success(page,"查询成功");
     }
     /**
@@ -122,4 +121,5 @@ public class ProcessController {
         return Result.success(list,"查询成功");
     }
 
+    
 }

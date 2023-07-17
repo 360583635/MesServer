@@ -1,16 +1,17 @@
 package com.job.authenticationService.Controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.job.authenticationService.mapper.RolesMapper;
 import com.job.authenticationService.mapper.UsersMapper;
+import com.job.authenticationService.pojo.Result;
+import com.job.authenticationService.service.MenusService;
+import com.job.authenticationService.service.RolesService;
 import com.job.authenticationService.service.UsersRolesService;
 import com.job.authenticationService.service.UsersService;
 import com.job.authenticationService.utils.JwtUtil;
-import com.job.common.pojo.MenusRoles;
-import com.job.common.pojo.Roles;
-import com.job.common.pojo.Users;
-import com.job.common.pojo.UsersRoles;
-import com.job.common.result.Result;
+import com.job.common.pojo.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.User;
@@ -21,10 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-//@RequestMapping("/authen")
+@RequestMapping("/authen")
 @RestController
 public class UsersController {
     @Autowired
@@ -36,11 +39,107 @@ public class UsersController {
     @Autowired
     private UsersMapper usersMapper;
 
+    @Autowired
+    private RolesService rolesService;
+
+    @Autowired
+    private MenusService menusService;
+
+    @Autowired
+    private RolesMapper rolesMapper;
+
+    /**
+     * 查询角色
+     * @return
+     */
+    @RequestMapping("/showrole")
+    public  Result showrole(){
+        LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Roles::getIsDelete,1);
+        List<Roles> roleslist=rolesService.list(wrapper);
+        System.out.println(roleslist);
+        if (roleslist.size()>0){
+            return Result.success(roleslist,"查询角色成功");
+        }else {
+            return Result.error("查询失败");
+        }
+
+    }
+
+    /**
+     * 查询所有用户
+     */
+    @RequestMapping("/showUser")
+    public Result showUser(){
+        LambdaQueryWrapper<Users> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Users::getIsDelete,1);
+        List<Users> usersList=usersService.list(wrapper);
+        System.out.println(usersList);
+        if (usersList.size()>0){
+            return Result.success(usersList,"查询用户成功");
+        }else {
+            return Result.error("查询失败");
+        }
+    }
+
+    /**
+     * 查询个人信息
+     * @param
+     * @return
+     */
+    @RequestMapping("/showById")
+    public Result joinQueryExample(@RequestParam(value = "id") String id) {
+        List list = new ArrayList<>();
+        Result<Object> result = new Result<>();
+        LambdaQueryWrapper<Users> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Users::getState, Users::getName, Users::getId) // 指定需要查询的字段
+                .eq(Users::getId, id); // 添加其他查询条件
+        List<Map<String, Object>> resultList = usersMapper.selectMaps(queryWrapper);
+        list.add(resultList);
+        System.out.println(resultList);
+        LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
+        wrapper.select(Roles::getRoleId, Roles::getRoleName) // 指定需要查询的字段
+                .eq(Roles::getIsDelete,1);
+        List<Map<String, Object>> rolesList=rolesMapper.selectMaps(wrapper);
+        list.add(rolesList);
+        System.out.println(rolesList);
+        result.setData(list);
+        result.setCode(200);
+        return result;
+    }
+
+    /**
+     * 查询所有权限
+     */
+    @RequestMapping("/showmenus")
+    public Result showmenus(){
+        LambdaQueryWrapper<Menus> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Menus::getIs_delete,1);
+        List<Menus> menusList=menusService.list(wrapper);
+        System.out.println(menusList);
+        if (menusList.size()>0){
+            return Result.success(menusList,"查询权限成功");
+        }else {
+            return Result.error("查询失败");
+        }
+    }
+    /**
+     * 添加员工用户
+     * @param name
+     * @param password
+     * @param state
+     * @param options
+     * @return
+     */
     @RequestMapping("/addUser")
     public Result<Users> addUser(@RequestParam(value = "name") String name,
                                  @RequestParam(value = "password") String password,
                                  @RequestParam(value = "state") Integer state,
                                  @RequestParam(value = "option") List<String> options){
+        System.out.println(name);
+        System.out.println(password);
+        System.out.println(state);
+        System.out.println(options);
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
         Date date=new Date();
         Users users=new Users();
@@ -76,6 +175,13 @@ public class UsersController {
         return result;
     }
 
+    /**
+     * 修改用户信息
+     * @param id
+     * @param state
+     * @param options
+     * @return
+     */
 
     @RequestMapping("/updateUser")
     public Result<Users> addUser(@RequestParam(value = "id") String id,
@@ -114,6 +220,12 @@ public class UsersController {
 
     }
 
+    /**
+     * 删除某个用户角色
+     * @param UserId
+     * @param request
+     * @return
+     */
     //    删除某个用户角色
     @RequestMapping("/delUser/{UserId}")
     public Result<Roles> deleteRole(@PathVariable("UserId") String UserId, HttpServletRequest request){
@@ -158,7 +270,7 @@ public class UsersController {
      * @param UserId
      * @return
      */
-    @RequestMapping("/showdetail/{Userid}")
+    @RequestMapping("/showdetail/{UserId}")
     public Result showdetail(@PathVariable("UserId") String UserId){
         Users users=usersService.getById(UserId);
         if (users!=null){

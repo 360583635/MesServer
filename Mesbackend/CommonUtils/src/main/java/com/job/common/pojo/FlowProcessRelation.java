@@ -58,7 +58,7 @@ public class FlowProcessRelation {
     /**
      * 排序
      */
-    private int sortNum;
+    private Integer sortNum;
 
     /**
      * 工序类型 (首道工序firstProcess;最后一道工序lastProcess)
@@ -66,7 +66,7 @@ public class FlowProcessRelation {
     private String processType;
 
     //删除状态
-    private int deleteStatus;
+    private Integer isDelete;
 
     private int isDelete;
 

@@ -6,7 +6,6 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +56,7 @@ public class RedisCache
     }
 
     /**
-//     * 设置有效时间
+     //     * 设置有效时间
      *
      * @param key Redis键
      * @param timeout 超时时间
@@ -65,9 +64,9 @@ public class RedisCache
      * @return true=设置成功；false=设置失败
      */
     public boolean expire(final String key, final long timeout, final TimeUnit unit)
-        {
-            return redisTemplate.expire(key, timeout, unit);
-        }
+    {
+        return redisTemplate.expire(key, timeout, unit);
+    }
 
     /**
      * 获得缓存的基本对象。
@@ -191,7 +190,7 @@ public class RedisCache
         redisTemplate.opsForHash().put(key, hKey, value);
     }
 
-//    添加数据分类
+    //    添加数据分类
     public <T> void addList(final String hKey, final T value){
         redisTemplate.opsForHash().put("list",hKey,value);
     }
@@ -233,6 +232,12 @@ public class RedisCache
     {
         return redisTemplate.opsForHash().multiGet(key, hKeys);
     }
+
+    public <T> List<T> getMultiDatas(final Collection<String> keys){
+        return redisTemplate.opsForValue().multiGet(keys);
+    }
+
+
 
     /**
      * 获得缓存的基本对象列表

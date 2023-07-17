@@ -1,4 +1,4 @@
-package com.job.dispatchservice.linemanager.config;
+package com.job.dispatchService.lineManager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
