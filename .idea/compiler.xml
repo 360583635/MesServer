@@ -15,25 +15,16 @@
         <module name="Data-Visualization-Service" />
         <module name="Zuul-Master" />
         <module name="Production-Management-Service" />
+        <module name="Feign-api" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Authentication-Service" target="17" />
-      <module name="CommonUtils" target="17" />
-      <module name="Data-Visualization-Service" target="17" />
-      <module name="Dispatch-Service" target="17" />
-      <module name="Mesbackend" target="17" />
-      <module name="Order-Service" target="17" />
-      <module name="Platform-Service" target="17" />
-      <module name="Production-Management-Service" target="17" />
-      <module name="Zuul-Master" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Authentication-Service" options="-parameters" />
       <module name="Data-Visualization-Service" options="-parameters" />
       <module name="Dispatch-Service" options="-parameters" />
+      <module name="Feign-api" options="-parameters" />
       <module name="Order-Service" options="-parameters" />
       <module name="Platform-Service" options="-parameters" />
       <module name="Production-Management-Service" options="-parameters" />
