@@ -25,13 +25,13 @@ public class FlowProcessRelationController {
      * 工序基础数据服务
      */
     @Autowired
-    public com.job.dispatchservice.linemanager.service.ProcessService processService;
+    public com.job.dispatchService.lineManager.service.ProcessService processService;
 
     /**
      * 流程基础数据服务
      */
     @Autowired
-    public com.job.dispatchservice.linemanager.service.FlowService flowService;
+    public com.job.dispatchService.lineManager.service.FlowService flowService;
 
     /**
      * 流程与工序基础数据服务
@@ -91,7 +91,7 @@ public class FlowProcessRelationController {
      */
     @PostMapping("/delete")
     @ResponseBody
-    public Result deleteByTableNameId(com.job.dispatchservice.linemanager.dto.FlowDto req) throws Exception {
+    public Result deleteByTableNameId(com.job.dispatchService.lineManager.dto.FlowDto req) throws Exception {
         //先删除流程头表
         flowService.removeById(req.getId());
         //删除流程关系表

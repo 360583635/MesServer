@@ -1,17 +1,25 @@
 package com.job.orderService.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Order;
+import com.job.common.redis.RedisCache;
 import com.job.orderService.common.result.Result;
+import com.job.orderService.mapper.FlowMapper;
 import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.rmi.MarshalledObject;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
@@ -19,7 +27,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
+    private FlowMapper flowMapper;
+    @Autowired
     private LineMapper lineMapper;
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 创建订单
@@ -44,7 +56,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setOrderPrice(null);
             order.setIsDelete(0);
             int i = orderMapper.insert(order);
-
+            //存入redis
+            Map<String,Object> map=new HashMap<>();
+            map.put("orderId",order.getOrderId());
+            map.put("productionStatus",order.getProductionStatus());
+            map.put("productLine",order.getProductLine());
+            redisCache.setCacheMap("order:"+order.getOrderId(),map);
             if (i>0)
             {
                 return Result.success("success");
@@ -148,19 +165,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
     }
 
+    /**
+     * 订单派发
+     * @param orderId
+     * @return
+     */
     @Override
     public Result<Order> handOrder(String orderId) {
         LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         Integer status=order.getProductionStatus();
-        String productId = order.getProductId();
+        String typeName = order.getTypeName();
         if (status==0){
-            LambdaQueryWrapper<Line> wrapper1=new LambdaQueryWrapper<>();
-//            wrapper.eq(Line::getLine,productId);
-//            Line line = lineMapper.selectOne(wrapper1);
+            LambdaQueryWrapper<Flow> wrapper1=new LambdaQueryWrapper<>();
+            wrapper1.eq(Flow::getFlow,typeName);
+            Flow flow = flowMapper.selectOne(wrapper1);
+            String flowId = flow.getId();
+            LambdaQueryWrapper<Line> wrapper2=new LambdaQueryWrapper<>();
+            wrapper2.eq(Line::getLineFlowId,flowId).orderByAsc(Line::getOrderCount);
+            Line line = lineMapper.selectOne(wrapper2);
+            if (line!=null){
+                String lineId = line.getId();
+                order.setProductLine(lineId);
+                order.setProductionStatus(1);
+                //TODO 修改redis里面的数据
 
+                return Result.success("流水线派发成功！");
+            }else {
+                return Result.error("未匹配到流水线，派发失败！");
+            }
+        }else {
+            return Result.error("该状态下的订单不在派发范围内！");
         }
-        return null;
     }
 }

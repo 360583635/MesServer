@@ -2,7 +2,6 @@ package com.job.dispatchService.lineManager.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.job.common.pojo.FlowProcessRelation;
-import com.job.dispatchService.lineManager.vo.ProcessVo;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface FlowProcessRelationMapper extends BaseMapper<FlowProcessRelatio
      * @param flowId 流程关联ID
      * @return 工序关系集合
      */
-    List<ProcessVo> queryOperRelationByFlowId(@Param("flowId") String flowId);
+    List<com.job.dispatchservice.linemanager.vo.ProcessVo> queryOperRelationByFlowId(@Param("flowId") String flowId);
 
     /**
      * 删除流程下挂的全部工序

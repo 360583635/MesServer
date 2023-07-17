@@ -1,7 +1,6 @@
 package com.job.dispatchService.lineManager.dto;
 
 import com.job.common.pojo.Flow;
-import com.job.dispatchService.lineManager.vo.ProcessVo;
 
 import java.util.List;
 
@@ -14,13 +13,13 @@ public class FlowDto extends Flow {
     /**
      * 流程与工序关系集合
      */
-    private List<ProcessVo> ProcessVoList;
+    private List<com.job.dispatchservice.linemanager.vo.ProcessVo> ProcessVoList;
 
-    public List<ProcessVo> getProcessVoList() {
+    public List<com.job.dispatchservice.linemanager.vo.ProcessVo> getProcessVoList() {
         return ProcessVoList;
     }
 
-    public void setProcessVoList(List<ProcessVo> ProcessVoList) {
+    public void setProcessVoList(List<com.job.dispatchservice.linemanager.vo.ProcessVo> ProcessVoList) {
         this.ProcessVoList = ProcessVoList;
     }
 }

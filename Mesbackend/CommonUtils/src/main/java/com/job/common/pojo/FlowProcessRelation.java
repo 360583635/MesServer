@@ -68,6 +68,8 @@ public class FlowProcessRelation {
     //删除状态
     private int deleteStatus;
 
+    private int isDelete;
+
     @Override
     public String toString() {
         return "TFlowProcessRelation{" +

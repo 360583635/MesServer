@@ -6,8 +6,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.Line;
 
 import com.job.common.result.Result;
+import com.job.dispatchService.lineManager.request.LinePageReq;
 import com.job.dispatchService.lineManager.service.LineService;
-import com.job.dispatchservice.linemanager.request.LinePageReq;
+import com.job.dispatchService.lineManager.request.LinePageReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +51,7 @@ public class LineController {
 
         String user="wen"; //获取用户信息
         pipeLine.setOrderCount("0");
-        pipeLine.setStatus("0"); //设置状态为空闲
+        pipeLine.setLineStatus("0"); //设置状态为空闲
         lineService.save(pipeLine);
         //ToDo 调用日志接口
         return Result.success(null,"添加成功");
@@ -78,7 +79,7 @@ public class LineController {
     @GetMapping("/removeLine/{lineId}")
     public Result removeLine(@PathVariable String lineId){
         Line byId = lineService.getById(lineId);
-        if(!"0".equals(byId.getStatus())){
+        if(!"0".equals(byId.getLineStatus())){
             return Result.error("流水线未关闭，无法删除");
         }
         lineService.removeById(lineId);
