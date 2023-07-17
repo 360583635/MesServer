@@ -181,8 +181,8 @@ public class OrderController {
     @GetMapping("/handOrder/{orderId}")
     @Scheduled(cron = "0 0/5 * ? * ?")
     public Result<Order> handOrder(@PathVariable String orderId){
-
-        return Result.success(new Order(),"success");
+        Result<Order> result = orderService.handOrder(orderId);
+        return result;
     }
 
 }
