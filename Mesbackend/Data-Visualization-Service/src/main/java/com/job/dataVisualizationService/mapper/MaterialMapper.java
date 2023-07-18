@@ -1,12 +1,10 @@
 package com.job.dataVisualizationService.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.job.common.pojo.OrderDetail;
+import com.job.common.pojo.Material;
 import org.apache.ibatis.annotations.Mapper;
 
-/**
- * @Auther:Liang
- */
 @Mapper
-public interface OrderDetailMapper extends BaseMapper<OrderDetail> {
+public interface MaterialMapper extends BaseMapper<Material> {
+
 }
