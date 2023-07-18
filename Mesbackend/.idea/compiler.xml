@@ -15,6 +15,7 @@
         <module name="CommonUtils" />
         <module name="Zuul-Master" />
         <module name="Production-Management-Service" />
+        <module name="Feign-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -30,6 +31,7 @@
       <module name="CommonUtils" options="" />
       <module name="Data-Visualization-Service" options="-parameters" />
       <module name="Dispatch-Service" options="-parameters" />
+      <module name="Feign-api" options="-parameters" />
       <module name="Log-Management" options="" />
       <module name="Message-Management" options="" />
       <module name="Order-Service" options="-parameters" />

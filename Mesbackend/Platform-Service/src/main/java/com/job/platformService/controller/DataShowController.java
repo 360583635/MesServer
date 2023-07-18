@@ -2,18 +2,13 @@ package com.job.platformService.controller;
 
 
 import com.job.platformService.config.RedisCache;
+import com.job.platformService.pojo.MyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import  com.job.platformService.result.Result;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class DataShowController {
@@ -126,6 +121,20 @@ public class DataShowController {
             result.setCode(404);
         }
         return result;
+    }
+
+
+    //    删除多个数据
+    @PostMapping("deletes")
+    public long deletebyids(@RequestBody MyDTO data){
+//        System.out.println(data);//com.job.platformService.pojo.MyDTO@cff4b67
+        // 处理接收到的JSON数据
+        String[] selectedItems = data.getSelectedItems();
+//        System.out.println(selectedItems);//[Ljava.lang.String;@4ff33d3
+//        System.out.println(Arrays.toString(selectedItems));//[key1, key2, key3]
+        List<String> keylist= Arrays.asList(selectedItems);
+        long l = redisCache.deleteObject(keylist);
+        return l;
     }
 
 }

@@ -20,11 +20,11 @@ import java.util.Date;
 @TableName("t_order")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order implements Serializable {
+public class Order{
     @TableId(type = IdType.ASSIGN_ID)
     private String orderId;
     private String customName;
-    private String typeName;
+    private Integer typeName;
     private String productId;
     private Integer orderNumber;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -33,7 +33,7 @@ public class Order implements Serializable {
     private Date expectDate;
     private String auditor;
     private Integer priority;// 0 无优先级；1 中等优先级； 2 高优先级
-    private String productLine;
+    private Integer productLine;
     private Integer productionStatus;//0 未生产；1待生产；2 生产中；3 生产异常；4 生产完成
     private Integer orderPrice;
     private String rawName;

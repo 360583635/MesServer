@@ -28,7 +28,6 @@ import java.util.List;
 @Component
 public class LineTaskController {
 
-
     @Autowired
     private WorkController workController;
 
@@ -67,6 +66,7 @@ public class LineTaskController {
                 //查询该订单是否有工单关联
                 LambdaQueryWrapper<Work> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper
+                        .eq(Work::getWState,4)
                         .eq(Work::getWOrderId, order.getOrderId());
                 Work work = workService.getOne(queryWrapper);
 
