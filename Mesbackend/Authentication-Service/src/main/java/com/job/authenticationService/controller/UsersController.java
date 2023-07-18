@@ -14,7 +14,6 @@ import com.job.authenticationService.utils.JwtUtil;
 import com.job.common.pojo.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/authen")
 @RestController
@@ -42,6 +43,9 @@ public class UsersController {
 
     @Autowired
     private MenusService menusService;
+
+    @Autowired
+    private RolesMapper rolesMapper;
 
     /**
      * 查询角色
@@ -75,6 +79,33 @@ public class UsersController {
         }else {
             return Result.error("查询失败");
         }
+    }
+
+
+    /**
+     * 查询个人信息
+     * @param
+     * @return
+     */
+    @RequestMapping("/showById")
+    public Result joinQueryExample(@RequestParam(value = "id") String id) {
+        List list = new ArrayList<>();
+        Result<Object> result = new Result<>();
+        LambdaQueryWrapper<Users> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Users::getState, Users::getName, Users::getId) // 指定需要查询的字段
+                .eq(Users::getId, id); // 添加其他查询条件
+        List<Map<String, Object>> resultList = usersMapper.selectMaps(queryWrapper);
+        list.add(resultList);
+        System.out.println(resultList);
+        LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
+        wrapper.select(Roles::getRoleId, Roles::getRoleName) // 指定需要查询的字段
+                .eq(Roles::getIsDelete,1);
+        List<Map<String, Object>> rolesList=rolesMapper.selectMaps(wrapper);
+        list.add(rolesList);
+        System.out.println(rolesList);
+        result.setData(list);
+        result.setCode(200);
+        return result;
     }
 
     /**
@@ -187,12 +218,12 @@ public class UsersController {
     }
 
     /**
-     * 删除某个用户角色
+     * 删除某个用户
      * @param UserId
      * @param request
      * @return
      */
-    //    删除某个用户角色
+    //    删除某个用户
     @RequestMapping("/delUser/{UserId}")
     public Result<Roles> deleteRole(@PathVariable("UserId") String UserId, HttpServletRequest request){
         String token=request.getHeader("token");
