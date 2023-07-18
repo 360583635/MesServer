@@ -21,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/authen")
 @RestController
@@ -135,7 +132,7 @@ public class UsersController {
     public Result<Users> addUser(@RequestParam(value = "name") String name,
                                  @RequestParam(value = "password") String password,
                                  @RequestParam(value = "state") Integer state,
-                                 @RequestParam(value = "option") List<String> options){
+                                 @RequestParam(value = "option",required = false) List<String> options){
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
         Date date=new Date();
         Users users=new Users();
@@ -153,18 +150,20 @@ public class UsersController {
         String id=users.getId();
         System.out.println(id);
 
-        System.out.println(options);
-        for(String s:options){
-            System.out.println(s);
-            UsersRoles usersRoles=new UsersRoles();
-            usersRoles.setUserId( id);
-            usersRoles.setCreateTime(date);
-            usersRoles.setUpdateTime(date);
-            usersRoles.setCreateTime(date);
-            usersRoles.setUpdateUser("zyx");
-            usersRoles.setCreateUser("zyx");
-            usersRoles.setRoleId(s);
-            usersRolesService.save(usersRoles);
+        if (options!=null) {
+            System.out.println(options);
+            for (String s : options) {
+                System.out.println(s);
+                UsersRoles usersRoles = new UsersRoles();
+                usersRoles.setUserId(id);
+                usersRoles.setCreateTime(date);
+                usersRoles.setUpdateTime(date);
+                usersRoles.setCreateTime(date);
+                usersRoles.setUpdateUser("zyx");
+                usersRoles.setCreateUser("zyx");
+                usersRoles.setRoleId(s);
+                usersRolesService.save(usersRoles);
+            }
         }
         Result result=new Result();
         result.setCode(200);
@@ -183,7 +182,7 @@ public class UsersController {
     @RequestMapping("/updateUser")
     public Result<Users> addUser(@RequestParam(value = "id") String id,
                                  @RequestParam(value = "state") Integer state,
-                                 @RequestParam(value = "option") List<String> options) {
+                                 @RequestParam(value = "option",required = false) List<String> options) {
 
 
 //                修改角色名
@@ -192,23 +191,24 @@ public class UsersController {
         user.setState(state);
         user.setUpdateTime(date);
         user.setUpdateUser("zyx");
-        UpdateWrapper<Users> updateWrapper = new UpdateWrapper<>();
-        usersService.update(user, updateWrapper);
+        usersService.updateById(user);
 
-        //        修改角色权限表
-        System.out.println(id);
-        System.out.println(options);
-        usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id",id));
-        for(String s:options){
-            System.out.println(s);
-            UsersRoles usersRoles=new UsersRoles();
-            usersRoles.setUserId(id);
-            usersRoles.setCreateTime(date);
-            usersRoles.setCreateTime(date);
-            usersRoles.setUpdateUser("zyx");
-            usersRoles.setCreateUser("zyx");
-            usersRoles.setRoleId(s);
-            usersRolesService.save(usersRoles);
+        if (options!=null) {
+            //        修改角色权限表
+            System.out.println(id);
+            System.out.println(options);
+            usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id", id));
+            for (String s : options) {
+                System.out.println(s);
+                UsersRoles usersRoles = new UsersRoles();
+                usersRoles.setUserId(id);
+                usersRoles.setCreateTime(date);
+                usersRoles.setCreateTime(date);
+                usersRoles.setUpdateUser("zyx");
+                usersRoles.setCreateUser("zyx");
+                usersRoles.setRoleId(s);
+                usersRolesService.save(usersRoles);
+            }
         }
         Result result=new Result();
         result.setCode(200);
