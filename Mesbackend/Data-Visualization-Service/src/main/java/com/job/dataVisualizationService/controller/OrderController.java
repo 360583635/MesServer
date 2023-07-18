@@ -5,17 +5,16 @@ import com.job.common.pojo.Order;
 import com.job.common.result.Result;
 import com.job.dataVisualizationService.pojo.OrderData;
 import com.job.dataVisualizationService.service.OrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * @Author 菜狗
  */
 @RestController
 @RequestMapping("/data/order")
+@Slf4j
 public class OrderController {
     @Autowired
     private OrderService orderService;
@@ -42,9 +41,7 @@ public class OrderController {
     @GetMapping("/prediction")    //金额预测和数量
     public Result<OrderData> getPAmount(){
         OrderData orderData = orderService.preData();
+        log.info(orderData.toString());
         return Result.success(orderData,"success");
-
     }
-
-
 }
