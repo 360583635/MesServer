@@ -32,7 +32,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-<!--        修改nacos弃用ribbon-->
+        <!--修改nacos弃用ribbon-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-loadbalancer</artifactId>

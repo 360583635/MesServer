@@ -1,12 +1,10 @@
 package com.job.dispatchService.lineManager.controller;
 
-import com.job.common.pojo.Flow;
 import com.job.common.pojo.Process;
 import com.job.dispatchService.lineManager.service.ProcessMaterialRelationService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.MaterialVo;
-import com.job.dispatchService.lineManager.vo.ProcessVo;
-import com.job.feign.clients.MaterialClient;
+import com.job.feign.clients.ProductionManagementClient;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -32,7 +30,7 @@ public class ProcessMaterialRelationController {
     private ProcessMaterialRelationService processMaterialRelationService;
 
     @Autowired
-    private MaterialClient materialClient;
+    private ProductionManagementClient productionManagementClient;
 
     /**
      * 工序与原材料关系管理编辑界面

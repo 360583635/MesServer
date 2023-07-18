@@ -1,10 +1,7 @@
 package com.job.dataVisualizationService.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.job.common.pojo.Logs;
+import com.job.common.pojo.Inventory;
 
-/**
- * @Auther:Liang
- */
-public interface LogsService extends IService<Logs> {
+public interface InventoryService extends IService<Inventory> {
 }
