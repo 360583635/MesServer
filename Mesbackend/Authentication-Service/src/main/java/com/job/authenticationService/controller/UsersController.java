@@ -110,6 +110,7 @@ public class UsersController {
         Users users=new Users();
         users.setCreateUser("zyx");
         users.setUpdateUser("zyx");
+        users.setIsDelete(1);
         users.setState(state);
         String encode=passwordEncoder.encode(password);
         System.out.println(encode);
