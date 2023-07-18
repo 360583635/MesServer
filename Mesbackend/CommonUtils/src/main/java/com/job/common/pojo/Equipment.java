@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Equipment {
 
-    private int equipmentID;
+    private int equipmentId;
     /**
      * 设备id
      */
