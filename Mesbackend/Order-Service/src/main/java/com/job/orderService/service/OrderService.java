@@ -2,6 +2,7 @@ package com.job.orderService.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.job.common.pojo.Order;
+import com.job.common.pojo.Users;
 import com.job.orderService.common.result.Result;
 
 public interface OrderService extends IService<Order> {
