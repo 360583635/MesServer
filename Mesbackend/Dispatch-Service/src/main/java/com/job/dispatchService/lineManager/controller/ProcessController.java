@@ -142,12 +142,12 @@ public class ProcessController {
     @GetMapping("/queryEquipmentsByType/{functionName}")
     public Result queryEquipmentsByType(@PathVariable("functionName") String functionName){
         List<Equipment> equipmentList = productionManagementClient.queryEquipmentsByType(functionName);
-        List<String> equipmentNameList = new ArrayList<>();
+        /*List<String> equipmentNameList = new ArrayList<>();
         for(Equipment equipment : equipmentList){
             String equipmentName = equipment.getEquipmentName();
             equipmentNameList.add(equipmentName);
-        }
-        return Result.success(equipmentNameList,"查询成功");
+        }*/
+        return Result.success(equipmentList,"查询成功");
     }
 
 }
