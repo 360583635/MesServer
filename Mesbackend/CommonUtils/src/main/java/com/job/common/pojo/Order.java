@@ -20,7 +20,7 @@ import java.util.Date;
 @TableName("t_order")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order implements Serializable {
+public class Order{
     @TableId(type = IdType.ASSIGN_ID)
     private String orderId;
     private String customName;
