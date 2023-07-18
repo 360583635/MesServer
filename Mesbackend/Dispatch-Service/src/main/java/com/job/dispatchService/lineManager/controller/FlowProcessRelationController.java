@@ -102,7 +102,7 @@ public class FlowProcessRelationController {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("flow_id", req.getId());
         flowProcessRelationService.remove(queryWrapper);
-        return Result.success();
+        return Result.success(null,"删除成功");
     }
 
 }
