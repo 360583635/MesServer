@@ -2,6 +2,7 @@ package com.job.orderService.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.job.common.pojo.Order;
+import com.job.common.pojo.Users;
 import com.job.orderService.common.result.Result;
 
 public interface OrderService extends IService<Order> {
@@ -11,7 +12,7 @@ public interface OrderService extends IService<Order> {
     Result<Order> selectOrderById(String orderId);
     Result<Order> showOrderDetail(String orderId);
     Result<Order> deleteOrder(String orderId);
-    Result<Order> handOrder(String orderId);
+//    Result<Order> handOrder(String orderId);
 
 
 

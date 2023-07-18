@@ -12,7 +12,7 @@ import java.util.Map;
  */
 //创建函数返回public R<xxx> xxx(){}
 @Data
-public class Result<T>  extends HashMap<String, Object> implements Serializable{
+public class Result<T>  implements Serializable{
 
     private Integer code; //编码：1成功，0和其它数字为失败
 
@@ -28,6 +28,7 @@ public class Result<T>  extends HashMap<String, Object> implements Serializable{
         result.data = object;
         result.code = 1;
         result.msg = msg;
+        System.out.println(result);
         return result;
     }
 
@@ -45,20 +46,20 @@ public class Result<T>  extends HashMap<String, Object> implements Serializable{
         return this;
     }
 
-    public static <T> Result<T> success() {
-        return restResult(null, 0, "操作成功");
-    }
-
-    public static <T> Result<T> success(T data) {
-        return restResult(data, 0, "操作成功");
-    }
-
-    private static <T> Result<T> restResult(T data, int code, String msg) {
-        Result<T> apiResult = new Result<>();
-        apiResult.put("code", code);
-        apiResult.put("data", data);
-        apiResult.put("msg", msg);
-        return apiResult;
-    }
+//    public static <T> Result<T> success() {
+//        return restResult(null, 0, "操作成功");
+//    }
+//
+//    public static <T> Result<T> success(T data) {
+//        return restResult(data, 0, "操作成功");
+//    }
+//
+//    private static <T> Result<T> restResult(T data, int code, String msg) {
+//        Result<T> apiResult = new Result<>();
+//        apiResult.put("code", code);
+//        apiResult.put("data", data);
+//        apiResult.put("msg", msg);
+//        return apiResult;
+//    }
 }
 

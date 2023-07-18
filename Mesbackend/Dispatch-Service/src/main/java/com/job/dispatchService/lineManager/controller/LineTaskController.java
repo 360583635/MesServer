@@ -66,6 +66,7 @@ public class LineTaskController {
                 //查询该订单是否有工单关联
                 LambdaQueryWrapper<Work> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper
+                        .eq(Work::getWState,4)
                         .eq(Work::getWOrderId, order.getOrderId());
                 Work work = workService.getOne(queryWrapper);
 
@@ -108,6 +109,7 @@ public class LineTaskController {
                         line.setLineStatus("3");
                         line.setExceptionCount(line.getExceptionCount()+1);
                         // TODO: 2023/7/15 流水线状态为异常后，实时监控工单异常处理信息
+
                     } else if ("ok".equals(workingStatus)) {
                         //如果工单运行成功，获取下一个工序
                         LambdaQueryWrapper<FlowProcessRelation> queryWrapper3 = new LambdaQueryWrapper<>();

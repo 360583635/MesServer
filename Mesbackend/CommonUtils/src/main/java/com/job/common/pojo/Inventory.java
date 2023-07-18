@@ -10,29 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("t_inventory")
 public class Inventory {
-    /**
-     * 仓库id
-     */
-    private String warehouseId ;
-    /**
-     * 仓库类型
-     */
-    private int warehouseType;
-    /**
-     * 原材料名称
-     */
+    private String warehouseId;
+    private Integer warehouseType;
     private String materialName;
-    /**
-     * 设备名称
-     */
-    private String  equipmentName;
-    /**
-     * 产品名称
-     */
-    private String Flow;
-    /**
-     * 数量
-     */
-    private int Number;
-
+    private String equipmentName;
+    private String flow;
+    private Integer number;
 }

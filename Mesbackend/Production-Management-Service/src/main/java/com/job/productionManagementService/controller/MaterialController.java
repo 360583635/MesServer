@@ -15,12 +15,12 @@ import java.util.List;
  * @description
  */
 @RestController
-@RequestMapping("/productionManagement")
+@RequestMapping("/productionManagement/material")
 public class MaterialController {
 
     @Autowired
     private MaterialService materialService;
-    @GetMapping("/material/queryMaterials")
+    @GetMapping("/queryMaterials")
     List<Material> queryMaterials() {
         return materialService.queryMaterials();
     }

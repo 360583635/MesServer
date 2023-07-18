@@ -34,20 +34,21 @@ public class Material {
     /**
      * 原材料单位
      */
-    private int materialArea;
+    private String materialArea;
     /**
      * * 100个所占面积
      */
-     String materialVolume;
+     private String materialVolume;
     /**
      * 100个原材料所占体积
      */
 
-    private String materialCost;
+    private Double materialCost;
     /**
      * 成本
      */
-    private String Weight;
+
+//    private String weight;
 
 
 }

@@ -14,7 +14,6 @@ import com.job.authenticationService.utils.JwtUtil;
 import com.job.common.pojo.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RequestMapping("/authen")
 @RestController
@@ -42,6 +40,9 @@ public class UsersController {
 
     @Autowired
     private MenusService menusService;
+
+    @Autowired
+    private RolesMapper rolesMapper;
 
     /**
      * 查询角色
@@ -77,6 +78,33 @@ public class UsersController {
         }
     }
 
+
+    /**
+     * 查询个人信息
+     * @param
+     * @return
+     */
+    @RequestMapping("/showById")
+    public Result joinQueryExample(@RequestParam(value = "id") String id) {
+        List list = new ArrayList<>();
+        Result<Object> result = new Result<>();
+        LambdaQueryWrapper<Users> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Users::getState, Users::getName, Users::getId) // 指定需要查询的字段
+                .eq(Users::getId, id); // 添加其他查询条件
+        List<Map<String, Object>> resultList = usersMapper.selectMaps(queryWrapper);
+        list.add(resultList);
+        System.out.println(resultList);
+        LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
+        wrapper.select(Roles::getRoleId, Roles::getRoleName) // 指定需要查询的字段
+                .eq(Roles::getIsDelete,1);
+        List<Map<String, Object>> rolesList=rolesMapper.selectMaps(wrapper);
+        list.add(rolesList);
+        System.out.println(rolesList);
+        result.setData(list);
+        result.setCode(200);
+        return result;
+    }
+
     /**
      * 查询所有权限
      */
@@ -104,12 +132,13 @@ public class UsersController {
     public Result<Users> addUser(@RequestParam(value = "name") String name,
                                  @RequestParam(value = "password") String password,
                                  @RequestParam(value = "state") Integer state,
-                                 @RequestParam(value = "option") List<String> options){
+                                 @RequestParam(value = "option",required = false) List<String> options){
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
         Date date=new Date();
         Users users=new Users();
         users.setCreateUser("zyx");
         users.setUpdateUser("zyx");
+        users.setIsDelete(1);
         users.setState(state);
         String encode=passwordEncoder.encode(password);
         System.out.println(encode);
@@ -121,18 +150,20 @@ public class UsersController {
         String id=users.getId();
         System.out.println(id);
 
-        System.out.println(options);
-        for(String s:options){
-            System.out.println(s);
-            UsersRoles usersRoles=new UsersRoles();
-            usersRoles.setUserId( id);
-            usersRoles.setCreateTime(date);
-            usersRoles.setUpdateTime(date);
-            usersRoles.setCreateTime(date);
-            usersRoles.setUpdateUser("zyx");
-            usersRoles.setCreateUser("zyx");
-            usersRoles.setRoleId(s);
-            usersRolesService.save(usersRoles);
+        if (options!=null) {
+            System.out.println(options);
+            for (String s : options) {
+                System.out.println(s);
+                UsersRoles usersRoles = new UsersRoles();
+                usersRoles.setUserId(id);
+                usersRoles.setCreateTime(date);
+                usersRoles.setUpdateTime(date);
+                usersRoles.setCreateTime(date);
+                usersRoles.setUpdateUser("zyx");
+                usersRoles.setCreateUser("zyx");
+                usersRoles.setRoleId(s);
+                usersRolesService.save(usersRoles);
+            }
         }
         Result result=new Result();
         result.setCode(200);
@@ -151,7 +182,7 @@ public class UsersController {
     @RequestMapping("/updateUser")
     public Result<Users> addUser(@RequestParam(value = "id") String id,
                                  @RequestParam(value = "state") Integer state,
-                                 @RequestParam(value = "option") List<String> options) {
+                                 @RequestParam(value = "option",required = false) List<String> options) {
 
 
 //                修改角色名
@@ -160,23 +191,24 @@ public class UsersController {
         user.setState(state);
         user.setUpdateTime(date);
         user.setUpdateUser("zyx");
-        UpdateWrapper<Users> updateWrapper = new UpdateWrapper<>();
-        usersService.update(user, updateWrapper);
+        usersService.updateById(user);
 
-        //        修改角色权限表
-        System.out.println(id);
-        System.out.println(options);
-        usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id",id));
-        for(String s:options){
-            System.out.println(s);
-            UsersRoles usersRoles=new UsersRoles();
-            usersRoles.setUserId(id);
-            usersRoles.setCreateTime(date);
-            usersRoles.setCreateTime(date);
-            usersRoles.setUpdateUser("zyx");
-            usersRoles.setCreateUser("zyx");
-            usersRoles.setRoleId(s);
-            usersRolesService.save(usersRoles);
+        if (options!=null) {
+            //        修改角色权限表
+            System.out.println(id);
+            System.out.println(options);
+            usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id", id));
+            for (String s : options) {
+                System.out.println(s);
+                UsersRoles usersRoles = new UsersRoles();
+                usersRoles.setUserId(id);
+                usersRoles.setCreateTime(date);
+                usersRoles.setCreateTime(date);
+                usersRoles.setUpdateUser("zyx");
+                usersRoles.setCreateUser("zyx");
+                usersRoles.setRoleId(s);
+                usersRolesService.save(usersRoles);
+            }
         }
         Result result=new Result();
         result.setCode(200);
@@ -186,12 +218,12 @@ public class UsersController {
     }
 
     /**
-     * 删除某个用户角色
+     * 删除某个用户
      * @param UserId
      * @param request
      * @return
      */
-    //    删除某个用户角色
+    //    删除某个用户
     @RequestMapping("/delUser/{UserId}")
     public Result<Roles> deleteRole(@PathVariable("UserId") String UserId, HttpServletRequest request){
         String token=request.getHeader("token");

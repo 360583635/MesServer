@@ -1,5 +1,7 @@
 package com.job.common.redis;
 
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -8,7 +10,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 //用于配置 RedisTemplate 的 RedisConfig 类。在这个类中，你可以设置 RedisTemplate 的序列化方式、连接工厂等配置。
 @Configuration
-public class RedisConfig {
+@EnableCaching
+public class RedisConfig extends CachingConfigurerSupport {
 
     @Bean
     @SuppressWarnings(value = { "unchecked", "rawtypes" })
