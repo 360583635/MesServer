@@ -12,7 +12,7 @@ public interface OrderService extends IService<Order> {
     Result<Order> selectOrderById(String orderId);
     Result<Order> showOrderDetail(String orderId);
     Result<Order> deleteOrder(String orderId);
-    Result<Order> handOrder(String orderId);
+//    Result<Order> handOrder(String orderId);
 
 
 

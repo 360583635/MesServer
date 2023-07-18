@@ -11,6 +11,7 @@ import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import com.job.orderService.service.UsersService;
 import com.job.orderService.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,19 +46,18 @@ public class OrderController {
      */
     @GetMapping("/addOrder")
     public Result<Order> addOrder(Order order,HttpServletRequest request){
-        String token=request.getHeader("token");
-        try {
+//        String token=request.getHeader("token");
+//        System.out.println(token);
+//        try {
 //            Claims claims = JwtUtil.parseJWT(token);
 //            String userId = claims.getSubject();
 //            String name = usersService.getById(userId).getName();
-//            System.out.println(userId);
-//
+//            //System.out.println(userId);
 //            order.setAuditor(name);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("token非法");
-        }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("token非法");
+//        }
         Result<Order> result = orderService.addOrder(order);
         return result;
 //        //数据验证
@@ -206,25 +206,25 @@ public class OrderController {
      * 订单的派发
      * @return
      */
-    @GetMapping("/handOrder")
-//    @Scheduled(cron = "0 0/5 * ? * ?")
-    public Result<Order> handOrder(){
-        PriorityQueue<Integer> a = new PriorityQueue<>();
-        a.offer(1);
-        a.offer(3);
-        a.offer(4);
-        redisCache.setCacheObject("a",a);
-        JSONArray jsonArray  = redisCache.getCacheObject("a");
-        System.out.println(jsonArray.size());
-        PriorityQueue<Integer> b = new PriorityQueue<>();
-        for (Object o : jsonArray) {
-            System.out.println(o);
-            b.offer((Integer) o);
-        }
-        while (!b.isEmpty()){
-            System.out.println(b.poll());
-        }
-        return null;
-    }
+//    @GetMapping("/handOrder")
+////    @Scheduled(cron = "0 0/5 * ? * ?")
+//    public Result<Order> handOrder(){
+//        PriorityQueue<Integer> a = new PriorityQueue<>();
+//        a.offer(2);
+//        a.offer(5);
+//        a.offer(6);
+//        redisCache.setCacheObject("a",a);
+//        JSONArray jsonArray  = redisCache.getCacheObject("a");
+//        System.out.println(jsonArray.size());
+//        PriorityQueue<Integer> b = new PriorityQueue<>();
+//        for (Object o : jsonArray) {
+//            System.out.println(o);
+//            b.offer((Integer) o);
+//        }
+//        while (!b.isEmpty()){
+//            System.out.println(b.poll());
+//        }
+//        return null;
+//    }
 
 }
