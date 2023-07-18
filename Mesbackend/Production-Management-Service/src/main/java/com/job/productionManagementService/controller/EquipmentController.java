@@ -49,4 +49,13 @@ public class EquipmentController {
         List<Equipment> equipmentList = equipmentService.list(queryWrapper);
         return equipmentList;
     }
+
+    /**
+     * 查询所有设备
+     */
+    @GetMapping("/queryEquipments")
+    List<Equipment> queryEquipments(){
+        List<Equipment> equipmentList = equipmentService.list();
+        return equipmentList;
+    }
 }

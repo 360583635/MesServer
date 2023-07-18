@@ -30,4 +30,8 @@ public interface ProductionManagementClient {
 
     @GetMapping("/productionManagement/equipment/queryEquipmentsByType/{functionName}")
     List<Equipment> queryEquipmentsByType(@PathVariable("functionName") String functionName);
+
+
+    @GetMapping("/productionManagement/equipment/queryEquipments")
+    List<Equipment> queryEquipments();
 }

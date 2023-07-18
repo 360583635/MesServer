@@ -128,6 +128,15 @@ public class ProcessController {
     }
 
     /**
+     * 查询全部设备
+     */
+    @GetMapping("/queryEquipments")
+    public Result queryEquipments(){
+        List<Equipment> equipmentList = productionManagementClient.queryEquipments();
+        return Result.success(equipmentList,"查询成功");
+    }
+
+    /**
      * 查询全部设备类型
      */
     @GetMapping("/queryEquipmentTypes")

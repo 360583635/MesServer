@@ -64,7 +64,6 @@ public class FlowController {
 
     @PostMapping("/save")
     public Result flowSave(@RequestBody Flow flow){
-
         flow.setCreateTime(DateUtil.date());
         flow.setUpdateTime(DateUtil.date());
         flow.setUpdateUsername("张三");
