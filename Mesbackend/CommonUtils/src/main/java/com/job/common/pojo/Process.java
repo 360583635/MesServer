@@ -57,4 +57,6 @@ public class Process {
     private Integer exceptionCount;
 
     private Integer isDelete;
+
+    private String equipmentId;
 }

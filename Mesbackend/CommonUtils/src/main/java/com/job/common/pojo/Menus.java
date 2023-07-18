@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Menus {
-    @TableId(value = "menu_id")
+    @TableId("menu_id")
     private String MenuID;
     private String Name;
     private String url;
