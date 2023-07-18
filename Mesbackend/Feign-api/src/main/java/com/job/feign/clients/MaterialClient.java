@@ -16,6 +16,12 @@ import java.util.List;
 
 @FeignClient(value = "PRODUCTIONMANAGEMENTSERVICE")
 public interface MaterialClient {
+
+    /**
+     * Dispatch-Service 调用 Production-Management-Service的queryMaterials方法
+     * @return
+     */
     @GetMapping("/productionManagement/material/queryMaterials")
     List<Material>  queryMaterials();
+
 }
