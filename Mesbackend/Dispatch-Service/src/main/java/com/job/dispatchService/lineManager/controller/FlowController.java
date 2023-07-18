@@ -43,7 +43,7 @@ public class FlowController {
     @ResponseBody
     public Result page(FlowPageReq req){
         IPage result = flowService.page(req);
-        return Result.success(result);
+        return Result.success(result,"查询成功");
     }
 
 
@@ -58,7 +58,7 @@ public class FlowController {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("idDelete",1);
         List<Flow> list = flowService.list(queryWrapper);
-        return Result.success(list);
+        return Result.success(list,"查询成功");
     }
 
 
@@ -84,7 +84,7 @@ public class FlowController {
         if(count>0){
            return Result.error("删除失败，请先删除对应的流水线");
         }else {
-            return Result.success("删除成功");
+            return Result.success(null,"删除成功");
         }
     }
     @PostMapping("/queryId")
