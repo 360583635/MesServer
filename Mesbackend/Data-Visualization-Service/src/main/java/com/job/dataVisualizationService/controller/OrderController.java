@@ -38,11 +38,19 @@ public class OrderController {
         OrderData orderData = orderService.countOneData(order);
         return Result.success(orderData,"success");
     }
-
+    @ResponseBody
     @GetMapping("/prediction")    //金额预测和数量
     public Result<OrderData> getPAmount(){
         OrderData orderData = orderService.preData();
         return Result.success(orderData,"success");
+
+    }
+    @ResponseBody
+    @GetMapping("/test")    //金额预测和数量
+    public Result<Order> get(){
+        Order order = new Order();
+        order.setOrderId("31321");
+        return Result.success(order,"success");
 
     }
 

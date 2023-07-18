@@ -1,12 +1,9 @@
 package com.job.dataVisualizationService.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.job.common.pojo.FlowProcessRelation;
+import com.job.common.pojo.Inventory;
 import org.apache.ibatis.annotations.Mapper;
 
-/**
- * @Auther:Liang
- */
 @Mapper
-public interface FlowProcessRelationMapper extends BaseMapper<FlowProcessRelation> {
+public interface InventoryMapper extends BaseMapper<Inventory> {
 }
