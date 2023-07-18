@@ -30,6 +30,8 @@ public class Filter implements GlobalFilter , Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path=exchange.getRequest().getURI().getPath();
+        System.out.println(path);
+        if(exchange.getRequest().getURI().toString().contains("order")) return chain.filter(exchange);
         String token=exchange.getRequest().getHeaders().getFirst("token");
         if (path.equals("/authen/login")) {
             System.out.println("111");

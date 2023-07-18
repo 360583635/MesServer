@@ -1,6 +1,7 @@
 package com.job.common.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -10,7 +11,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
-
 @Component
 public class RedisCache
 {
@@ -65,7 +65,7 @@ public class RedisCache
      */
     public boolean expire(final String key, final long timeout, final TimeUnit unit)
     {
-        return redisTemplate.expire(key, timeout, unit);
+        return Boolean.TRUE.equals(redisTemplate.expire(key, timeout, unit));
     }
 
     /**

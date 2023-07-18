@@ -3,6 +3,7 @@ package com.job.orderService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 @EnableDiscoveryClient
+@ComponentScan({"com.job.common","com.job.orderService"})
 public class OrderService {
     public static void main(String[] args) {
         SpringApplication.run(OrderService.class,args);

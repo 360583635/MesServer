@@ -7,12 +7,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Order;
+import com.job.common.pojo.Users;
 import com.job.common.redis.RedisCache;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.FlowMapper;
 import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private FlowMapper flowMapper;
     @Autowired
     private LineMapper lineMapper;
+    @Autowired
+    private RedisCache redisCache;
 
 
     /**
@@ -48,6 +52,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
             order.setOrderDate(new Date());
             //TODO: 2023/7/8
+
             order.setAuditor(null);//获取当前登录用户
             order.setPriority(0);
             order.setProductionStatus(0);
@@ -56,7 +61,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setIsDelete(0);
             int i = orderMapper.insert(order);
             //存入redis
-            RedisCache redisCache=new RedisCache();
             Map<String,Object> map=new HashMap<>();
             map.put("orderId",order.getOrderId());
             map.put("productionStatus",order.getProductionStatus());
@@ -189,8 +193,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 String lineId = line.getId();
                 order.setProductLine(lineId);
                 order.setProductionStatus(1);
+
                 //TODO 修改redis里面的数据
                 RedisCache redisCache=new RedisCache();
+
                 return Result.success("流水线派发成功！");
             }else {
                 return Result.error("未匹配到流水线，派发失败！");
@@ -199,4 +205,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return Result.error("该状态下的订单不在派发范围内！");
         }
     }
+
+
 }
