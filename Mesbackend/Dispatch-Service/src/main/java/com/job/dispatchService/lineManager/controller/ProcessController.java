@@ -12,11 +12,14 @@ import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.ProcessService;
+import com.job.feign.clients.ProductionManagementClient;
+import com.job.feign.pojo.Equipment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +36,9 @@ public class ProcessController {
 
     @Autowired
     private FlowProcessRelationService processRelationService;
+
+    @Autowired
+    private ProductionManagementClient productionManagementClient;
 
     /**
      * 工序分页查询
@@ -121,5 +127,27 @@ public class ProcessController {
         return Result.success(list,"查询成功");
     }
 
-    
+    /**
+     * 查询全部设备类型
+     */
+    @GetMapping("/queryEquipmentTypes")
+    public Result queryEquipmentTypes(){
+        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes();
+        return Result.success(equipmentTypes,"查询成功");
+    }
+
+    /**
+     * 根据设备功能类型查询设备
+     */
+    @GetMapping("/queryEquipmentsByType/{functionName}")
+    public Result queryEquipmentsByType(@PathVariable("functionName") String functionName){
+        List<Equipment> equipmentList = productionManagementClient.queryEquipmentsByType(functionName);
+        List<String> equipmentNameList = new ArrayList<>();
+        for(Equipment equipment : equipmentList){
+            String equipmentName = equipment.getEquipmentName();
+            equipmentNameList.add(equipmentName);
+        }
+        return Result.success(equipmentNameList,"查询成功");
+    }
+
 }
