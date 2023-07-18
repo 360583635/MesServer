@@ -2,6 +2,7 @@ package com.job.orderService.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.job.common.pojo.Flow;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,6 +10,6 @@ import org.springframework.stereotype.Service;
  * @create 2023-07-06-17:44
  * @description
  */
-@Service
+@Mapper
 public interface FlowMapper extends BaseMapper<Flow> {
 }

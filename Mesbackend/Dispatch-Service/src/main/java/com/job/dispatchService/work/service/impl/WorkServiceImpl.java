@@ -85,6 +85,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
     }
 
     //生产
+
     public String product(String workId, int orderNumber){
         int count = 0;
         int sum = 100;

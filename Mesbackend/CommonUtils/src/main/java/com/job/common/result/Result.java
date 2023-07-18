@@ -12,7 +12,7 @@ import java.util.Map;
  */
 //创建函数返回public R<xxx> xxx(){}
 @Data
-public class Result<T> implements Serializable{
+public class Result<T>  implements Serializable{
 
     private Integer code; //编码：1成功，0和其它数字为失败
 
@@ -28,6 +28,7 @@ public class Result<T> implements Serializable{
         result.data = object;
         result.code = 1;
         result.msg = msg;
+        System.out.println(result);
         return result;
     }
 

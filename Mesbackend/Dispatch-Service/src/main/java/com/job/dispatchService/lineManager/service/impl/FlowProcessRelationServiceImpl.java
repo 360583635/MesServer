@@ -117,7 +117,7 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
         //更细流程头表信息
         flowService.saveOrUpdate(flow);
         saveOrUpdateBatch(flowProcessRelationList);
-        return Result.success();
+        return Result.success(null,"更新成功");
     }
 
     /**
