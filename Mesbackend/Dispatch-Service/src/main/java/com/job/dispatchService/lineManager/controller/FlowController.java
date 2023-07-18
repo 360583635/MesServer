@@ -1,17 +1,16 @@
 package com.job.dispatchService.lineManager.controller;
 
-import cn.hutool.core.date.DateUtil;
+import com.alibaba.nacos.api.model.v2.Result;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.job.common.pojo.Flow;
-import com.job.common.result.Result;
+
 import com.job.dispatchService.lineManager.request.FlowPageReq;
 import com.job.dispatchService.lineManager.service.FlowService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.unit.DataUnit;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.Flow;
 
 /**
  * @author 庸俗可耐
@@ -32,8 +31,7 @@ public class FlowController {
      */
     @PostMapping("/page")
     @ResponseBody
-    public Result page(@RequestBody FlowPageReq req){
-
+    public Result page(FlowPageReq req){
         IPage result = flowService.page(req);
         return Result.success(result);
     }
@@ -51,20 +49,4 @@ public class FlowController {
         List<Flow> list = flowService.list(queryWrapper);
         return Result.success(list);
     }
-
-    @PostMapping("/save")
-    public Result flowSave(@RequestBody Flow flow){
-        flow.setCreateTime(DateUtil.date());
-        flow.setUpdateTime(DateUtil.date());
-        flow.setUpdateUsername("张三");
-        flow.setCreateUsername("张三");
-        boolean save = flowService.save(flow);
-        if(save){
-            return Result.success(null,"保存成功");
-        }
-        return Result.error("保存失败");
-
-    }
-
-
 }

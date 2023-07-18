@@ -1,6 +1,5 @@
 package com.job.common.pojo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Menus {
-    @TableId(value = "menu_id")
     private String MenuID;
     private String Name;
     private String url;

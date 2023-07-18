@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class LoginUser implements UserDetails {
  
-    private com.job.common.pojo.Users user;
+    private Users user;
     private List<String > permission;
 
     public LoginUser(Users users, List<String> permissionKeyList) {
