@@ -1,6 +1,6 @@
 package com.job.authenticationService.controller;
 
-import com.job.authenticationService.pojo.Result;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -9,6 +9,7 @@ import com.job.authenticationService.service.MenusRolesService;
 import com.job.authenticationService.service.RolesService;
 import com.job.common.pojo.MenusRoles;
 import com.job.common.pojo.Roles;
+import com.job.common.result.Result;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/getRoles")
-    public Result getAllRoles(){
+    public Result<Roles> getAllRoles(){
         LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Roles::getIsDelete,"1");
         List<Roles> list= rolesService.list(wrapper);
@@ -52,7 +53,7 @@ public class RoleController {
         for (Roles entity : list) {
             System.out.println(entity);
         }
-        return result;
+        return null;
     }
 
     /**
@@ -63,12 +64,13 @@ public class RoleController {
     @RequestMapping("/delRole/{RoleId}")
     public Result<Roles> deleteRole(@PathVariable("RoleId") String RoleId){
         Roles roles=rolesService.getById(RoleId);
-        roles.setIsDelete(0);
-        rolesService.updateById(roles);
+        roles.setIsDelete(1);
+        UpdateWrapper<Roles> updateWrapper = new UpdateWrapper<>();
+        rolesService.update(roles,updateWrapper);
         Roles role=rolesService.getById(RoleId);
         System.out.println(role);
         Result result = new Result<>();
-        if (role.getIsDelete().equals(0)){
+        if (role.getIsDelete().equals(1)){
             result.setData("删除成功");
             result.setCode(200);
         }

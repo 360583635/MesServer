@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.job.dispatchService.lineManager.mapper.ProcessMaterialRelationMapper">
+
+    <resultMap id="ResultVoMap" type="com.job.dispatchService.lineManager.vo.MaterialVo">
+        <result column="material_id" property="value" javaType="VARCHAR"/>
+        <result column="material_name" property="title" javaType="VARCHAR"/>
+    </resultMap>
+    <select id="queryMaterialRelationByProcessId" parameterType="string" resultMap="ResultVoMap">
+        SELECT
+        material_id,
+        material_name
+        FROM
+        t_process_material_relation
+        <where>
+        process_id = #{processId}
+        </where>
+    </select>
+
+    <delete id="deleteMaterialRelationByProcessId">
+        delete from t_process_material_relation
+        <where>
+            process_id = #{processId}
+        </where>
+    </delete>
+
+</mapper>
