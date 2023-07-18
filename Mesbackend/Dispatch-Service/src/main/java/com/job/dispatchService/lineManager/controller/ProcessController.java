@@ -65,7 +65,7 @@ public class ProcessController {
         DateTime nowTime = DateUtil.date();
         tProcess.setUpdateTime(nowTime);
         processService.updateById(tProcess);
-        return Result.success();
+        return Result.success(null,"修改成功");
 
     }
 
@@ -84,7 +84,7 @@ public class ProcessController {
         DateTime nowTime = DateUtil.date();
         tProcess.setUpdateTime(nowTime);
         processService.saveOrUpdate(tProcess);
-        return Result.success();
+        return Result.success(null,"增加成功");
     }
 
     /**
@@ -104,7 +104,7 @@ public class ProcessController {
         }
         boolean b = processService.removeById(processId);
         if(b){
-            return Result.success();
+            return Result.success(null,"删除成功");
         }
         return Result.error("操作失败，请刷新页面重试");
     }
