@@ -1,0 +1,38 @@
+package com.job.common.pojo;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@TableName("t_inventory")
+public class Inventory {
+    /**
+     * 仓库id
+     */
+    private String warehouseId ;
+    /**
+     * 仓库类型
+     */
+    private int warehouseType;
+    /**
+     * 原材料名称
+     */
+    private String materialName;
+    /**
+     * 设备名称
+     */
+    private String  equipmentName;
+    /**
+     * 产品名称
+     */
+    private String Flow;
+    /**
+     * 数量
+     */
+    private int Number;
+
+}
