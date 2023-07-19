@@ -45,6 +45,8 @@ public class ProcessController {
     @Autowired
     private ProductionManagementClient productionManagementClient;
 
+    //逻辑删除1未删除0已删除
+    private static int IS_DELETE=1;
     /**
      * 工序分页查询
      * @param req
@@ -130,7 +132,8 @@ public class ProcessController {
      */
     @GetMapping("/list")
     public Result list(){
-        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Process> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(Process::getIsDelete,IS_DELETE);
         List<Process> list = processService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }
