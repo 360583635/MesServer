@@ -1,5 +1,6 @@
 package com.job.dispatchService.lineManager.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.FlowProcessRelation;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -143,7 +144,10 @@ public class LineTaskController {
     @Scheduled(initialDelay = 0,fixedRate = 3000)
     public void queryOrders() throws InterruptedException {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单
+        List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
+        for(Order order : orderPQ){
 
+        }
     }
     
     @Scheduled(initialDelay = 0,fixedDelay = 5000)

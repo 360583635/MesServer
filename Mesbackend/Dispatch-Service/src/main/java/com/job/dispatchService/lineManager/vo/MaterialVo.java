@@ -21,4 +21,8 @@ public class MaterialVo {
      * 显示标题
      */
     private String title;
+    /**
+     * 原材料数目
+     */
+    private String number;
 }
