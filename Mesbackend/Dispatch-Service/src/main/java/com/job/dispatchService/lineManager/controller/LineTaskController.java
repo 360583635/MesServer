@@ -145,6 +145,13 @@ public class LineTaskController {
     public void queryOrders() throws InterruptedException {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单
         List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
+        List<Order> orderQueue = new LinkedList<>();
+        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+        List<Line> list = lineService.list(queryWrapper);
+        for(Line line: list){
+            String lineName = line.getLine();
+
+        }
         for(Order order : orderPQ){
 
         }

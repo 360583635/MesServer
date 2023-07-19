@@ -68,7 +68,12 @@ public class ProcessMaterialRelationController {
     @PostMapping("/add-or-update")
     @ResponseBody
     public Result addOrUpdate(@RequestBody ProcessDto processDto) throws Exception {
-        return processMaterialRelationService.addOrUpdate(processDto);
+        List<ProcessMaterialRelation> processMaterialRelationList = processMaterialRelationService.addOrUpdate(processDto);
+        boolean saveBatch = processMaterialRelationService.saveBatch(processMaterialRelationList);
+        if(saveBatch == true){
+            return Result.success(null,"更新成功");
+        }
+        return Result.error("更新失败");
     }
 
 
