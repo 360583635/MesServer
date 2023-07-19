@@ -89,7 +89,6 @@ public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements Li
             map1.put(flowProcessRelation.getSortNum(),process);
         }
         map.put("流水线流程",map1);
-
         return map;
     }
 }
