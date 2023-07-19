@@ -40,6 +40,8 @@ public class SecurityConfig{
         http.csrf().disable();
 
         http.authorizeHttpRequests((authz)->authz
+                .requestMatchers("/authen/login").anonymous()
+                .requestMatchers("/authen/**").permitAll()
                 .requestMatchers("/hello").permitAll()
                 .requestMatchers("/getRoles").permitAll()
                 .requestMatchers("/delRole/*").permitAll()
@@ -47,11 +49,9 @@ public class SecurityConfig{
                 .requestMatchers("/addRole").permitAll()
                 .requestMatchers("/updateRole").permitAll()
                 .requestMatchers("/addUser").permitAll()
-                .requestMatchers("/authen/login").anonymous()
                 .requestMatchers("/updateUser").permitAll()
                 .requestMatchers("/update/detail").permitAll()
                 .requestMatchers("/authen/menus/**").permitAll()
-                .requestMatchers("/authen/**").permitAll()
                 .anyRequest().authenticated()
         );
 

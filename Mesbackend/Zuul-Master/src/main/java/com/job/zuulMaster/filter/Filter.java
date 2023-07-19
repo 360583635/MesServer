@@ -11,10 +11,14 @@ import com.mysql.cj.util.StringUtils;
 //import io.jsonwebtoken.Claims;
 //import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Claims;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -35,6 +39,7 @@ public class Filter implements GlobalFilter , Ordered {
 //        threadLocal.set("userid");
 //        if(exchange.getRequest().getURI().toString().contains("order")) return chain.filter(exchange);
         String token=exchange.getRequest().getHeaders().getFirst("token");
+
         if (path.equals("/authen/login")) {
             System.out.println("111");
             return chain.filter(exchange);
@@ -47,8 +52,14 @@ public class Filter implements GlobalFilter , Ordered {
             System.out.println("234");
             System.out.println(token);
             if (StringUtils.isNullOrEmpty(token)){
-                System.out.println("meiyoutoken");
-               return exchange.getResponse().setComplete();
+                System.out.println("没有token");
+                String redirectUrl = "http://localhost:8080/#/pages/pt/login/login";
+                exchange.getResponse().getHeaders().set(HttpHeaders.LOCATION, redirectUrl);
+                //303状态码表示由于请求对应的资源存在着另一个URI，应使用GET方法定向获取请求的资源
+                exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(HttpStatus.SC_SEE_OTHER));
+                exchange.getResponse().getHeaders().add("Content-Type", "text/plain;charset=UTF-8");
+                return exchange.getResponse().setComplete();
+
             }
             else {
                 //解析token
@@ -87,6 +98,14 @@ public class Filter implements GlobalFilter , Ordered {
     public int getOrder() {
         return 0;
     }
+
+    /**
+     * 错误信息响应到客户端
+     * @param serverHttpResponse Response
+     * @param resultCode 错误枚举
+     * @date: 2021/4/20 9:13
+     * @return: reactor.core.publisher.Mono<java.lang.Void>
+     */
 
 
 }

@@ -87,6 +87,19 @@ public class FlowProcessRelationController {
 
 
     /**
+     * 流程与工序关系管理新增+修改
+     * @param flowDto
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/add-or-update")
+    @ResponseBody
+    public Result addOrUpdate(@RequestBody FlowDto flowDto) throws Exception {
+        return flowProcessRelationService.addOrUpdate(flowDto);
+    }
+
+
+    /**
      * 删除流程与工序关系
      *
      *

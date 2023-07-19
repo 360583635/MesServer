@@ -5,11 +5,13 @@
     <resultMap id="ResultVoMap" type="com.job.dispatchService.lineManager.vo.MaterialVo">
         <result column="material_id" property="value" javaType="VARCHAR"/>
         <result column="material_name" property="title" javaType="VARCHAR"/>
+        <result column="number" property="number" javaType="VARCHAR"/>
     </resultMap>
     <select id="queryMaterialRelationByProcessId" parameterType="string" resultMap="ResultVoMap">
         SELECT
         material_id,
-        material_name
+        material_name,
+        number
         FROM
         t_process_material_relation
         <where>

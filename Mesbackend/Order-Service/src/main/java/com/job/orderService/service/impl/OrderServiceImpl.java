@@ -20,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.rmi.MarshalledObject;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
@@ -82,11 +79,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 //order.setExpectDate(new Date());
                 int j = orderMapper.updateById(order);
                 PriorityQueue<Order> qq = new PriorityQueue<>(
-                        (o1, o2) -> o1.getPriority() != o2.getPriority()
+                        (o1, o2) -> !Objects.equals(o1.getPriority(), o2.getPriority())
                                 ? o1.getPriority() - o2.getPriority()
                                 : (o1.getExpectDate().getTime() < o2.getExpectDate().getTime())
                                 ? -1
-                                : 1);
+                                : 0);
                 //创建优先队列并存入redis
                 JSONArray orderPQ = redisCache.getCacheObject("orderPQ");
                 if (orderPQ!=null){
@@ -147,15 +144,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 根据订单id查询单个订单
-     * @param orderId
+     * @param typeName
      * @return
      */
     @Override
-    public Result<Order> selectOrderById(String orderId) {
+    public Result<List<Order>> selectOrderByName(String typeName) {
         LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-        wrapper.like(Order::getOrderId,orderId);
-        Order order = orderMapper.selectOne(wrapper);
-        return Result.success(order,"success");
+        wrapper.like(Order::getTypeName,typeName);
+        List<Order> orderList = orderMapper.selectList(wrapper);
+        if (orderList!=null){
+            return Result.success(orderList,"success");
+        }else
+            return Result.error("查询失败");
     }
 
     /**

@@ -47,6 +47,10 @@ public class Warehouse {
      */
     private  int automationEquipment;
 
+    private String warehouseCapacity;
+
+    private String warehouseAvailable;
+
 
 
 

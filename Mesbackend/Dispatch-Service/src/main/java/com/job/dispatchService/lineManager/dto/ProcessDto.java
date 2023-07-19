@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ProcessDto extends Process {
     /**
-     * 流程与工序关系集合
+     * 工序与原材料关系集合
      */
     private List<MaterialVo> MaterialVoList;
 

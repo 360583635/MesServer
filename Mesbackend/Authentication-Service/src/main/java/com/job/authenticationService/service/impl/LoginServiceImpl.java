@@ -44,6 +44,7 @@ public class  LoginServiceImpl implements LoginService {
 
         //如果认证没通过，给出对应的提示
         if (Objects.isNull(authenticate)) {
+            System.out.println("认证失败");
             throw new RuntimeException("登录失败");
         }
 

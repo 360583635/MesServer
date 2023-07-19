@@ -15,6 +15,7 @@ import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.EquipmentVo;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Equipment;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/dispatch/process")
+@CrossOrigin
 public class ProcessController {
 
     @Autowired
@@ -43,6 +45,8 @@ public class ProcessController {
     @Autowired
     private ProductionManagementClient productionManagementClient;
 
+    //逻辑删除1未删除0已删除
+    private static int IS_DELETE=1;
     /**
      * 工序分页查询
      * @param req
@@ -61,9 +65,11 @@ public class ProcessController {
      */
     @PostMapping("/update")
     @ResponseBody
-    public Result updateProcess(@RequestBody Process tProcess){
-        //获得用户信息
+    public Result updateProcess(@RequestBody Process tProcess, HttpServletRequest httpServletRequest){
+
         String userinf="郭帅比";
+        //获得用户信息
+//        String userId= UserUtil.getUserId(httpServletRequest);
         tProcess.setUpdateUsername(userinf);
         DateTime nowTime = DateUtil.date();
         tProcess.setUpdateTime(nowTime);
@@ -79,8 +85,9 @@ public class ProcessController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result saveProcess(@RequestBody Process tProcess){
+    public Result saveProcess(@RequestBody Process tProcess, HttpServletRequest httpServletRequest){
         //获得用户信息
+        //String userId= UserUtil.getUserId(httpServletRequest);
         String userinf="郭帅比";
         tProcess.setUpdateUsername(userinf);
         tProcess.setCreateUsername(userinf);
@@ -97,7 +104,7 @@ public class ProcessController {
      */
     @PostMapping("/remove")
     @ResponseBody
-    public Result removePeocess(String processId){
+    public Result removePeocess(@RequestBody String processId){
         LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper();
         queryWrapper.eq(FlowProcessRelation::getProcessId,processId);
         long count = processRelationService.count(queryWrapper);
@@ -125,7 +132,8 @@ public class ProcessController {
      */
     @GetMapping("/list")
     public Result list(){
-        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Process> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.eq(Process::getIsDelete,IS_DELETE);
         List<Process> list = processService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }
