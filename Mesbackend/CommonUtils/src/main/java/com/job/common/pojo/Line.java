@@ -44,4 +44,10 @@ public class Line {
     private Integer successCount;
 
     private Integer isDelete;
+    @TableField(exist = false)
+    private Integer totalExceptionCount;
+    @TableField(exist = false)
+    private Integer totalSuccessCount;
+    @TableField(exist = false)
+    private Integer totalLineStatus;
 }
