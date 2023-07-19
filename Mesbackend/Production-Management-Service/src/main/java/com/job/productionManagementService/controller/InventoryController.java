@@ -2,10 +2,12 @@ package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.Inventory;
-import com.job.dispatchService.lineManager.service.ProcessService;
+//import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.productionManagementService.service.EquipmentService;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.MaterialService;
+import com.job.productionManagementService.service.ProduceService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +29,8 @@ public class InventoryController {
     @Autowired
     private EquipmentService equipmentService;
 
-    @Autowired
-    private ProcessService processService;
+    @Resource
+    private ProduceService produceService;
 
     /**
      * 根据原材料名称查询数量

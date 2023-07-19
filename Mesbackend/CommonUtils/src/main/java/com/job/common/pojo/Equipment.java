@@ -40,4 +40,7 @@ public class Equipment {
      * 工序Id
      */
     private String processId;
+
+    //逻辑删除
+    private int isDelete;
 }

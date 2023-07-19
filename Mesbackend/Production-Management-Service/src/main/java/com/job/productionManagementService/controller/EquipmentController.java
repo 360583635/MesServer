@@ -1,13 +1,13 @@
 package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Equipment;
+import com.job.common.result.Result;
 import com.job.productionManagementService.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,4 +65,49 @@ public class EquipmentController {
         List<Equipment> equipmentList = equipmentService.list();
         return equipmentList;
     }
+
+    /**
+     * 根据id逻辑删除
+     * @param equipmentId
+     * @return
+     */
+    @PostMapping("/delete")
+    @ResponseBody
+    public Result removeById(@RequestParam long equipmentId){
+        LambdaUpdateWrapper<Equipment> lambdaUpdateWrapper=new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.set(Equipment::getIsDelete,0);
+        boolean update = equipmentService.update(lambdaUpdateWrapper);
+        if(update){
+            return Result.success(null,"成功删除");
+        }else {
+            return Result.error("删除失败");
+        }
+    }
+
+    @PostMapping("/save")
+    @ResponseBody
+    public Result saveEquipment(@RequestBody Equipment equipment){
+
+        boolean save = equipmentService.save(equipment);
+        if(save){
+            return Result.success(null,"保存成功");
+        }
+        return Result.error("保存失败");
+    }
+    @PostMapping("/update")
+    @ResponseBody
+    public Result updateEquipment(@RequestBody Equipment equipment){
+
+        boolean b = equipmentService.updateById(equipment);
+        if(b){
+            return Result.success(null,"保存成功");
+        }
+        return Result.error("保存失败");
+    }
+
+
+
+
+
+
 }

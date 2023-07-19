@@ -49,6 +49,8 @@ public class Material {
      */
 
 //    private String weight;
+    //逻辑删除
+    private int isDelete;
 
 
 }
