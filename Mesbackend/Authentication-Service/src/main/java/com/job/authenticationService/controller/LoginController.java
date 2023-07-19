@@ -1,6 +1,6 @@
 package com.job.authenticationService.controller;
 
-import com.job.authenticationService.config.GetUserid;
+
 import com.job.authenticationService.pojo.ResponseResult;
 import com.job.authenticationService.service.LoginService;
 import com.job.common.pojo.Users;

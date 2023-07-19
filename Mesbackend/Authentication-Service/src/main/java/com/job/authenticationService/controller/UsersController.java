@@ -80,7 +80,7 @@ public class UsersController {
 
 
     /**
-     * 查询个人信息
+     * 查询个人信息1
      * @param
      * @return
      */
@@ -172,7 +172,7 @@ public class UsersController {
     }
 
     /**
-     * 修改用户信息
+     * 修改用户信息1
      * @param id
      * @param state
      * @param options
@@ -193,11 +193,12 @@ public class UsersController {
         user.setUpdateUser("zyx");
         usersService.updateById(user);
 
-        if (options!=null) {
+
             //        修改角色权限表
             System.out.println(id);
             System.out.println(options);
             usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id", id));
+        if (options!=null) {
             for (String s : options) {
                 System.out.println(s);
                 UsersRoles usersRoles = new UsersRoles();
