@@ -40,6 +40,7 @@ public class Line {
 
     //异常次数
     private Integer exceptionCount;
-
+    //完成次数
+    private Integer successCount;
     private Integer isDelete;
 }

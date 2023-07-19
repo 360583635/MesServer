@@ -79,11 +79,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 //order.setExpectDate(new Date());
                 int j = orderMapper.updateById(order);
                 PriorityQueue<Order> qq = new PriorityQueue<>(
-                        (o1, o2) -> o1.getPriority() != o2.getPriority()
+                        (o1, o2) -> !Objects.equals(o1.getPriority(), o2.getPriority())
                                 ? o1.getPriority() - o2.getPriority()
                                 : (o1.getExpectDate().getTime() < o2.getExpectDate().getTime())
                                 ? -1
-                                : 1);
+                                : 0);
                 //创建优先队列并存入redis
                 JSONArray orderPQ = redisCache.getCacheObject("orderPQ");
                 if (orderPQ!=null){
