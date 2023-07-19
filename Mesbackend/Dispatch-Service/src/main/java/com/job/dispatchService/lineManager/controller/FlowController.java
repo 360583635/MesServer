@@ -3,6 +3,7 @@ package com.job.dispatchService.lineManager.controller;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import com.job.common.pojo.Flow;
@@ -46,6 +47,9 @@ public class FlowController {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+    //逻辑删除1未删除0已删除
+    private static int IS_DELETE_NO=1;
+    private static int IS_DELETE_YES=0;
     /**
      * 流程信息信息分页查询
      *
@@ -69,7 +73,7 @@ public class FlowController {
     @ResponseBody
     public Result list(){
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("idDelete",1);
+        queryWrapper.eq("idDelete",IS_DELETE_NO);
         List<Flow> list = flowService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }
@@ -104,7 +108,13 @@ public class FlowController {
         if(count>0){
            return Result.error("删除失败，请先删除对应的流水线");
         }else {
-            return Result.success(null,"删除成功");
+            LambdaUpdateWrapper<Flow> updateWrapper=new LambdaUpdateWrapper<>();
+            updateWrapper.set(Flow::getIsDelete,IS_DELETE_YES);
+            boolean update = flowService.update(updateWrapper);
+            if (update){
+                return Result.success(null,"删除成功");
+            }
+            return Result.error("删除失败");
         }
     }
 

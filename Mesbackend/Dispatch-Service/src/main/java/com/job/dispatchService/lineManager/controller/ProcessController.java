@@ -4,7 +4,9 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
+import com.job.common.pojo.Line;
 import com.job.common.pojo.Process;
 //import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 //import com.job.dispatchService.LineManager.pojo.TProcess;
@@ -119,6 +121,49 @@ public class ProcessController {
         return Result.error("操作失败，请刷新页面重试");
     }
 
+    /**
+     * 批量逻辑删除
+     * @param idList
+     * @return
+     */
+    @PostMapping("/batchDelete")
+    @ResponseBody
+    public Result batchDeleteById(@RequestParam List<String> idList){
+
+//        List< FlowProcessRelation> flowProcessRelations = processRelationService.listByIds(idList);
+        LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.in(FlowProcessRelation::getProcessId,idList);
+        long count = processRelationService.count(queryWrapper);
+        if(count>0){
+            return Result.error("请保证删除的工序没有流程与之绑定");
+        }
+        // 获取需要逻辑删除的记录的ID列表
+        List<Process> recordList = new ArrayList<>();
+        for (String id : idList) {
+            Process process=new Process();
+            process.setId(id);
+            process.setIsDelete(0);  // 设置要更新的字段和值
+            recordList.add(process);
+        }
+
+        boolean b = processService.updateBatchById(recordList);
+
+        if(b){
+            return Result.success(null,"查询成功");
+        }
+        return Result.error("删除失败");
+
+
+    }
+
+
+
+    /**
+     * 根据工序名模糊查询
+     * @param procrssName
+     * @param req
+     * @return
+     */
     @PostMapping("/query/{processName}")
     @ResponseBody
     public Result<ProcessPageReq> query(@PathVariable("process") String procrssName, @RequestBody ProcessPageReq req){
