@@ -1,4 +1,4 @@
-package com.job.authenticationService.config;
+package com.job.authenticationService.Config;
 
 import com.job.authenticationService.pojo.LoginUser;
 import org.springframework.security.core.Authentication;

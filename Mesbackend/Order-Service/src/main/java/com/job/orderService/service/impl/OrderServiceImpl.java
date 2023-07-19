@@ -1,5 +1,6 @@
 package com.job.orderService.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
@@ -7,12 +8,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Order;
+import com.job.common.pojo.Users;
 import com.job.common.redis.RedisCache;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.FlowMapper;
 import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import java.rmi.MarshalledObject;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
@@ -30,6 +34,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private FlowMapper flowMapper;
     @Autowired
     private LineMapper lineMapper;
+    @Autowired
+    private RedisCache redisCache;
 
 
     /**
@@ -44,26 +50,55 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return  Result.error("输入对象不能为空！");
         }else if (order.getOrderNumber() != null  && order.getExpectDate() != null && order.getProductId() !=null
                 && order.getTypeName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
-                && order.getRawName() !=null && order.getRawNum() !=null){
+                && order.getRawName() !=null && order.getRawNum() !=null  || true){
 
             order.setOrderDate(new Date());
-            //TODO: 2023/7/8
-            order.setAuditor(null);//获取当前登录用户
             order.setPriority(0);
             order.setProductionStatus(0);
             //TODO: 2023/7/8
             order.setOrderPrice(null);
             order.setIsDelete(0);
+            //创建完成
             int i = orderMapper.insert(order);
-            //存入redis
-            RedisCache redisCache=new RedisCache();
-            Map<String,Object> map=new HashMap<>();
-            map.put("orderId",order.getOrderId());
-            map.put("productionStatus",order.getProductionStatus());
-            map.put("productLine",order.getProductLine());
-            redisCache.setCacheMap("order:"+order.getOrderId(),map);
+//            //存入redis
+//            Map<String,Object> map=new HashMap<>();
+//            map.put("orderId",order.getOrderId());
+//            map.put("productionStatus",order.getProductionStatus());
+//            map.put("productLine",order.getProductLine());
+//            redisCache.setCacheMap("order:"+order.getOrderId(),map);
             if (i>0)
             {
+                //此时开始派发订单
+                LambdaQueryWrapper<Flow> wrapper1=new LambdaQueryWrapper<>();
+                wrapper1.eq(Flow::getFlow,order.getTypeName());
+                Flow flow = flowMapper.selectOne(wrapper1);
+                String flowId = flow.getId();
+                LambdaQueryWrapper<Line> wrapper2=new LambdaQueryWrapper<>();
+                wrapper2.eq(Line::getLineFlowId,flowId).orderByAsc(Line::getOrderCount);
+                Line line = lineMapper.selectOne(wrapper2);
+                String lineId = line.getId();
+                order.setProductLine(lineId);
+                order.setProductionStatus(1);
+                //order.setExpectDate(new Date());
+                int j = orderMapper.updateById(order);
+                PriorityQueue<Order> qq = new PriorityQueue<>(
+                        (o1, o2) -> o1.getPriority() != o2.getPriority()
+                                ? o1.getPriority() - o2.getPriority()
+                                : (o1.getExpectDate().getTime() < o2.getExpectDate().getTime())
+                                ? -1
+                                : 1);
+                //创建优先队列并存入redis
+                JSONArray orderPQ = redisCache.getCacheObject("orderPQ");
+                if (orderPQ!=null){
+                    for (Object o : orderPQ) {
+                        qq.offer((Order)o);
+                    }
+                    qq.offer(order);
+                    redisCache.setCacheObject("orderPQ",qq);
+                }else {
+                    qq.offer(order);
+                    redisCache.setCacheObject("orderPQ",qq);
+                }
                 return Result.success("success");
             }else {
                 return  Result.error("error!");
@@ -118,7 +153,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public Result<Order> selectOrderById(String orderId) {
         LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-        wrapper.eq(Order::getOrderId,orderId);
+        wrapper.like(Order::getOrderId,orderId);
         Order order = orderMapper.selectOne(wrapper);
         return Result.success(order,"success");
     }
@@ -170,33 +205,37 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @param orderId
      * @return
      */
-    @Override
-    public Result<Order> handOrder(String orderId) {
-        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-        wrapper.eq(Order::getOrderId,orderId);
-        Order order = orderMapper.selectOne(wrapper);
-        Integer status=order.getProductionStatus();
-        String typeName = order.getTypeName();
-        if (status==0){
-            LambdaQueryWrapper<Flow> wrapper1=new LambdaQueryWrapper<>();
-            wrapper1.eq(Flow::getFlow,typeName);
-            Flow flow = flowMapper.selectOne(wrapper1);
-            String flowId = flow.getId();
-            LambdaQueryWrapper<Line> wrapper2=new LambdaQueryWrapper<>();
-            wrapper2.eq(Line::getLineFlowId,flowId).orderByAsc(Line::getOrderCount);
-            Line line = lineMapper.selectOne(wrapper2);
-            if (line!=null){
-                String lineId = line.getId();
-                order.setProductLine(lineId);
-                order.setProductionStatus(1);
-                //TODO 修改redis里面的数据
-                RedisCache redisCache=new RedisCache();
-                return Result.success("流水线派发成功！");
-            }else {
-                return Result.error("未匹配到流水线，派发失败！");
-            }
-        }else {
-            return Result.error("该状态下的订单不在派发范围内！");
-        }
-    }
+//    @Override
+//    public Result<Order> handOrder(String orderId) {
+//        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
+//        wrapper.eq(Order::getOrderId,orderId);
+//        Order order = orderMapper.selectOne(wrapper);
+//        Integer status=order.getProductionStatus();
+//        String typeName = order.getTypeName();
+//        if (status==0){
+//            LambdaQueryWrapper<Flow> wrapper1=new LambdaQueryWrapper<>();
+//            wrapper1.eq(Flow::getFlow,typeName);
+//            Flow flow = flowMapper.selectOne(wrapper1);
+//            String flowId = flow.getId();
+//            LambdaQueryWrapper<Line> wrapper2=new LambdaQueryWrapper<>();
+//            wrapper2.eq(Line::getLineFlowId,flowId).orderByAsc(Line::getOrderCount);
+//            Line line = lineMapper.selectOne(wrapper2);
+//            if (line!=null){
+//                String lineId = line.getId();
+//                order.setProductLine(lineId);
+//                order.setProductionStatus(1);
+//
+//                //TODO 修改redis里面的数据
+//                RedisCache redisCache=new RedisCache();
+//
+//                return Result.success("流水线派发成功！");
+//            }else {
+//                return Result.error("未匹配到流水线，派发失败！");
+//            }
+//        }else {
+//            return Result.error("该状态下的订单不在派发范围内！");
+//        }
+//    }
+
+
 }

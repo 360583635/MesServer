@@ -2,6 +2,8 @@ package com.job.orderService.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.job.common.pojo.Line;
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,6 +11,6 @@ import org.springframework.stereotype.Service;
  * @create 2023-07-06-17:59
  * @description
  */
-@Service
+@Mapper
 public interface LineMapper extends BaseMapper<Line> {
 }
