@@ -36,11 +36,12 @@ public class Line {
     /**
      *
      */
-    private String orderCount;
+    private Integer orderCount;
 
     //异常次数
     private Integer exceptionCount;
     //完成次数
     private Integer successCount;
+
     private Integer isDelete;
 }

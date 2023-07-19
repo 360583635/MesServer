@@ -1,6 +1,7 @@
 package com.job.dispatchService.lineManager.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.ProcessMaterialRelation;
 import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
@@ -30,8 +31,13 @@ public class ProcessMaterialRelationServiceImpl extends ServiceImpl<ProcessMater
     @Autowired
     private ProcessMaterialRelationMapper processMaterialRelationMapper;
 
+
+
     @Override
     public Result addOrUpdate(ProcessDto processDto) throws Exception {
+        List<MaterialVo> materialVoList = processDto.getMaterialVoList();
+        List<FlowProcessRelation> flowProcessRelationList = new ArrayList<>();
+
         return null;
     }
 
@@ -48,15 +54,10 @@ public class ProcessMaterialRelationServiceImpl extends ServiceImpl<ProcessMater
         return materialVos;
     }
 
-    /**
-     * 绘制当前流程下的工序
-     *
-     * @param processId
-     * @return
-     * @throws Exception
-     */
+
 
     public List<MaterialVo> currentMaterialViewServer(String processId) throws Exception {
         return processMaterialRelationMapper.queryMaterialRelationByProcessId(processId);
     }
+
 }

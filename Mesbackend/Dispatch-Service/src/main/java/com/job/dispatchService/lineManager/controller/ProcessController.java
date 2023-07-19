@@ -32,6 +32,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/dispatch/process")
+@CrossOrigin
 public class ProcessController {
 
     @Autowired
@@ -97,7 +98,7 @@ public class ProcessController {
      */
     @PostMapping("/remove")
     @ResponseBody
-    public Result removePeocess(String processId){
+    public Result removePeocess(@RequestBody String processId){
         LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper();
         queryWrapper.eq(FlowProcessRelation::getProcessId,processId);
         long count = processRelationService.count(queryWrapper);
