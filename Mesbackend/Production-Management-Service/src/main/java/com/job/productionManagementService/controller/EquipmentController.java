@@ -5,7 +5,9 @@ import com.job.common.pojo.Equipment;
 import com.job.productionManagementService.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +21,6 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/productionManagement/equipment")
-@CrossOrigin
 public class EquipmentController {
     @Autowired
     private EquipmentService equipmentService;
@@ -48,9 +49,8 @@ public class EquipmentController {
     /**
      * 根据设备功能类型查询设备
      */
-    @PostMapping("/queryEquipmentsByType")
-    @ResponseBody
-    List<Equipment> queryEquipmentsByType(@RequestParam String functionName){
+    @GetMapping("/queryEquipmentsByType/{functionName}")
+    List<Equipment> queryEquipmentsByType(@PathVariable("functionName") String functionName){
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Equipment::getFunctionName,functionName);
         List<Equipment> equipmentList = equipmentService.list(queryWrapper);
