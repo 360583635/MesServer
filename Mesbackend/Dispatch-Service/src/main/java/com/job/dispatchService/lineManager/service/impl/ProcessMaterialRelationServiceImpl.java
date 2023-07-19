@@ -3,7 +3,6 @@ package com.job.dispatchService.lineManager.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.ProcessMaterialRelation;
-import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
 import com.job.dispatchService.lineManager.mapper.ProcessMaterialRelationMapper;
 import com.job.dispatchService.lineManager.service.ProcessMaterialRelationService;
@@ -31,15 +30,15 @@ public class ProcessMaterialRelationServiceImpl extends ServiceImpl<ProcessMater
     @Autowired
     private ProcessMaterialRelationMapper processMaterialRelationMapper;
 
-    @Autowired
-    private ProcessMaterialRelationService relationService;
+    /*@Autowired
+    private ProcessMaterialRelationService relationService;*/
 
     //逻辑删除1未删除，0已删除
     private static Integer IS_DELETE=1;
 
 
     @Override
-    public Result addOrUpdate(ProcessDto processDto) throws Exception {
+    public List<ProcessMaterialRelation> addOrUpdate(ProcessDto processDto) throws Exception {
         List<MaterialVo> materialVoList = processDto.getMaterialVoList();
         List<FlowProcessRelation> flowProcessRelationList = new ArrayList<>();
         List<ProcessMaterialRelation> processMaterialRelationList=new ArrayList<>();
@@ -51,13 +50,10 @@ public class ProcessMaterialRelationServiceImpl extends ServiceImpl<ProcessMater
             processMaterialRelation.setNumber(materialVo.getNumber());
             processMaterialRelation.setIsDelete(IS_DELETE);
             processMaterialRelationList.add(processMaterialRelation);
-
         }
-        boolean b = relationService.saveBatch(processMaterialRelationList);
 
 
-
-        return null;
+        return processMaterialRelationList;
     }
 
     @Override

@@ -21,11 +21,14 @@ public class LineController {
 
     @GetMapping("/1")
     public Result<Object> getLine(Line line){
+        System.out.println(1);
         //查找全部
-        if(line==null&&line.getId()==null){
+        if(!(line!=null&&line.getId()!=null)){
+            System.out.println(2);
             return Result.success(lineService.getall(),"success");
         }
         //查找一个
+        System.out.println(3);
         return Result.success(lineService.getone(line),"success");
 
     }

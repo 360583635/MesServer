@@ -2,15 +2,21 @@ package com.job.dispatchService.lineManager.controller;
 
 
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
+import com.job.common.pojo.Users;
 import com.job.common.result.Result;
+import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.LinePageReq;
 import com.job.dispatchService.lineManager.service.LineService;
+import com.job.feign.clients.AuthenticationClient;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +38,8 @@ public class LineController {
     @Autowired
     private LineService lineService;
 
+    @Autowired
+    private AuthenticationClient authenticationClient;
 
     //初始的订单数量，默认为0
     private static int ORDER_COUNT=0;
@@ -54,9 +62,24 @@ public class LineController {
      */
     @RequestMapping("/saveLine")
     @ResponseBody
-    public Result saveLine(@RequestBody Line pipeLine){
+    public Result saveLine(@RequestBody Line pipeLine, HttpServletRequest request){
 
-        String user="wen"; //获取用户信息
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            pipeLine.setUpdateUsername(name);
+            pipeLine.setCreateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        pipeLine.setCreateTime(DateUtil.date());
+        pipeLine.setUpdateTime(DateUtil.date());
         pipeLine.setOrderCount(0);
         pipeLine.setLineStatus("0"); //设置状态为空闲
         lineService.save(pipeLine);
@@ -71,9 +94,24 @@ public class LineController {
      */
     @RequestMapping("/updateLine")
     @ResponseBody
-    public Result updateLine(@RequestBody Line pipeLine){
+    public Result updateLine(@RequestBody Line pipeLine, HttpServletRequest request){
         UpdateWrapper updateWrapper=new UpdateWrapper();
-        String user="wen";//获取当前用户信息
+
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            pipeLine.setUpdateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+
+        pipeLine.setUpdateTime(DateUtil.date());
         lineService.updateById(pipeLine);
         //ToDo 调用日志接口
         return Result.success(null,"修改成功");

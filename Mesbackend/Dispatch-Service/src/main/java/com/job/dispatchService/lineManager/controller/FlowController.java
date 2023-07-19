@@ -8,11 +8,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Line;
+import com.job.common.pojo.Users;
 import com.job.common.result.Result;
+import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
+import com.job.feign.clients.AuthenticationClient;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import com.job.dispatchService.lineManager.utils.UserUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.http.HttpRequest;
@@ -39,7 +44,8 @@ public class FlowController {
     @Autowired
     public LineService lineService;
 
-
+    @Autowired
+    private AuthenticationClient authenticationClient;
     /**
      * 流程信息信息分页查询
      *
