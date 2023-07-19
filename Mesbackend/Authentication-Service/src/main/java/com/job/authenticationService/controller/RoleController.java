@@ -28,7 +28,7 @@ import java.util.Map;
 /*
 对角色进行增删改查
  */
-//@RequestMapping("/roles")
+@RequestMapping("/authen")
 @RestController
 public class RoleController {
     @Autowired
@@ -71,25 +71,23 @@ public class RoleController {
     @RequestMapping("/showRoleById/{RoleId}")
     public Result joinQueryExample(@PathVariable("RoleId") String id) {
         System.out.println(id);
-        return null;
-//        List list = new ArrayList<>();
-//        Result<Object> result = new Result<>();
-//        LambdaQueryWrapper<Roles> queryWrapper = new LambdaQueryWrapper<>();
-//        queryWrapper.select(Roles::getRoleId, Roles::getRoleName) // 指定需要查询的字段
-//                .eq(Roles::getRoleId, id); // 添加其他查询条件
-//        List<Map<String, Object>> resultList = rolesMapper.selectMaps(queryWrapper);
-//        list.add(resultList);
-//        System.out.println(resultList);
-//
-//        LambdaQueryWrapper<Menus> wrapper=new LambdaQueryWrapper<>();
-//        wrapper.select(Menus::getMenuID, Menus::getName) // 指定需要查询的字段
-//                .eq(Menus::getIs_delete,1);
-//        List<Map<String, Object>> rolesList=menusMapper.selectMaps(wrapper);
-//        list.add(rolesList);
-//        System.out.println(rolesList);
-//        result.setData(list);
-//        result.setCode(200);
-//        return result;
+        List list = new ArrayList<>();
+        Result<Object> result = new Result<>();
+        LambdaQueryWrapper<Roles> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Roles::getRoleId, Roles::getRoleName) // 指定需要查询的字段
+                .eq(Roles::getRoleId, id); // 添加其他查询条件
+        List<Map<String, Object>> resultList = rolesMapper.selectMaps(queryWrapper);
+        System.out.println(resultList);
+        list.add(resultList);
+        LambdaQueryWrapper<Menus> wrapper=new LambdaQueryWrapper<>();
+        wrapper.select(Menus::getMenuID, Menus::getName) // 指定需要查询的字段
+                .eq(Menus::getIs_delete,1);
+        List<Map<String, Object>> rolesList=menusMapper.selectMaps(wrapper);
+        list.add(rolesList);
+        System.out.println(rolesList);
+        result.setData(list);
+        result.setCode(200);
+        return result;
     }
 
     /**
@@ -119,14 +117,14 @@ public class RoleController {
 //    添加某个用户角色
 
     /**
-     * 添加某个用户角色
+     * 添加某个用户角色1
      * @param role_name
      * @param options
      * @return
      */
     @RequestMapping("/addRole")
     public Result<Roles> addRole(@RequestParam(value = "role_name") String role_name,
-                                 @RequestParam(value = "option") List<String> options){
+                                 @RequestParam(value = "option",required = false) List<String> options){
         Date date=new Date();
         Roles roles=new Roles();
         roles.setRoleName(role_name);
@@ -139,16 +137,18 @@ public class RoleController {
         System.out.println(roleId);
         System.out.println(role_name);
         System.out.println(options);
-        for(String s:options){
-            System.out.println(s);
-            MenusRoles menusRoles=new MenusRoles();
-            menusRoles.setRoleId(roleId);
-            menusRoles.setCreateTime(date);
-            menusRoles.setCreateTime(date);
-            menusRoles.setUpdateUser("zyx");
-            menusRoles.setCreateUser("zyx");
-            menusRoles.setMenuId(s);
-            menusRolesService.save(menusRoles);
+        if (options!=null) {
+            for (String s : options) {
+                System.out.println(s);
+                MenusRoles menusRoles = new MenusRoles();
+                menusRoles.setRoleId(roleId);
+                menusRoles.setCreateTime(date);
+                menusRoles.setCreateTime(date);
+                menusRoles.setUpdateUser("zyx");
+                menusRoles.setCreateUser("zyx");
+                menusRoles.setMenuId(s);
+                menusRolesService.save(menusRoles);
+            }
         }
         Result result=new Result();
         result.setCode(200);
@@ -161,7 +161,7 @@ public class RoleController {
     //    修改某个用户角色
 
     /**
-     * 修改某个用户角色
+     * 修改某个用户角色1
      * @param role_name
      * @param role_id
      * @param options
@@ -170,30 +170,31 @@ public class RoleController {
     @RequestMapping("/updateRole")
     public Result<Roles> updateRole(@RequestParam(value = "role_name") String role_name,
                                     @RequestParam(value = "role_id") String role_id,
-                                 @RequestParam(value = "option") List<String> options){
+                                 @RequestParam(value = "option",required = false) List<String> options){
 //        修改角色名
         Date date=new Date();
         Roles roles=rolesService.getById(role_id);
         roles.setRoleName(role_name);
         roles.setUpdateTime(date);
         roles.setUpdateUser("zyx");
-        UpdateWrapper<Roles> updateWrapper = new UpdateWrapper<>();
-        rolesService.update(roles,updateWrapper);
+        rolesService.updateById(roles);
 
 //        修改角色权限表
         System.out.println(role_id);
         System.out.println(options);
-        menusRolesService.remove(new QueryWrapper<MenusRoles>().eq("role_id","1"));
-        for(String s:options){
-            System.out.println(s);
-            MenusRoles menusRoles=new MenusRoles();
-            menusRoles.setRoleId(role_id);
-            menusRoles.setCreateTime(date);
-            menusRoles.setCreateTime(date);
-            menusRoles.setUpdateUser("zyx");
-            menusRoles.setCreateUser("zyx");
-            menusRoles.setMenuId(s);
-            menusRolesService.save(menusRoles);
+        menusRolesService.remove(new QueryWrapper<MenusRoles>().eq("role_id",role_id));
+        if (options!=null) {
+            for (String s : options) {
+                System.out.println(s);
+                MenusRoles menusRoles = new MenusRoles();
+                menusRoles.setRoleId(role_id);
+                menusRoles.setCreateTime(date);
+                menusRoles.setCreateTime(date);
+                menusRoles.setUpdateUser("zyx");
+                menusRoles.setCreateUser("zyx");
+                menusRoles.setMenuId(s);
+                menusRolesService.save(menusRoles);
+            }
         }
         Result result=new Result();
         result.setCode(200);

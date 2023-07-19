@@ -1,7 +1,7 @@
 package com.job.authenticationService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.job.authenticationService.config.GetUserid;
+
 import com.job.authenticationService.mapper.MenusMapper;
 import com.job.authenticationService.pojo.LoginUser;
 import com.job.authenticationService.pojo.ResponseResult;
