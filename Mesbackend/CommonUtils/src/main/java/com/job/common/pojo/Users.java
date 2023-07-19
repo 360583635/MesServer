@@ -16,24 +16,24 @@ import java.util.Date;
 @NoArgsConstructor
 public class Users implements Serializable {
     @TableId
-    private String Id;
-    private String Password;
-    private String Salt;
-    private String Name;
-    private String Phone;
-    private String Email;
-    private String Address;
-    private Date EnterTime;
-    private String Sex;
+    private String id;
+    private String password;
+    private String salt;
+    private String name;
+    private String phone;
+    private String email;
+    private String address;
+    private Date enterTime;
+    private String sex;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date CreateTime;
-    private String CreateUser;
+    private Date createTime;
+    private String createUser;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private Date UpdateTime;
-    private String UpdateUser;
-    private Integer State;
+    private Date updateTime;
+    private String updateUser;
+    private Integer state;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
-    private String Birth;
+    private String birth;
     private Integer isDelete;
     private Integer isBlack;
 }
