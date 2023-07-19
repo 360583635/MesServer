@@ -15,6 +15,7 @@ import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.EquipmentVo;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Equipment;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -62,9 +63,11 @@ public class ProcessController {
      */
     @PostMapping("/update")
     @ResponseBody
-    public Result updateProcess(@RequestBody Process tProcess){
-        //获得用户信息
+    public Result updateProcess(@RequestBody Process tProcess, HttpServletRequest httpServletRequest){
+
         String userinf="郭帅比";
+        //获得用户信息
+//        String userId= UserUtil.getUserId(httpServletRequest);
         tProcess.setUpdateUsername(userinf);
         DateTime nowTime = DateUtil.date();
         tProcess.setUpdateTime(nowTime);
@@ -80,8 +83,9 @@ public class ProcessController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result saveProcess(@RequestBody Process tProcess){
+    public Result saveProcess(@RequestBody Process tProcess, HttpServletRequest httpServletRequest){
         //获得用户信息
+        //String userId= UserUtil.getUserId(httpServletRequest);
         String userinf="郭帅比";
         tProcess.setUpdateUsername(userinf);
         tProcess.setCreateUsername(userinf);

@@ -13,6 +13,9 @@ import com.job.dispatchService.lineManager.request.FlowPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
+import com.job.dispatchService.lineManager.utils.UserUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +38,8 @@ public class FlowController {
     public FlowProcessRelationService relationService;
     @Autowired
     public LineService lineService;
+
+
     /**
      * 流程信息信息分页查询
      *
@@ -65,11 +70,13 @@ public class FlowController {
 
 
     @PostMapping("/save")
-    public Result flowSave(@RequestBody Flow flow){
+    public Result flowSave(@RequestBody Flow flow, HttpServletRequest httpServletRequest){
+
+//        String userId= UserUtil.getUserId(httpServletRequest);
         flow.setCreateTime(DateUtil.date());
         flow.setUpdateTime(DateUtil.date());
-        flow.setUpdateUsername("张三");
-        flow.setCreateUsername("张三");
+        flow.setUpdateUsername("userId");
+        flow.setCreateUsername("userId");
         boolean save = flowService.save(flow);
         if(save){
             return Result.success(null,"保存成功");

@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 庸俗可耐
@@ -27,13 +29,18 @@ public class EquipmentController {
      * @return
      */
     @GetMapping("/queryEquipmentTypes")
+    @ResponseBody
     List<String> queryEquipmentTypes(){
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         List<Equipment> list = equipmentService.list();
         List<String> functionNames = new ArrayList<>();
-        for(Equipment equipment:list){
+        Set<String> uniqueFunctionNames = new HashSet<>();
+        for (Equipment equipment : list) {
             String functionName = equipment.getFunctionName();
-            functionNames.add(functionName);
+            if (!uniqueFunctionNames.contains(functionName)) {
+                functionNames.add(functionName);
+                uniqueFunctionNames.add(functionName);
+            }
         }
         return functionNames;
     }
