@@ -48,4 +48,6 @@ public class Warehouse {
     private  int automationEquipment;
 
 
+
+
 }
