@@ -57,7 +57,7 @@ public class LineTaskController {
         String lineId = line.getId();
         Thread.currentThread().setName(lineName+lineId);
         //订单队列
-        List<Order> orderQueue = new LinkedList<>();
+        List<Order> orderQueue = redisCache.getCacheList(lineName);
         while(true) {
             //判断订单列表是否有数据，流水线状态是否为 空闲或完成
             if ((orderQueue.isEmpty() == false && line.getLineStatus().equals("0")) || (orderQueue.isEmpty() == false && line.getLineStatus().equals("4")) ) {
@@ -107,7 +107,7 @@ public class LineTaskController {
                     if ("error".equals(workingStatus)) {
                         //如果工单运行失败
                         order.setProductionStatus(3);
-                        line.setLineStatus("3");
+                        /*line.setLineStatus("3");*/
                         line.setExceptionCount(line.getExceptionCount()+1);
                         // TODO: 2023/7/15 流水线状态为异常后，实时监控工单异常处理信息
 
@@ -129,7 +129,8 @@ public class LineTaskController {
                     if ("error".equals(workingStatus)) {
                         //如果工单运行失败，将订单和流水线状态设置为 异常
                         order.setProductionStatus(3);
-                        line.setLineStatus("3");
+                        /*line.setLineStatus("3");*/
+                        line.setExceptionCount(line.getExceptionCount()+1);
                     } else if ("ok".equals(workingStatus)) {
                         //如果工单运行成功，将订单和流水线状态设置为 完成
                         order.setProductionStatus(4);
@@ -141,7 +142,7 @@ public class LineTaskController {
     }
 
     @Async
-    @Scheduled(initialDelay = 0,fixedRate = 3000)
+    @Scheduled(initialDelay = 0,fixedRate = 30000)
     public void queryOrders() throws InterruptedException {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单
         List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
@@ -149,11 +150,12 @@ public class LineTaskController {
         LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
         List<Line> list = lineService.list(queryWrapper);
         for(Line line: list){
-            String lineName = line.getLine();
-
+            String lineOrderQE = line.getLine();
+            redisCache.setCacheList(lineOrderQE,orderQueue);
         }
         for(Order order : orderPQ){
-
+            String lineName = order.getProductLine();
+            redisCache.getCacheList(lineName).add(order);
         }
     }
     
