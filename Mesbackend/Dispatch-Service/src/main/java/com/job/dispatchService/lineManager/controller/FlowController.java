@@ -95,6 +95,11 @@ public class FlowController {
         }
     }
 
+    /**
+     * 批量逻辑删除
+     * @param idList
+     * @return
+     */
     @PostMapping("/batchDelete")
     @ResponseBody
     public Result batchDeleteById(@RequestParam List<String> idList){
