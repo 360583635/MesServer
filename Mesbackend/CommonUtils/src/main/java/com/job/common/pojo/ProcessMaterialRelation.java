@@ -50,4 +50,9 @@ public class ProcessMaterialRelation {
      * 逻辑删除
      */
     private Integer isDelete;
+
+    public ProcessMaterialRelation(String id, String process) {
+        this.processId=id;
+        this.processName=process;
+    }
 }

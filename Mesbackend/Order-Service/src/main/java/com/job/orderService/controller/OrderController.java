@@ -1,18 +1,26 @@
 package com.job.orderService.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Order;
+import com.job.common.redis.RedisCache;
+import com.job.common.utils.JwtUtil;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
+import com.job.orderService.service.UsersService;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.PriorityQueue;
 
 @RestController
 @RequestMapping("/order")
@@ -22,13 +30,34 @@ public class OrderController {
     private OrderMapper orderMapper;
     @Autowired
     private OrderService orderService;
+    private RedisCache redisCache;
+    @Autowired
+    public void setRedisCache(RedisCache redisCache){
+        this.redisCache = redisCache;
+    }
+    @Autowired
+    private UsersService usersService;
+
+
 
     /**
      * 创建订单
      * @return
      */
     @GetMapping("/addOrder")
-    public Result<Order> addOrder(Order order){
+    public Result<Order> addOrder(Order order,HttpServletRequest request){
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            String name = usersService.getById(userId).getName();
+            //System.out.println(userId);
+            order.setAuditor(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         Result<Order> result = orderService.addOrder(order);
         return result;
 //        //数据验证
@@ -113,12 +142,12 @@ public class OrderController {
     }
 
     /**
-     * 根据订单id查询单个订单
+     * 根据产品名称查询订单
      * @return
      */
-    @GetMapping("/selectOrderById/{orderId}")
-    public Result<Order> selectOrderById(@PathVariable String orderId){
-        Result<Order> result = orderService.selectOrderById(orderId);
+    @GetMapping("/selectOrderById/{typeName}")
+    public Result<List<Order>> selectOrderByName(@PathVariable String typeName){
+        Result<List<Order>> result = orderService.selectOrderByName(typeName);
         return result;
 
 //        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
@@ -175,14 +204,27 @@ public class OrderController {
 
     /**
      * 订单的派发
-     * @param orderId
      * @return
      */
-    @GetMapping("/handOrder/{orderId}")
-    @Scheduled(cron = "0 0/5 * ? * ?")
-    public Result<Order> handOrder(@PathVariable String orderId){
-        Result<Order> result = orderService.handOrder(orderId);
-        return result;
-    }
+//    @GetMapping("/handOrder")
+////    @Scheduled(cron = "0 0/5 * ? * ?")
+//    public Result<Order> handOrder(){
+//        PriorityQueue<Integer> a = new PriorityQueue<>();
+//        a.offer(2);
+//        a.offer(5);
+//        a.offer(6);
+//        redisCache.setCacheObject("a",a);
+//        JSONArray jsonArray  = redisCache.getCacheObject("a");
+//        System.out.println(jsonArray.size());
+//        PriorityQueue<Integer> b = new PriorityQueue<>();
+//        for (Object o : jsonArray) {
+//            System.out.println(o);
+//            b.offer((Integer) o);
+//        }
+//        while (!b.isEmpty()){
+//            System.out.println(b.poll());
+//        }
+//        return null;
+//    }
 
 }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +24,11 @@ public class MaterialData extends Material {
     private double[] total ;
     //产品数量
     private int[] number ;
-
+    //仓库总空间 m^3
+    private int capacity;
+    //可用仓库总空间 m^3
+    private int available;
+    //原材料已使用空间
+    private Map<String,Object> material;
 
 }

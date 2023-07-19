@@ -17,7 +17,11 @@ public class MaterialController {
     @GetMapping("/classification")    //分类占比   金额 体积 面积
     public Result<MaterialData> getClassification(){
         MaterialData materialData = materialService.classification();
-        log.info(materialData.toString());
+        return Result.success(materialData,"success");
+    }
+    @GetMapping("/warehouse")    //分类占比   金额 体积 面积
+    public Result<MaterialData> getWarehouse(){
+        MaterialData materialData = materialService.getWarehouse();
         return Result.success(materialData,"success");
     }
 }

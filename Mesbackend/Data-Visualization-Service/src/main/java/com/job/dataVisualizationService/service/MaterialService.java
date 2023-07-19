@@ -6,4 +6,6 @@ import com.job.dataVisualizationService.pojo.MaterialData;
 
 public interface MaterialService extends IService<Material> {
     MaterialData classification();
+
+    MaterialData getWarehouse();
 }

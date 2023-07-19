@@ -16,7 +16,13 @@ public class RedisCache
 {
     @Autowired
     public RedisTemplate redisTemplate;
- 
+
+
+    /**
+     *判断key是否存在
+     */
+    public boolean hasKey(final String key){ return redisTemplate.hasKey(key);}
+
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *

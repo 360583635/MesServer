@@ -2,9 +2,12 @@ package com.job.common.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
 @TableName("t_line")
@@ -36,10 +39,34 @@ public class Line {
     /**
      *
      */
-    private String orderCount;
+    private Integer orderCount;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
+    private Date createTime;
+
+
+    //创建人
+    private String createUsername;
+
+
+    //修改时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
+    private Date updateTime;
+
+    //修改人
+    private String updateUsername;
+
 
     //异常次数
     private Integer exceptionCount;
+    //完成次数
+    private Integer successCount;
 
     private Integer isDelete;
+    @TableField(exist = false)
+    private Integer totalExceptionCount;
+    @TableField(exist = false)
+    private Integer totalSuccessCount;
+    @TableField(exist = false)
+    private Integer totalLineStatus;
 }
