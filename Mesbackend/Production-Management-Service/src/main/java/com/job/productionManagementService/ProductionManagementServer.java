@@ -11,7 +11,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@MapperScan("com.job.Production-Management.**.mapper*")
+@MapperScan("com/job/productionManagementService/mapper")
 public class ProductionManagementServer {
     public static void main(String[] args) {
         SpringApplication.run(ProductionManagementServer.class,args);

@@ -147,7 +147,6 @@ public class LineController {
 
         if (hasStatusOne) {
             return Result.error("请先保证流水线状态为关闭");
-
         } else {
             // 列表中不存在status为1的Line对象
             System.out.println("列表中不存在status为1的Line对象");
