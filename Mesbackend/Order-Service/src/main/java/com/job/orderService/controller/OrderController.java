@@ -6,11 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Order;
 import com.job.common.redis.RedisCache;
+import com.job.common.utils.JwtUtil;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import com.job.orderService.service.UsersService;
-import com.job.orderService.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.ibatis.annotations.Select;
@@ -46,18 +46,18 @@ public class OrderController {
      */
     @GetMapping("/addOrder")
     public Result<Order> addOrder(Order order,HttpServletRequest request){
-//        String token=request.getHeader("token");
-//        System.out.println(token);
-//        try {
-//            Claims claims = JwtUtil.parseJWT(token);
-//            String userId = claims.getSubject();
-//            String name = usersService.getById(userId).getName();
-//            //System.out.println(userId);
-//            order.setAuditor(name);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("token非法");
-//        }
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            String name = usersService.getById(userId).getName();
+            //System.out.println(userId);
+            order.setAuditor(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         Result<Order> result = orderService.addOrder(order);
         return result;
 //        //数据验证
@@ -142,12 +142,12 @@ public class OrderController {
     }
 
     /**
-     * 根据订单id查询单个订单
+     * 根据产品名称查询订单
      * @return
      */
-    @GetMapping("/selectOrderById/{orderId}")
-    public Result<Order> selectOrderById(@PathVariable String orderId){
-        Result<Order> result = orderService.selectOrderById(orderId);
+    @GetMapping("/selectOrderById/{typeName}")
+    public Result<List<Order>> selectOrderByName(@PathVariable String typeName){
+        Result<List<Order>> result = orderService.selectOrderByName(typeName);
         return result;
 
 //        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
