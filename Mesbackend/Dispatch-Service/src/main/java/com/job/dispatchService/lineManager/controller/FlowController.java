@@ -8,11 +8,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Line;
+import com.job.common.pojo.Users;
 import com.job.common.result.Result;
+import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
+import com.job.feign.clients.AuthenticationClient;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +40,9 @@ public class FlowController {
     public FlowProcessRelationService relationService;
     @Autowired
     public LineService lineService;
+
+    @Autowired
+    private AuthenticationClient authenticationClient;
     /**
      * 流程信息信息分页查询
      *
@@ -65,11 +73,25 @@ public class FlowController {
 
 
     @PostMapping("/save")
-    public Result flowSave(@RequestBody Flow flow){
+    public Result flowSave(@RequestBody Flow flow, HttpServletRequest request){
+
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            flow.setUpdateUsername(name);
+            flow.setCreateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+
         flow.setCreateTime(DateUtil.date());
         flow.setUpdateTime(DateUtil.date());
-        flow.setUpdateUsername("张三");
-        flow.setCreateUsername("张三");
         boolean save = flowService.save(flow);
         if(save){
             return Result.success(null,"保存成功");
