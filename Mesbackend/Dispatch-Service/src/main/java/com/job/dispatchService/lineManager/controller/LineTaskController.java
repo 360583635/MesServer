@@ -18,6 +18,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.job.common.result.Result;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,8 +58,13 @@ public class LineTaskController {
         String lineName = line.getLine();
         String lineId = line.getId();
         Thread.currentThread().setName(lineName+lineId);
-        //订单队列
-        List<Order> orderQueue = redisCache.getCacheList(lineName);
+        List<Order> orderQueue = new ArrayList<>();
+
+        boolean existsKey = redisCache.hasKey(lineName);
+        if(existsKey==true){
+            //订单队列
+            orderQueue = redisCache.getCacheList(lineName);
+        }
         while(true) {
             //判断订单列表是否有数据，流水线状态是否为 空闲或完成
             if ((orderQueue.isEmpty() == false && line.getLineStatus().equals("0")) || (orderQueue.isEmpty() == false && line.getLineStatus().equals("4")) ) {
@@ -97,46 +104,47 @@ public class LineTaskController {
                     //将流水线状态修改为繁忙
                     order.setProductionStatus(2);
                     line.setLineStatus("2");
-                }
-                FlowProcessRelation relation = firstRelation;
-                //遍历工序开始生产
-                while (!StringUtil.isNullOrEmpty(relation.getNextProcessId())) {
-                    //调用工单处理方法
-                    String currentProcessId = relation.getProcessId();
-                    String workingStatus = String.valueOf(workController.working(currentProcessId, order.getOrderId()));
-                    if ("error".equals(workingStatus)) {
-                        //如果工单运行失败
-                        order.setProductionStatus(3);
-                        /*line.setLineStatus("3");*/
-                        line.setExceptionCount(line.getExceptionCount()+1);
-                        // TODO: 2023/7/15 流水线状态为异常后，实时监控工单异常处理信息
+                    FlowProcessRelation relation = firstRelation;
+                    //遍历工序开始生产
+                    while (!StringUtil.isNullOrEmpty(relation.getNextProcessId())) {
+                        //调用工单处理方法
+                        String currentProcessId = relation.getProcessId();
+                        String workingStatus = String.valueOf(workController.working(currentProcessId, order.getOrderId()));
+                        if ("error".equals(workingStatus)) {
+                            //如果工单运行失败
+                            order.setProductionStatus(3);
+                            /*line.setLineStatus("3");*/
+                            line.setExceptionCount(line.getExceptionCount()+1);
+                            // TODO: 2023/7/15 流水线状态为异常后，实时监控工单异常处理信息
 
-                    } else if ("ok".equals(workingStatus)) {
-                        //如果工单运行成功，获取下一个工序
-                        LambdaQueryWrapper<FlowProcessRelation> queryWrapper3 = new LambdaQueryWrapper<>();
-                        queryWrapper3
-                                .eq(FlowProcessRelation::getIsDelete, 1)
-                                .eq(FlowProcessRelation::getProcessId, relation.getNextProcessId())
-                                .eq(FlowProcessRelation::getFlowId, flowId);
-                        relation = flowProcessRelationService.getOne(queryWrapper3);
+                        } else if ("ok".equals(workingStatus)) {
+                            //如果工单运行成功，获取下一个工序
+                            LambdaQueryWrapper<FlowProcessRelation> queryWrapper3 = new LambdaQueryWrapper<>();
+                            queryWrapper3
+                                    .eq(FlowProcessRelation::getIsDelete, 1)
+                                    .eq(FlowProcessRelation::getProcessId, relation.getNextProcessId())
+                                    .eq(FlowProcessRelation::getFlowId, flowId);
+                            relation = flowProcessRelationService.getOne(queryWrapper3);
+                        }
+                    }
+                    //判断此时的流程是否为最后的流程
+                    if ("lastProcess".equals(relation.getProcessType())) {
+                        //调用工单处理方法
+                        String currentProcessId = relation.getProcessId();
+                        String workingStatus = String.valueOf(workController.working(currentProcessId, order.getOrderId()));
+                        if ("error".equals(workingStatus)) {
+                            //如果工单运行失败，将订单和流水线状态设置为 异常
+                            order.setProductionStatus(3);
+                            /*line.setLineStatus("3");*/
+                            line.setExceptionCount(line.getExceptionCount()+1);
+                        } else if ("ok".equals(workingStatus)) {
+                            //如果工单运行成功，将订单和流水线状态设置为 完成
+                            order.setProductionStatus(4);
+                            line.setLineStatus("4");
+                        }
                     }
                 }
-                //判断此时的流程是否为最后的流程
-                if ("lastProcess".equals(relation.getProcessType())) {
-                    //调用工单处理方法
-                    String currentProcessId = relation.getProcessId();
-                    String workingStatus = String.valueOf(workController.working(currentProcessId, order.getOrderId()));
-                    if ("error".equals(workingStatus)) {
-                        //如果工单运行失败，将订单和流水线状态设置为 异常
-                        order.setProductionStatus(3);
-                        /*line.setLineStatus("3");*/
-                        line.setExceptionCount(line.getExceptionCount()+1);
-                    } else if ("ok".equals(workingStatus)) {
-                        //如果工单运行成功，将订单和流水线状态设置为 完成
-                        order.setProductionStatus(4);
-                        line.setLineStatus("4");
-                    }
-                }
+
             }
         }
     }
@@ -146,16 +154,17 @@ public class LineTaskController {
     public void queryOrders() throws InterruptedException {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单
         List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
-        List<Order> orderQueue = new LinkedList<>();
-        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
-        List<Line> list = lineService.list(queryWrapper);
-        for(Line line: list){
-            String lineOrderQE = line.getLine();
-            redisCache.setCacheList(lineOrderQE,orderQueue);
-        }
-        for(Order order : orderPQ){
-            String lineName = order.getProductLine();
-            redisCache.getCacheList(lineName).add(order);
+        if(orderPQ!=null) {
+            for (Order order : orderPQ) {
+                String lineName = order.getProductLine();
+                if(redisCache.getCacheList(lineName)==null&&StringUtil.isNullOrEmpty(lineName)==false){
+                    List<Order> orderQueue = new LinkedList<>();
+                    orderQueue.add(order);
+                    redisCache.setCacheList(lineName, orderQueue);
+                }else{
+                    redisCache.getCacheList(lineName).add(order);
+                }
+            }
         }
     }
     
