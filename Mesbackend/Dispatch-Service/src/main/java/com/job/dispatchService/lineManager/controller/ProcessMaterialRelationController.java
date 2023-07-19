@@ -1,10 +1,12 @@
 package com.job.dispatchService.lineManager.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.ProcessMaterialRelation;
 import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
+import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.ProcessMaterialRelationService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.MaterialVo;
@@ -16,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -36,6 +39,9 @@ public class ProcessMaterialRelationController {
 
     @Autowired
     private ProductionManagementClient productionManagementClient;
+
+    @Autowired
+    private FlowProcessRelationService flowProcessRelationService;
 
     /**
      * 工序与原材料关系管理编辑界面
@@ -96,6 +102,30 @@ public class ProcessMaterialRelationController {
             materialNameList.add(materialName);
         }
         return materialNameList;
+    }
+
+    /**
+     *根据流程功能查询原材料
+     */
+    @PostMapping("/queryMaterialsByFlowName")
+    public List<String> queryMaterialsByFlowName(@RequestBody String flowName) throws Exception {
+        LambdaQueryWrapper<FlowProcessRelation> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(FlowProcessRelation::getIsDelete,1)
+                .eq(FlowProcessRelation::getFlow,flowName)
+                .orderBy(true,false,FlowProcessRelation::getSortNum);
+        List<FlowProcessRelation> processRelationList = flowProcessRelationService.list(queryWrapper);
+        HashSet<String> hashSet = new HashSet<String>();
+        for(FlowProcessRelation flowProcessRelation:processRelationList){
+            String process = flowProcessRelation.getProcess();
+            List<String> queryMaterialsByProcess = queryMaterialsByProcess(process);
+            for(String MaterialName : queryMaterialsByProcess){
+                hashSet.add(MaterialName);
+            }
+        }
+        List<String> MaterialList = new ArrayList<>();
+        MaterialList.addAll(hashSet);
+        return MaterialList;
     }
 
     /**
