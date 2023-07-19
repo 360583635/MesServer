@@ -52,7 +52,7 @@ public class Filter implements GlobalFilter , Ordered {
             System.out.println("234");
             System.out.println(token);
             if (StringUtils.isNullOrEmpty(token)){
-                System.out.println("没有token");
+                System.out.println("没有token就跳转到登录界面");
                 String redirectUrl = "http://localhost:8080/#/pages/pt/login/login";
                 exchange.getResponse().getHeaders().set(HttpHeaders.LOCATION, redirectUrl);
                 //303状态码表示由于请求对应的资源存在着另一个URI，应使用GET方法定向获取请求的资源

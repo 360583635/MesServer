@@ -251,7 +251,7 @@ public class UsersController {
        // Users users=usersService.getById(UserId);
         //System.out.println(users);
         Result result = new Result<>();
-        if (users.getIsDelete().equals(1)){
+        if (user.getIsDelete().equals(0)){
             result.setData("删除成功");
             result.setCode(200);
         }
