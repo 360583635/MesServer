@@ -19,11 +19,14 @@ public class LineController {
     @Autowired
     private LineService lineService;
 
-    @GetMapping("")
-    public Result<List<Line>> getLine(Line line){
-        if(!(line!=null&&line.getId()!=null))return Result.success(lineService.list(),"success");
-
-        return null;
+    @GetMapping("/1")
+    public Result<Object> getLine(Line line){
+        //查找全部
+        if(line==null&&line.getId()==null){
+            return Result.success(lineService.getall(),"success");
+        }
+        //查找一个
+        return Result.success(lineService.getone(line),"success");
 
     }
 }
