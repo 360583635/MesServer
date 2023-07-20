@@ -46,10 +46,19 @@ public class Warehouse {
      * 是否装配自动化设备
      */
     private  int automationEquipment;
-
-    private String warehouseCapacity;
-
+    /**
+     * 仓库面积
+     */
+    private String warehouseArea;
+    /**
+     * 可用面积
+     */
     private String warehouseAvailable;
+    /**
+     *仓库高度
+     */
+    private String WarehouseHeight;
+
 
 
 

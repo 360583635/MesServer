@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Users;
 import com.job.common.result.Result;
@@ -84,8 +83,8 @@ public class LineController {
         pipeLine.setLineStatus("0"); //设置状态为空闲
         lineService.save(pipeLine);
         //ToDo 调用日志接口
-        return Result.success(null,"添加成功");
-    }
+        return Result.success(null,"添加成功")
+    };
 
     /**
      * 修改流水线

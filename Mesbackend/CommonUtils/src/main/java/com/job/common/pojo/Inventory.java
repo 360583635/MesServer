@@ -27,9 +27,9 @@ public class Inventory {
      */
     private String equipmentName;
     /**
-     *所属流程
+     *产品名称
      */
-    private String flow;
+    private String ProduceName;
     /**
      * 数量
      */
