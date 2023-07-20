@@ -14,9 +14,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = "com.job.feign.clients",defaultConfiguration = DefaultFeignConfiguration.class)
+
 @ComponentScan({"com.job.common","com.job.orderService"})
-@EnableFeignClients(basePackages = "com.job.feign.clients",defaultConfiguration = DefaultFeignConfiguration.class)
 public class OrderService {
     public static void main(String[] args) {
         SpringApplication.run(OrderService.class,args);
