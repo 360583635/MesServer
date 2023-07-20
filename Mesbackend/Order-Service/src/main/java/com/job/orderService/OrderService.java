@@ -1,8 +1,10 @@
 package com.job.orderService;
 
+import com.job.feign.config.DefaultFeignConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -12,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableFeignClients(basePackages = "com.job.feign.clients",defaultConfiguration = DefaultFeignConfiguration.class)
 @ComponentScan({"com.job.common","com.job.orderService"})
 public class OrderService {
     public static void main(String[] args) {
