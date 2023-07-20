@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Line;
@@ -19,7 +18,6 @@ import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import com.job.dispatchService.lineManager.utils.UserUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;

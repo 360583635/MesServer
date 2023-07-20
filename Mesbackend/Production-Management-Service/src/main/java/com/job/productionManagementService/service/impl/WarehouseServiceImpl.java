@@ -3,5 +3,5 @@ package com.job.productionManagementService.service.impl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProduceServiceImpl {
+public class WarehouseServiceImpl {
 }
