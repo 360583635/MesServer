@@ -70,12 +70,21 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.54</version>
-            <scope>compile</scope>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!--httpClient的依赖 -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-httpclient</artifactId>
         </dependency>
 
+        <!--引入自定义的feign-api-->
+        <dependency>
+            <groupId>com.job</groupId>
+            <artifactId>Feign-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <!--httpClient的依赖 -->
         <dependency>

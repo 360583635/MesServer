@@ -178,7 +178,8 @@ public class ProcessController {
     @GetMapping("/list")
     public Result list(){
         LambdaQueryWrapper<Process> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(Process::getIsDelete,IS_DELETE);
+        queryWrapper
+                .eq(Process::getIsDelete,IS_DELETE);
         List<Process> list = processService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }
