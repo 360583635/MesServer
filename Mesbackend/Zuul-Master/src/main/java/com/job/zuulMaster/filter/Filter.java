@@ -11,8 +11,6 @@ import com.job.zuulMaster.utils.Query;
 import com.job.zuulMaster.mapper.MenusMapper;
 import com.job.zuulMaster.utils.JwtUtil;
 import com.mysql.cj.util.StringUtils;
-//import io.jsonwebtoken.Claims;
-//import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Claims;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -37,7 +35,7 @@ public class Filter implements GlobalFilter , Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path=exchange.getRequest().getURI().getPath();
-        System.out.println(path);
+
 //        System.out.println(path);
 //        ThreadLocal threadLocal = new InheritableThreadLocal();
 //        threadLocal.set("userid");
@@ -87,8 +85,6 @@ public class Filter implements GlobalFilter , Ordered {
                     List<String > urllist= menusMapper.selectPermsByUserId(userid);
                     for (String s : urllist) {
                         if (path.equals(s)){
-                            GetUserId.setUserId(userid);
-                            System.out.println("用户id为："+userid);
                             System.out.println("hjsgfh");
                             return chain.filter(exchange);
 
