@@ -1,4 +1,4 @@
-package com.job.authenticationService.controller;
+package com.job.authenticationService.Controller;
 
 import com.job.authenticationService.pojo.LoginUser;
 import org.springframework.security.access.prepost.PreAuthorize;
