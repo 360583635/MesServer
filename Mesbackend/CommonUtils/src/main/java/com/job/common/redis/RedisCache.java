@@ -260,4 +260,17 @@ public class RedisCache
     {
         return redisTemplate.getExpire(key,TimeUnit.SECONDS);
     }
+
+    public void addSingle(String tableName, Double score, String data){
+        redisTemplate.opsForZSet().add(tableName, data, score);
+    }
+
+    public void addAll(String tableName, Set set){
+        redisTemplate.opsForZSet().add(tableName, set);
+    }
+
+    public Set selectByTime(String tableName, Double beginTime, Double endTime){
+        Set set = redisTemplate.opsForZSet().rangeByScore(tableName, beginTime, endTime);
+        return set;
+    }
 }
