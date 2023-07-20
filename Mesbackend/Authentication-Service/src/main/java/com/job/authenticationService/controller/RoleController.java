@@ -1,4 +1,4 @@
-package com.job.authenticationService.controller;
+package com.job.authenticationService.Controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

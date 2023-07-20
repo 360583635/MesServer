@@ -6,11 +6,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Order;
 import com.job.common.redis.RedisCache;
+import com.job.common.utils.GetUserId;
 import com.job.common.utils.JwtUtil;
+import com.job.feign.clients.DispatchClient;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import com.job.orderService.service.UsersService;
+import com.job.orderService.vo.FlowVo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.ibatis.annotations.Select;
@@ -38,7 +41,20 @@ public class OrderController {
     @Autowired
     private UsersService usersService;
 
-
+//    /**
+//     * 测试获取用户id
+//     * @return
+//     */
+//    @GetMapping("/getUserId")
+//    public void getUserId(){
+//        String userId = GetUserId.getUserId();
+//        System.out.println(userId);
+//    }
+    @GetMapping("/toAddOrder")
+   public Result<List<FlowVo>> toAddOrder(){
+       Result<List<FlowVo>> result = orderService.toAddorder();
+       return result;
+   }
 
     /**
      * 创建订单

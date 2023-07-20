@@ -19,6 +19,14 @@ public class RedisCache
 
 
     /**
+     * 查询Key是否存在
+     *
+     * @param key 查询的键值
+     * @return
+     */
+    public boolean hasKey(String key){ return redisTemplate.hasKey(key); }
+
+    /**
      * 缓存基本的对象，Integer、String、实体类等
      *s
      * @param key 缓存的键值
@@ -259,5 +267,18 @@ public class RedisCache
     public Long getCacheExpiration(final String key)
     {
         return redisTemplate.getExpire(key,TimeUnit.SECONDS);
+    }
+
+    public void addSingle(String tableName, Double score, String data){
+        redisTemplate.opsForZSet().add(tableName, data, score);
+    }
+
+    public void addAll(String tableName, Set set){
+        redisTemplate.opsForZSet().add(tableName, set);
+    }
+
+    public Set selectByTime(String tableName, Double beginTime, Double endTime){
+        Set set = redisTemplate.opsForZSet().rangeByScore(tableName, beginTime, endTime);
+        return set;
     }
 }
