@@ -14,10 +14,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @Author 菜狗
  */
 @SpringBootApplication(scanBasePackages = "com.job.dispatchService")
+@ComponentScan({"com.job.common","com.job.dispatchService"})
 @EnableDiscoveryClient
 @EnableScheduling
 @EnableAsync
-@ComponentScan({"com.job.common","com.job.dispatchService"})
 @EnableFeignClients(basePackages = "com.job.feign.clients",defaultConfiguration = DefaultFeignConfiguration.class)
 @MapperScan("com.job.dispatchService.**.mapper*")
 public class DispatchService {
