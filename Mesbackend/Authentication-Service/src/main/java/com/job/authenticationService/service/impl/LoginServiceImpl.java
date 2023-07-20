@@ -6,6 +6,7 @@ import com.job.authenticationService.service.LoginService;
 import com.job.authenticationService.utils.JwtUtil;
 import com.job.authenticationService.utils.RedisCache;
 import com.job.common.pojo.Users;
+import com.job.common.utils.GetUserId;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

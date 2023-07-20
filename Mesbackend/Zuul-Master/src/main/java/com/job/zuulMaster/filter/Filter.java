@@ -4,6 +4,9 @@ package com.job.zuulMaster.filter;
 //import com.job.authenticationService.utils.JwtUtil;
 
 //import com.job.zuulMaster.redis.RedisCache;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.job.common.pojo.Menus;
+import com.job.common.utils.GetUserId;
 import com.job.zuulMaster.utils.Query;
 import com.job.zuulMaster.mapper.MenusMapper;
 import com.job.zuulMaster.utils.JwtUtil;
@@ -34,6 +37,7 @@ public class Filter implements GlobalFilter , Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path=exchange.getRequest().getURI().getPath();
+        System.out.println(path);
 //        System.out.println(path);
 //        ThreadLocal threadLocal = new InheritableThreadLocal();
 //        threadLocal.set("userid");
@@ -67,6 +71,7 @@ public class Filter implements GlobalFilter , Ordered {
                 try {
                     Claims claims = JwtUtil.parseJWT(token);
                     userid = claims.getSubject();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw new RuntimeException("token非法");
@@ -79,14 +84,25 @@ public class Filter implements GlobalFilter , Ordered {
                     System.out.println("不给访问");
                     return exchange.getResponse().setComplete();
                 }else {
-
                     List<String > urllist= menusMapper.selectPermsByUserId(userid);
                     for (String s : urllist) {
                         if (path.equals(s)){
+                            GetUserId.setUserId(userid);
+                            System.out.println("用户id为："+userid);
                             System.out.println("hjsgfh");
                             return chain.filter(exchange);
+
                         }
                     }
+//                    LambdaQueryWrapper<Menus> q = new LambdaQueryWrapper<>();
+//                    List<Menus> menus = menusMapper.selectList(q);
+//                    for (Menus menu : menus) {
+//                        if(!path.equals(menu.getUrl()))continue;
+//                        GetUserId.setUserId(userid);
+//                        System.out.println("用户id为："+userid);
+//                        System.out.println(GetUserId.getUserId());
+//                        return chain.filter(exchange);
+//                    }
                     return exchange.getResponse().setComplete();
                 }
 
