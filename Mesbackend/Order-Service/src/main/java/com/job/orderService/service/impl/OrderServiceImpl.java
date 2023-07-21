@@ -14,6 +14,7 @@ import com.job.feign.clients.DispatchClient;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.FlowMapper;
 //import com.job.orderService.mapper.LineMapper;
+import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import com.job.orderService.vo.FlowVo;
@@ -32,7 +33,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private FlowMapper flowMapper;
     @Autowired
-    //private LineMapper lineMapper;
+    private LineMapper lineMapper;
     @Autowired
     private RedisCache redisCache;
     @Autowired
