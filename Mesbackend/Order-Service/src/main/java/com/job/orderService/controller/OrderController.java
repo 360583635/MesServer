@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Order;
 import com.job.common.redis.RedisCache;
-import com.job.common.utils.GetUserId;
 import com.job.common.utils.JwtUtil;
 import com.job.feign.clients.DispatchClient;
 import com.job.orderService.common.result.Result;
