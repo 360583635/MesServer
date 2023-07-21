@@ -51,14 +51,17 @@ public class Warehouse {
      */
     private String warehouseArea;
     /**
-     * 可用面积
+     * 可用面积 （梁晋豪）修改：String类型修改成Integer类型
      */
-    private String warehouseAvailable;
+    private Integer warehouseAvailable;
     /**
      *仓库高度
      */
     private String WarehouseHeight;
-
+    /**
+     *新加字段      (梁晋豪)新增：仓库总总容量
+     */
+    private Integer warehouseCapacity;
 
 
 

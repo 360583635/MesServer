@@ -142,24 +142,8 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         int sumWarehouseAvailable = 0;
 
         for (Warehouse warehouse : list2) {
-            String warehouseCapacity = "";
-            for (int i1 = 0; i1 < warehouse.getWarehouseCapacity().length(); i1++) {
-                if (warehouse.getWarehouseCapacity().charAt(i1)>=48 && warehouse.getWarehouseCapacity().charAt(i1)<=57) {
-                    warehouseCapacity += warehouse.getWarehouseCapacity().charAt(i1);
-                }
-            }
-            int warehouseCapacity1 = Integer.parseInt(warehouseCapacity);
-
-            String warehouseAvailable = "";
-            for (int i1 = 0; i1 < warehouse.getWarehouseAvailable().length(); i1++) {
-                if (warehouse.getWarehouseAvailable().charAt(i1)>=48 && warehouse.getWarehouseAvailable().charAt(i1)<=57) {
-                    warehouseAvailable += warehouse.getWarehouseAvailable().charAt(i1);
-                }
-            }
-            int warehouseAvailable1 = Integer.parseInt(warehouseAvailable);
-
-            sumWarehouseCapacity += warehouseCapacity1;
-            sumWarehouseAvailable += warehouseAvailable1;
+            sumWarehouseCapacity += warehouse.getWarehouseCapacity();
+            sumWarehouseAvailable += warehouse.getWarehouseAvailable();
         }
 
         map.put("所有仓库剩余空间",sumWarehouseAvailable);
