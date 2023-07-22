@@ -2,7 +2,6 @@ package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.job.common.pojo.Equipment;
 import com.job.common.pojo.Material;
 import com.job.common.result.Result;
 import com.job.productionManagementService.service.MaterialService;

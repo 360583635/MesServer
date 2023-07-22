@@ -29,7 +29,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
     private WarehouseMapper warehouseMapper;
 
     @Override
-    public MaterialData classification() {
+    public Map<Object, Object> classification() {
         MaterialData materialData = new MaterialData();
         QueryWrapper<Inventory> q1 = new QueryWrapper<Inventory>();
         q1.select("material_name","sum(number) as number");
@@ -95,18 +95,26 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
             }
             y++;
         }
-        materialData.setId(id);
-        materialData.setName(name);
-        materialData.setNumber(number);
-        materialData.setArea(area);
-        materialData.setVolume(volume);
-        materialData.setTotal(total);
-        return materialData;
+        int z = 0;
+        Map<Object,Object> map = new HashMap<>();
+        for (int i1 : id) {
+            Map<Object,Object> map1 = new HashMap<>();
+            map1.put("原材料名称",name[z]);
+            map1.put("原材料数量",number[z]);
+            map1.put("原材料占地面积",area[z]);
+            map1.put("原材料占体积",volume[z]);
+            map1.put("原材料所占金额",total[z]);
+            map.put(i1,map1);
+            z++;
+        }
+        return map;
     }
 
     @Override
-    public MaterialData getWarehouse() {
+    public Map<Object,Object> getWarehouse() {
         MaterialData materialData = new MaterialData();
+
+        Map<Object,Object> map = new HashMap<>();
 
         //获取原材料名称和数量
         QueryWrapper<Inventory> q1 = new QueryWrapper<Inventory>();
@@ -134,28 +142,12 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         int sumWarehouseAvailable = 0;
 
         for (Warehouse warehouse : list2) {
-            String warehouseCapacity = "";
-            for (int i1 = 0; i1 < warehouse.getWarehouseCapacity().length(); i1++) {
-                if (warehouse.getWarehouseCapacity().charAt(i1)>=48 && warehouse.getWarehouseCapacity().charAt(i1)<=57) {
-                    warehouseCapacity += warehouse.getWarehouseCapacity().charAt(i1);
-                }
-            }
-            int warehouseCapacity1 = Integer.parseInt(warehouseCapacity);
-
-            String warehouseAvailable = "";
-            for (int i1 = 0; i1 < warehouse.getWarehouseAvailable().length(); i1++) {
-                if (warehouse.getWarehouseAvailable().charAt(i1)>=48 && warehouse.getWarehouseAvailable().charAt(i1)<=57) {
-                    warehouseAvailable += warehouse.getWarehouseAvailable().charAt(i1);
-                }
-            }
-            int warehouseAvailable1 = Integer.parseInt(warehouseAvailable);
-
-            sumWarehouseCapacity += warehouseCapacity1;
-            sumWarehouseAvailable += warehouseAvailable1;
+            sumWarehouseCapacity += warehouse.getWarehouseCapacity();
+            sumWarehouseAvailable += warehouse.getWarehouseAvailable();
         }
 
-        materialData.setCapacity(sumWarehouseCapacity);
-        materialData.setAvailable(sumWarehouseAvailable);
+        map.put("所有仓库剩余空间",sumWarehouseAvailable);
+        map.put("所有仓库总空间",sumWarehouseCapacity);
 
         //获取原材料100个使用空间
         QueryWrapper<Material> q3 = new QueryWrapper<>();
@@ -165,7 +157,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         //Map("原材料名称",使用空间)
         int y = 0;
         List<Material> list3 = materialMapper.selectList(q3);
-        Map<String ,Object> map = new HashMap<>();
+        Map<String ,Object> map1 = new HashMap<>();
         for (String s : name) {
 
             for (Material material : list3) {
@@ -178,13 +170,12 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
                         }
                     }
                     int warehouseAvailable1 = Integer.parseInt(materialVolume);
-                    map.put(s,warehouseAvailable1*number[y]/100);
+                    map1.put(s,warehouseAvailable1*number[y]/100);
                 }
             }
             y++;
         }
-        materialData.setMaterial(map);
-
-        return materialData;
+        map.put("原材料所占空间",map1);
+        return map;
     }
 }

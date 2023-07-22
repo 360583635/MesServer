@@ -46,10 +46,22 @@ public class Warehouse {
      * 是否装配自动化设备
      */
     private  int automationEquipment;
-
-    private String warehouseCapacity;
-
-    private String warehouseAvailable;
+    /**
+     * 仓库面积
+     */
+    private String warehouseArea;
+    /**
+     * 可用面积 （梁晋豪）修改：String类型修改成Integer类型
+     */
+    private Integer warehouseAvailable;
+    /**
+     *仓库高度
+     */
+    private String WarehouseHeight;
+    /**
+     *新加字段      (梁晋豪)新增：仓库总总容量
+     */
+    private Integer warehouseCapacity;
 
 
 

@@ -10,11 +10,14 @@ import com.job.common.pojo.Line;
 import com.job.common.pojo.Order;
 import com.job.common.pojo.Users;
 import com.job.common.redis.RedisCache;
+import com.job.feign.clients.DispatchClient;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.FlowMapper;
+//import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
+import com.job.orderService.vo.FlowVo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private LineMapper lineMapper;
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private DispatchClient dispatchClient;
+
+    /**
+     * 创建订单界面初始化
+     * @return
+     */
+    @Override
+    public Result<List<FlowVo>> toAddorder() {
+        //获取产品类型名称
+        LambdaQueryWrapper wrapper=new LambdaQueryWrapper();
+        List<Flow> flowList = flowMapper.selectList(wrapper);
+        List<FlowVo> flowVosList=new ArrayList<>();
+        for (Flow flow : flowList) {
+            FlowVo flowVo = new FlowVo();
+            flowVo.setTitle(flow.getFlow());
+            flowVo.setValue(flow.getId());
+            List<String> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
+            flowVo.setMaterial(materialsList);
+            flowVosList.add(flowVo);
+        }
+        if (flowVosList!=null){
+            return Result.success(flowVosList,"success");
+        }else {
+            return Result.error("error");
+        }
+    }
 
 
     /**
@@ -47,7 +77,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return  Result.error("输入对象不能为空！");
         }else if (order.getOrderNumber() != null  && order.getExpectDate() != null && order.getProductId() !=null
                 && order.getTypeName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
-                && order.getRawName() !=null && order.getRawNum() !=null  || true){
+                && order.getRawName() !=null && order.getRawNum() !=null  ){
 
             order.setOrderDate(new Date());
             order.setPriority(0);
@@ -57,12 +87,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setIsDelete(0);
             //创建完成
             int i = orderMapper.insert(order);
-//            //存入redis
-//            Map<String,Object> map=new HashMap<>();
-//            map.put("orderId",order.getOrderId());
-//            map.put("productionStatus",order.getProductionStatus());
-//            map.put("productLine",order.getProductLine());
-//            redisCache.setCacheMap("order:"+order.getOrderId(),map);
+
             if (i>0)
             {
                 //此时开始派发订单
@@ -72,18 +97,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 String flowId = flow.getId();
                 LambdaQueryWrapper<Line> wrapper2=new LambdaQueryWrapper<>();
                 wrapper2.eq(Line::getLineFlowId,flowId).orderByAsc(Line::getOrderCount);
-                Line line = lineMapper.selectOne(wrapper2);
+                List<Line> lineList = lineMapper.selectList(wrapper2);
+                Line line = lineList.get(0);
                 String lineId = line.getId();
                 order.setProductLine(lineId);
                 order.setProductionStatus(1);
-                //order.setExpectDate(new Date());
                 int j = orderMapper.updateById(order);
                 PriorityQueue<Order> qq = new PriorityQueue<>(
                         (o1, o2) -> !Objects.equals(o1.getPriority(), o2.getPriority())
                                 ? o1.getPriority() - o2.getPriority()
                                 : (o1.getExpectDate().getTime() < o2.getExpectDate().getTime())
                                 ? -1
-                                : 0);
+                                : 1);
                 //创建优先队列并存入redis
                 JSONArray orderPQ = redisCache.getCacheObject("orderPQ");
                 if (orderPQ!=null){
@@ -199,6 +224,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         }
     }
+
 
     /**
      * 订单派发

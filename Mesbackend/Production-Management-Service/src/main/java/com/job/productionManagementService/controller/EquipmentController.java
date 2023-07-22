@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author 庸俗可耐
+ * @author 猫
  * @create 2023-07-18-15:14
  * @description
  */
@@ -84,6 +84,11 @@ public class EquipmentController {
         }
     }
 
+    /**
+     *
+     * @param equipment
+     * @return
+     */
     @PostMapping("/save")
     @ResponseBody
     public Result saveEquipment(@RequestBody Equipment equipment){
