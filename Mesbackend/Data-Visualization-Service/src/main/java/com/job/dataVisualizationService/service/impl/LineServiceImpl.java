@@ -2,19 +2,14 @@ package com.job.dataVisualizationService.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.job.common.pojo.Flow;
-import com.job.common.pojo.FlowProcessRelation;
+import com.job.common.pojo.*;
 import com.job.common.pojo.Process;
-import com.job.common.pojo.ProcessMaterialRelation;
-import com.job.dataVisualizationService.mapper.FlowMapper;
-import com.job.dataVisualizationService.mapper.LineMapper;
-import com.job.common.pojo.Line;
-import com.job.dataVisualizationService.mapper.FlowProcessRelationMapper;
-import com.job.dataVisualizationService.mapper.ProcessMapper;
+import com.job.dataVisualizationService.mapper.*;
 import com.job.dataVisualizationService.service.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.management.ObjectName;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +27,8 @@ public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements Li
     private FlowProcessRelationMapper flowProcessRelationMapper;
     @Autowired
     private ProcessMapper processMapper;
+    @Autowired
+    private EquipmentMapper equipmentMapper;
     @Override
     public Map<Object, Object> getall() {
         Map<Object,Object> map = new HashMap<>();
@@ -83,12 +80,16 @@ public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements Li
         Map<Object,Object> map1 = new HashMap<>();
         for (FlowProcessRelation flowProcessRelation : list) {
             QueryWrapper<Process> q4 = new QueryWrapper<>();
-            q4.select("id","process","process_desc","exception_count","success_count");
             q4.eq("id",flowProcessRelation.getProcessId());
             Process process = processMapper.selectOne(q4);
+            QueryWrapper<Equipment> q5 = new QueryWrapper<>();
+            q5.eq("equipment_id",process.getEquipmentId());
+            Equipment equipment = equipmentMapper.selectOne(q5);
+            process.setEquipment(equipment);
             map1.put(flowProcessRelation.getSortNum(),process);
         }
         map.put("流水线流程",map1);
+
         return map;
     }
 }
