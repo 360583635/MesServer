@@ -102,8 +102,8 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @GetMapping("/updateOrder/{orderId}")
-    public Result<Order> updateOrder(@PathVariable String orderId){
+    @GetMapping("/updateOrder")
+    public Result<Order> updateOrder(@RequestParam String orderId){
         Result<Order> result = orderService.updateOrder(orderId);
         return result;
 
@@ -152,8 +152,8 @@ public class OrderController {
      * 根据产品名称查询订单
      * @return
      */
-    @GetMapping("/selectOrderByName/{productName}")
-    public Result<List<Order>> selectOrderByName(@PathVariable String productName){
+    @GetMapping("/selectOrderByName")
+    public Result<List<Order>> selectOrderByName(@RequestParam String productName){
         Result<List<Order>> result = orderService.selectOrderByName(productName);
         return result;
 
@@ -168,8 +168,8 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @GetMapping("/showOrderDetail/{orderId}")
-    public Result<Order> showOrderDetail(@PathVariable String orderId){
+    @GetMapping("/showOrderDetail")
+    public Result<Order> showOrderDetail(@RequestParam String orderId){
         Result<Order> result = orderService.showOrderDetail(orderId);
         return result;
 //        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
@@ -183,8 +183,8 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @GetMapping("/deleteOrder/{orderId}")
-    public Result<Order> deleteOrder(@PathVariable String orderId){
+    @GetMapping("/deleteOrder")
+    public Result<Order> deleteOrder(@RequestParam String orderId){
         Result<Order> result = orderService.deleteOrder(orderId);
         return result;
 //        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
