@@ -83,7 +83,7 @@ public class LineController {
         pipeLine.setLineStatus("0"); //设置状态为空闲
         lineService.save(pipeLine);
         //ToDo 调用日志接口
-        return Result.success(null,"添加成功")
+        return Result.success(null,"添加成功");
     };
 
     /**

@@ -34,7 +34,7 @@ public class Material {
     /**
      * 原材料单位
      */
-    private String materialArea;
+    private Float materialArea;
     /**
      * * 100个所占面积
      */

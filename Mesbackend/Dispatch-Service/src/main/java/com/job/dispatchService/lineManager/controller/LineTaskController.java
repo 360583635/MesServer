@@ -153,17 +153,20 @@ public class LineTaskController {
     @Async
     @Scheduled(initialDelay = 0,fixedRate = 3000)
     public void queryOrders() throws InterruptedException {
-        // TODO: 2023/7/10 每隔3秒执行一次查询订单
-        List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
-        if(orderPQ!=null) {
-            for (Order order : orderPQ) {
-                String lineName = order.getProductLine();
-                if(redisCache.getCacheList(lineName)==null&&StringUtil.isNullOrEmpty(lineName)==false){
-                    List<Order> orderQueue = new LinkedList<>();
-                    orderQueue.add(order);
-                    redisCache.setCacheList(lineName, orderQueue);
-                }else{
-                    redisCache.getCacheList(lineName).add(order);
+        // TODO: 2023/7/10 每隔3秒执行一次查询订单red
+        boolean b = redisCache.hasKey("orderPQ");
+        if(b==true){
+            List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
+            if(orderPQ!=null) {
+                for (Order order : orderPQ) {
+                    String lineName = order.getProductLine();
+                    if(redisCache.getCacheList(lineName)==null&&StringUtil.isNullOrEmpty(lineName)==false){
+                        List<Order> orderQueue = new LinkedList<>();
+                        orderQueue.add(order);
+                        redisCache.setCacheList(lineName, orderQueue);
+                    }else{
+                        redisCache.getCacheList(lineName).add(order);
+                    }
                 }
             }
         }

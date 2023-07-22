@@ -108,7 +108,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public OrderData countData(OrderData order) {
+    public Map<Object,Object> countData(OrderData order) {
 
         OrderData orderData = new OrderData();
         //格式化时间日期
@@ -142,7 +142,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             q.ge(Order::getOrderDate,preTime);
             long count1 = orderMapper.selectCount(q);
             List<Order> orders = orderMapper.selectList(q);
-            time[i] = --mm;
+            time[i] = i+1;
             count[i] = (int)count1;
 
             int total = 0;
@@ -157,11 +157,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderData.setCount(count);
         orderData.setTime(time);
         orderData.setAmount(amount);
-        return orderData;
+
+        Map<Object,Object> map = new HashMap<>();
+        int y = 0 ;
+        for (int i : time) {
+            Map<Object,Object> map1 = new HashMap<>();
+            map1.put("订单总数",count[y]);
+            map1.put("金额总数",amount[y]);
+            map.put("第"+i+"份数据",map1);
+            y++;
+        }
+        map.put("请求数据量",order.getDataNumber());
+        map.put("请求数据间隔",order.getSeparate());
+
+        return map;
     }
 
     @Override
-    public OrderData classification(OrderData order) {
+    public Map<Object,Object> classification(OrderData order) {
         OrderData orderData = new OrderData();
 
         QueryWrapper<Order> q1 = new QueryWrapper<>();
@@ -170,6 +183,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         String[] type = new String[Math.toIntExact(typeCount)];
         int[] total = new int[Math.toIntExact(typeCount)];
+        String[] id = new String[Math.toIntExact(typeCount)];
 
         //sql语句
         QueryWrapper<Order> q = new QueryWrapper<>();
@@ -183,18 +197,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for (Order order1:orders
              ) {
             type[i] = order1.getProductName();
-            order1.getClass();
+            id[i] = order1.getProductId();
             total[i] = order1.getOrderTotal();
             i++;
         }
-        System.out.println(type);
+
         orderData.setProductType(type);
         orderData.setTotal(total);
-        return orderData;
+
+        Map<Object,Object> map = new HashMap<>();
+        int y = 0;
+        for (String s : type) {
+            Map<Object,Object> map1 =new HashMap<>();
+            map1.put("产品名称",type[y]);
+            map1.put("订单金额",total[y]);
+            map.put(y,map1);
+            y++;
+        }
+        map.put("开始统计时间",order.getStartTime());
+        map.put("结束统计时间",order.getEndTime());
+        return map;
     }
 
     @Override
-    public OrderData countOneData(OrderData order) {
+    public Map<Object,Object> countOneData(OrderData order) {
         System.out.println("productname="+order.getProductName());
         System.out.println("DataNumber="+order.getDataNumber());
         System.out.println("Separate="+order.getSeparate());
@@ -224,6 +250,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         int[] count = new int[order.getDataNumber()];
         int[] amount = new int[order.getDataNumber()];
 
+        String productID = "";
+
         for (int i = 0; i < order.getDataNumber(); i++) {
             LambdaQueryWrapper<Order> q = new LambdaQueryWrapper<>();
             q.le(Order::getOrderDate,endTime);
@@ -235,14 +263,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             long count1 = orderMapper.selectCount(q);
 
             List<Order> orders = orderMapper.selectList(q);
+
+
+
             System.out.println("orders="+orders);
-            time[i] = --mm;
+            time[i] = i+1;
             count[i] = (int)count1;
 
             int total = 0;
             for (Order order2 :orders
             ) {
                 total+=order2.getOrderNumber()*order2.getOrderPrice();
+                productID = order2.getProductId();
             }
             endTime.add(Calendar.MONTH,-order.getSeparate());
             preTime.add(Calendar.MONTH,-order.getSeparate());
@@ -251,6 +283,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderData.setCount(count);
         orderData.setTime(time);
         orderData.setAmount(amount);
-        return orderData;
+        Map<Object,Object> map = new HashMap<>();
+
+        for (int i : time) {
+            Map<Object,Object> map1 = new HashMap<>();
+            map1.put("订单总数",count[i-1]);
+            map1.put("金额总数",amount[i-1]);
+            map.put("第"+i+"份数据",map1);
+        }
+
+        map.put("请求数据量",order.getDataNumber());
+        map.put("请求数据间隔",order.getSeparate());
+        map.put("产品id",productID);
+
+
+        return map;
     }
 }
