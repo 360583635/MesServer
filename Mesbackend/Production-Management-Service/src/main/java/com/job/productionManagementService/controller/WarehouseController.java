@@ -2,6 +2,7 @@ package com.job.productionManagementService.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Material;
 import com.job.common.pojo.Warehouse;
@@ -11,7 +12,6 @@ import com.job.productionManagementService.service.MaterialService;
 import com.job.productionManagementService.service.WarehouseService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.val;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,56 +57,70 @@ public class  WarehouseController {
      */
     @PostMapping("/MaterialStockin")
     @ResponseBody
-    public Result MaterialStockin(HttpServletRequest httpServletRequest ,@RequestBody int materialNumber,@RequestBody String materialName){
+    public Result MaterialStockin(HttpServletRequest httpServletRequest ,@RequestBody int materialNumber,@RequestBody String materialName) {
 
         int number = 0;
 
-        LambdaQueryWrapper<Warehouse> queryWrapper= new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
         List<Warehouse> warehouseList = (List<Warehouse>) queryWrapper
-               .select(Warehouse::getWarehouseAvailable,Warehouse::getWarehouseId)
-               .ge(Warehouse::getWarehouseAvailable,0);
-        if(warehouseList.size()<=0){
+                .select(Warehouse::getWarehouseAvailable, Warehouse::getWarehouseId)
+                .ge(Warehouse::getWarehouseAvailable, 0);
+        if (warehouseList.size() <= 0) {
             return Result.error("无可用仓库");
         }
 
 
-        LambdaQueryWrapper<Material> queryMaterialArea= new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Material> queryMaterialArea = new LambdaQueryWrapper<>();
         queryMaterialArea
                 .select(Material::getMaterialArea)
-                .eq(Material::getMaterialName,materialName);
+                .eq(Material::getMaterialName, materialName);
         Float materialArea = materialService.getOne(queryMaterialArea).getMaterialArea();
 
-//        LambdaQueryWrapper<Inventory> inventoryLambdaQueryWrapper = new LambdaQueryWrapper<>();
-//        inventoryLambdaQueryWrapper
-//                .eq(Inventory::getMaterialName,materialName)
+        LambdaUpdateWrapper<Inventory> inventoryLambdaQueryWrapper = new LambdaUpdateWrapper<>();
+        inventoryLambdaQueryWrapper
+                .eq(Inventory::getMaterialName, materialName).setSql("number=number+{}");
+
 
         int len = warehouseList.size();
 
-        for(int i=0;i<len;i++){
-            if(number<materialNumber){
+
+        for (int i = 0; i < len; i++) {
+            if (materialNumber > 0) {
                 LambdaQueryWrapper<Warehouse> queryWarehouseArea = new LambdaQueryWrapper<>();
                 queryWarehouseArea
-                        .select(Warehouse::getWarehouseAvailable).eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId());
-                Float warehouseArea = warehouseService.getOne(queryWarehouseArea).getWarehouseArea();
-                int maxNumber = (int) (warehouseArea/materialArea);//获取最大可存储的个数
+                        .select(Warehouse::getWarehouseAvailable, Warehouse::getWarehouseLayers).eq(Warehouse::getWarehouseId, warehouseList.get(i).getWarehouseId());
 
-                if(maxNumber >= materialNumber){
+                Float warehouseArea = warehouseService.getOne(queryWarehouseArea).getWarehouseArea();
+                int layers = warehouseService.getOne(queryWrapper).getWarehouseLayers();
+                int maxNumber = (int) ((warehouseArea / materialArea) * layers);//获取最大可存储的个数
+
+                if (maxNumber >= materialNumber) {
+                    inventoryLambdaQueryWrapper
+                            .eq(Inventory::getMaterialName, materialName).setSql("number=number+{materialNUmber}");
+                } else {
+                    materialNumber = (materialNumber - maxNumber);
 
                 }
-
-                number=maxNumber;
-
-            }{
-                break;
+                {
+                    break;
+                }
             }
+
         }
-
-
-
-
-
-
+        return Result.success("null","入库成功");
     }
+
+/**
+ * 原材料出库
+ */
+@PostMapping("/MaterialStockout")
+@ResponseBody
+    public Result MaterialStockOut(HttpServletRequest httpServletRequest ,@RequestBody int materialNumber ,String materialName){
+
+    LambdaQueryWrapper<Warehouse> queryWrapper
+}
+
+}
 
 
 

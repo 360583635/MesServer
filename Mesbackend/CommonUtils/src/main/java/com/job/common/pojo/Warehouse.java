@@ -49,15 +49,15 @@ public class Warehouse {
     /**
      * 仓库面积
      */
-    private String warehouseArea;
+    private float warehouseArea;
     /**
      * 可用面积
      */
-    private String warehouseAvailable;
+    private float warehouseAvailable;
     /**
-     *仓库高度
+     *仓库层数
      */
-    private String WarehouseHeight;
+    private int warehouseLayers;
 
 
 
