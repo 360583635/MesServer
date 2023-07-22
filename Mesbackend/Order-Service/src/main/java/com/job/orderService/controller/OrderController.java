@@ -60,20 +60,21 @@ public class OrderController {
      * 创建订单
      * @return
      */
-    @GetMapping("/addOrder")
-    public Result<Order> addOrder(Order order,HttpServletRequest request){
-        String token=request.getHeader("token");
-        System.out.println(token);
-        try {
-            Claims claims = JwtUtil.parseJWT(token);
-            String userId = claims.getSubject();
-            String name = usersService.getById(userId).getName();
-            //System.out.println(userId);
-            order.setAuditor(name);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("token非法");
-        }
+    @PostMapping("/addOrder")
+    public Result<Order> addOrder(@RequestBody Order order,HttpServletRequest request){
+        System.out.println(order);
+//        String token=request.getHeader("token");
+//        System.out.println(token);
+//        try {
+//            Claims claims = JwtUtil.parseJWT(token);
+//            String userId = claims.getSubject();
+//            String name = usersService.getById(userId).getName();
+//            //System.out.println(userId);
+//            order.setAuditor(name);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("token非法");
+//        }
         Result<Order> result = orderService.addOrder(order);
         return result;
 //        //数据验证
@@ -161,9 +162,9 @@ public class OrderController {
      * 根据产品名称查询订单
      * @return
      */
-    @GetMapping("/selectOrderById/{typeName}")
-    public Result<List<Order>> selectOrderByName(@PathVariable String typeName){
-        Result<List<Order>> result = orderService.selectOrderByName(typeName);
+    @GetMapping("/selectOrderByName/{productName}")
+    public Result<List<Order>> selectOrderByName(@PathVariable String productName){
+        Result<List<Order>> result = orderService.selectOrderByName(productName);
         return result;
 
 //        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();

@@ -21,6 +21,7 @@ import com.job.orderService.vo.FlowVo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.rmi.MarshalledObject;
 import java.util.*;
@@ -76,8 +77,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (order == null){
             return  Result.error("输入对象不能为空！");
         }else if (order.getOrderNumber() != null  && order.getExpectDate() != null && order.getProductId() !=null
-                && order.getTypeName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
-                && order.getRawName() !=null && order.getRawNum() !=null  ){
+                && order.getProductName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
+                && order.getRawName() !=null && order.getRawNum() !=null ){
 
             order.setOrderDate(new Date());
             order.setPriority(0);
@@ -92,8 +93,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             {
                 //此时开始派发订单
                 LambdaQueryWrapper<Flow> wrapper1=new LambdaQueryWrapper<>();
-                wrapper1.eq(Flow::getFlow,order.getTypeName());
+                wrapper1.eq(Flow::getFlow,order.getProductName());
                 Flow flow = flowMapper.selectOne(wrapper1);
+                System.out.println(flow);
                 String flowId = flow.getId();
                 LambdaQueryWrapper<Line> wrapper2=new LambdaQueryWrapper<>();
                 wrapper2.eq(Line::getLineFlowId,flowId).orderByAsc(Line::getOrderCount);
@@ -169,13 +171,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 根据订单id查询单个订单
-     * @param typeName
+     * @param productName
      * @return
      */
     @Override
-    public Result<List<Order>> selectOrderByName(String typeName) {
+    public Result<List<Order>> selectOrderByName(String productName) {
+        System.out.println(productName);
         LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-        wrapper.like(Order::getTypeName,typeName);
+        //wrapper.like(Order::getProductName,productName);
+        wrapper.like(Order::getProductName,productName);
         List<Order> orderList = orderMapper.selectList(wrapper);
         if (orderList!=null){
             return Result.success(orderList,"success");
