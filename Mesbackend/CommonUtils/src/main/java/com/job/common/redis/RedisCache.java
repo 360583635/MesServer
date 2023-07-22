@@ -265,8 +265,8 @@ public class RedisCache
         redisTemplate.opsForZSet().add(tableName, data, score);
     }
 
-    public void addAll(String tableName, Set set){
-        redisTemplate.opsForZSet().add(tableName, set);
+    public void addAll(String tableName, Set typles){
+        redisTemplate.opsForZSet().add(tableName, typles);
     }
 
     public Set selectByTime(String tableName, Double beginTime, Double endTime){
