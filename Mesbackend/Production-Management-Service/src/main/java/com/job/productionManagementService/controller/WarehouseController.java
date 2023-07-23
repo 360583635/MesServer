@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@RestController
 @RequestMapping("/warehouse")
 public class  WarehouseController {
 
@@ -33,7 +34,7 @@ public class  WarehouseController {
      */
     @PostMapping("/saveWarehouse")
     @ResponseBody
-    public Result saveWarehouse(@RequestBody Warehouse tWarehouse, HttpServletRequest httpServletRequest) {
+    public Result saveWarehouse(@RequestBody Warehouse tWarehouse) {
 
         long warehouseNumber = warehouseService.count();
         if (warehouseNumber < 10) {
