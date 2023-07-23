@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -42,6 +42,7 @@ public class ProcessMaterialRelationController {
 
     @Autowired
     private FlowProcessRelationService flowProcessRelationService;
+
 
     /**
      * 工序与原材料关系管理编辑界面
@@ -108,7 +109,7 @@ public class ProcessMaterialRelationController {
      *根据流程功能查询原材料
      */
     @PostMapping("/queryMaterialsByFlowName")
-    public List<String> queryMaterialsByFlowName(@RequestBody String flowName) throws Exception {
+    public Map<String,Integer> queryMaterialsByFlowName(@RequestBody String flowName) throws Exception {
         LambdaQueryWrapper<FlowProcessRelation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(FlowProcessRelation::getIsDelete,1)
@@ -123,9 +124,14 @@ public class ProcessMaterialRelationController {
                 hashSet.add(MaterialName);
             }
         }
-        List<String> MaterialList = new ArrayList<>();
-        MaterialList.addAll(hashSet);
-        return MaterialList;
+        List<String> materialList = new ArrayList<>();
+        materialList.addAll(hashSet);
+        Map<String,Integer> materialMap = new HashMap<>();
+        for(String materialName : materialList){
+            Material material = (Material) productionManagementClient.queryMaterialByName(materialName).getData();
+            materialMap.put(materialName, Integer.valueOf(material.getMaterialCost()));
+        }
+        return materialMap;
     }
 
     /**

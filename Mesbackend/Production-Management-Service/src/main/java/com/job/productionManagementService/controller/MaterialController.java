@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * @author 庸俗可耐
+ * @author 猫
  * @create 2023-07-17-18:45
  * @description
  */
@@ -36,6 +36,19 @@ public class MaterialController {
         LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Material::getMaterialId,id);
         return materialService.list(queryWrapper);
+    }
+
+    @PostMapping("/queryMaterialByName")
+    public Result queryMaterialByName(@RequestParam String materialName){
+        LambdaQueryWrapper<Material> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper
+                .eq(Material::getIsDelete,1)
+                .eq(Material::getMaterialName,materialName);
+        Material material = materialService.getOne(lambdaQueryWrapper);
+        if(material!=null){
+            return Result.success(material,"查询成功");
+        }
+        return Result.error("查询失败");
     }
 
     /**

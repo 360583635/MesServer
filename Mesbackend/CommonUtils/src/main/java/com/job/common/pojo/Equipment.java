@@ -1,5 +1,6 @@
 package com.job.common.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import   com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,4 +44,14 @@ public class Equipment {
 
     //逻辑删除
     private int isDelete;
+
+    //缺少该字段 修改人：梁晋豪
+    private int Operating_Speed;
+
+
+    /**
+     * 设备状态数
+     */
+    @TableField(exist = false)
+    private Integer count;
 }

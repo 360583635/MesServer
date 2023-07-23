@@ -2,10 +2,11 @@ package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.Inventory;
-import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.productionManagementService.service.EquipmentService;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.MaterialService;
+import com.job.productionManagementService.service.ProduceService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +32,8 @@ public class InventoryController {
     @Autowired
     private EquipmentService equipmentService;
 
-    @Autowired
-    private ProcessService processService;
+    @Resource
+    private ProduceService produceService;
 
     /**
      * 根据原材料名称查询数量（模糊查询）
@@ -74,13 +75,13 @@ public class InventoryController {
 
     /**
      * 根据产品名称插叙数量（模糊查询）
-     * @param processName
+     * @param produceName
      * @return
      */
-    @GetMapping("/queryProductNumberByName/{processName}")
-    List<Integer> queryProductNumberByName(@PathVariable("processName") String processName) {
+    @GetMapping("/queryProductNumberByName/{produceName}")
+    List<Integer> queryProductNumberByName(@PathVariable("produceName") String produceName) {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(Inventory::getProcessName, processName);
+        queryWrapper.like(Inventory::getProcessName, produceName);
         List<Inventory> producelist = inventoryService.list(queryWrapper);
         List<Integer> produceNumberList = new ArrayList<>();
         for (Inventory inventory : producelist) {
@@ -114,6 +115,7 @@ public class InventoryController {
         List<Inventory> equipmentlist = inventoryService.list(queryWrapper);
         return equipmentlist;
     }
+
     /**
      * 根据库存类型查询成品库存信息
      * @param warehouseType
