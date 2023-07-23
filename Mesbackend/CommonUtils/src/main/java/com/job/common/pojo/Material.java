@@ -34,7 +34,7 @@ public class Material {
     /**
      * 原材料单位
      */
-    private String materialArea;
+    private Float materialArea;
     /**
      * * 100个所占面积
      */
@@ -49,6 +49,8 @@ public class Material {
      */
 
 //    private String weight;
+    //逻辑删除
+    private int isDelete;
 
 
 }

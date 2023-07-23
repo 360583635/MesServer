@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Users;
 import com.job.common.result.Result;
@@ -85,7 +84,7 @@ public class LineController {
         lineService.save(pipeLine);
         //ToDo 调用日志接口
         return Result.success(null,"添加成功");
-    }
+    };
 
     /**
      * 修改流水线
@@ -147,7 +146,6 @@ public class LineController {
 
         if (hasStatusOne) {
             return Result.error("请先保证流水线状态为关闭");
-
         } else {
             // 列表中不存在status为1的Line对象
             System.out.println("列表中不存在status为1的Line对象");

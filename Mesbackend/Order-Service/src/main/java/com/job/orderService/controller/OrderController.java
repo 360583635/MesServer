@@ -1,9 +1,5 @@
 package com.job.orderService.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Order;
 import com.job.common.redis.RedisCache;
 import com.job.common.utils.JwtUtil;
@@ -11,16 +7,13 @@ import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import com.job.orderService.service.UsersService;
+import com.job.orderService.vo.FlowVo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
-import java.util.PriorityQueue;
 
 @RestController
 @RequestMapping("/order")
@@ -38,21 +31,35 @@ public class OrderController {
     @Autowired
     private UsersService usersService;
 
-
+//    /**
+//     * 测试获取用户id
+//     * @return
+//     */
+//    @GetMapping("/getUserId")
+//    public void getUserId(){
+//        String userId = GetUserId.getUserId();
+//        System.out.println(userId);
+//    }
+    @GetMapping("/toAddOrder")
+   public Result<List<FlowVo>> toAddOrder(){
+       Result<List<FlowVo>> result = orderService.toAddorder();
+       return result;
+   }
 
     /**
      * 创建订单
      * @return
      */
-    @GetMapping("/addOrder")
-    public Result<Order> addOrder(Order order,HttpServletRequest request){
+    @PostMapping("/addOrder")
+    public Result<Order> addOrder(@RequestBody Order order,HttpServletRequest request){
+        System.out.println(order);
         String token=request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
+            System.out.println(userId);
             String name = usersService.getById(userId).getName();
-            //System.out.println(userId);
             order.setAuditor(name);
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,8 +102,8 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @GetMapping("/updateOrder/{orderId}")
-    public Result<Order> updateOrder(@PathVariable String orderId){
+    @GetMapping("/updateOrder")
+    public Result<Order> updateOrder(@RequestParam String orderId){
         Result<Order> result = orderService.updateOrder(orderId);
         return result;
 
@@ -145,9 +152,9 @@ public class OrderController {
      * 根据产品名称查询订单
      * @return
      */
-    @GetMapping("/selectOrderById/{typeName}")
-    public Result<List<Order>> selectOrderByName(@PathVariable String typeName){
-        Result<List<Order>> result = orderService.selectOrderByName(typeName);
+    @GetMapping("/selectOrderByName")
+    public Result<List<Order>> selectOrderByName(@RequestParam String productName){
+        Result<List<Order>> result = orderService.selectOrderByName(productName);
         return result;
 
 //        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
@@ -161,8 +168,8 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @GetMapping("/showOrderDetail/{orderId}")
-    public Result<Order> showOrderDetail(@PathVariable String orderId){
+    @GetMapping("/showOrderDetail")
+    public Result<Order> showOrderDetail(@RequestParam String orderId){
         Result<Order> result = orderService.showOrderDetail(orderId);
         return result;
 //        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
@@ -176,8 +183,8 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @GetMapping("/deleteOrder/{orderId}")
-    public Result<Order> deleteOrder(@PathVariable String orderId){
+    @GetMapping("/deleteOrder")
+    public Result<Order> deleteOrder(@RequestParam String orderId){
         Result<Order> result = orderService.deleteOrder(orderId);
         return result;
 //        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
@@ -227,4 +234,7 @@ public class OrderController {
 //        return null;
 //    }
 
+    /**
+     * 查询生产产品数量
+     */
 }

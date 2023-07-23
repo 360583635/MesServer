@@ -7,7 +7,7 @@ import com.job.productionManagementService.service.EquipmentService;
 import org.springframework.stereotype.Service;
 
 /**
- * @author 庸俗可耐
+ * @author Dangerous
  * @create 2023-07-17-18:42
  * @description
  */

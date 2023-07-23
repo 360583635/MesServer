@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -16,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableDiscoveryClient
 @EnableScheduling
 @EnableAsync
-
+@ComponentScan({"com.job.common","com.job.dispatchService"})
 @EnableFeignClients(basePackages = "com.job.feign.clients",defaultConfiguration = DefaultFeignConfiguration.class)
 @MapperScan("com.job.dispatchService.**.mapper*")
 public class DispatchService {

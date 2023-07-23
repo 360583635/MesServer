@@ -7,6 +7,7 @@ import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
 
+import com.job.common.redis.RedisCache;
 import com.job.dispatchService.work.config.StateConfig;
 import com.job.dispatchService.work.mapper.WOrderMapper;
 import com.job.dispatchService.work.mapper.WProcessMapper;
@@ -16,13 +17,14 @@ import com.job.dispatchService.work.service.WorkService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.DefaultTypedTuple;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import wiki.xsx.core.snowflake.config.Snowflake;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 //@FeignClient(value = "ORDERSERVICE")
@@ -40,6 +42,9 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
 
     @Autowired
     private WProcessMapper processMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
     //创建工单
     @Override
@@ -206,6 +211,21 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
     }
 
     public List<Work> getAllWorkList(){
-        return workMapper.selectList(null);
+        List<Work> works = workMapper.selectList(null);
+        Set typles = new HashSet();
+        for (Work work : works) {
+            Timestamp timestamp = Timestamp.valueOf(work.getWCreateTime());
+            String score = String.valueOf(timestamp);
+            ZSetOperations.TypedTuple<String> objectDefaultTypedTuple = new DefaultTypedTuple(work, Double.valueOf(score));
+            typles.add(objectDefaultTypedTuple);
+        }
+        redisCache.addAll("work", typles);
+        Set set = redisCache.selectByTime("work",
+                Double.valueOf(100),
+                Double.valueOf(System.currentTimeMillis()));
+        for (Object o : set) {
+            System.out.println(o.toString());
+        }
+        return works;
     }
 }

@@ -1,28 +1,27 @@
 package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Material;
+import com.job.common.result.Result;
 import com.job.productionManagementService.service.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * @author 庸俗可耐
+ * @author 猫
  * @create 2023-07-17-18:45
  * @description
  */
 @RestController
-@RequestMapping("/productionManagement/material")
+@RequestMapping("/productionManagement")
 public class MaterialController {
 
     @Autowired
     private MaterialService materialService;
-    @GetMapping("/queryMaterials")
+    @GetMapping("/material/queryMaterials")
     List<Material> queryMaterials() {
         return materialService.queryMaterials();
     }
@@ -38,4 +37,67 @@ public class MaterialController {
         queryWrapper.eq(Material::getMaterialId,id);
         return materialService.list(queryWrapper);
     }
+
+    @PostMapping("/queryMaterialByName")
+    public Result queryMaterialByName(@RequestParam String materialName){
+        LambdaQueryWrapper<Material> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper
+                .eq(Material::getIsDelete,1)
+                .eq(Material::getMaterialName,materialName);
+        Material material = materialService.getOne(lambdaQueryWrapper);
+        if(material!=null){
+            return Result.success(material,"查询成功");
+        }
+        return Result.error("查询失败");
+    }
+
+    /**
+     * 根据id逻辑删除
+     * @param materialId
+     * @return
+     */
+    @PostMapping("/delete")
+    @ResponseBody
+    public Result removeById(@RequestParam long materialId){
+        LambdaUpdateWrapper<Material> lambdaUpdateWrapper=new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(Material::getMaterialId,materialId);
+        lambdaUpdateWrapper.set(Material::getIsDelete,0);
+        boolean update = materialService.update(lambdaUpdateWrapper);
+        if(update){
+            return Result.success(null,"成功删除");
+        }else {
+            return Result.error("删除失败");
+        }
+    }
+
+    /**
+     * 保存材料
+     * @param material
+     * @return
+     */
+    @PostMapping("/save")
+    @ResponseBody
+    public Result saveMaterial(@RequestBody Material material){
+        boolean save = materialService.save(material);
+        if(save){
+            return Result.success(null,"保存成功");
+        }
+        return Result.error("保存失败");
+    }
+    @PostMapping("/update")
+    @ResponseBody
+    public Result updateMaterial(@RequestBody Material material){
+
+        boolean b = materialService.updateById(material);
+        if(b){
+            return Result.success(null,"保存成功");
+        }
+        return Result.error("保存失败");
+    }
+
+
+
+
+
+
 }

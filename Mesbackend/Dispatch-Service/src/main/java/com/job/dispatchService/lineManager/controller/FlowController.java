@@ -3,8 +3,8 @@ package com.job.dispatchService.lineManager.controller;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Line;
@@ -18,6 +18,8 @@ import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +45,9 @@ public class FlowController {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+    //逻辑删除1未删除0已删除
+    private static int IS_DELETE_NO=1;
+    private static int IS_DELETE_YES=0;
     /**
      * 流程信息信息分页查询
      *
@@ -66,32 +71,20 @@ public class FlowController {
     @ResponseBody
     public Result list(){
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("idDelete",1);
+        queryWrapper.eq("idDelete",IS_DELETE_NO);
         List<Flow> list = flowService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }
 
 
     @PostMapping("/save")
-    public Result flowSave(@RequestBody Flow flow, HttpServletRequest request){
+    public Result flowSave(@RequestBody Flow flow, HttpServletRequest httpServletRequest){
 
-        String token=request.getHeader("token");
-        System.out.println(token);
-        try {
-            Claims claims = JwtUtil.parseJWT(token);
-            String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
-            String name = users.getName();
-            //System.out.println(userId);
-            flow.setUpdateUsername(name);
-            flow.setCreateUsername(name);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("token非法");
-        }
-
+//        String userId= UserUtil.getUserId(httpServletRequest);
         flow.setCreateTime(DateUtil.date());
         flow.setUpdateTime(DateUtil.date());
+        flow.setUpdateUsername("userId");
+        flow.setCreateUsername("userId");
         boolean save = flowService.save(flow);
         if(save){
             return Result.success(null,"保存成功");
@@ -113,7 +106,13 @@ public class FlowController {
         if(count>0){
            return Result.error("删除失败，请先删除对应的流水线");
         }else {
-            return Result.success(null,"删除成功");
+            LambdaUpdateWrapper<Flow> updateWrapper=new LambdaUpdateWrapper<>();
+            updateWrapper.set(Flow::getIsDelete,IS_DELETE_YES);
+            boolean update = flowService.update(updateWrapper);
+            if (update){
+                return Result.success(null,"删除成功");
+            }
+            return Result.error("删除失败");
         }
     }
 
