@@ -16,13 +16,10 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
+@CrossOrigin
 @RequestMapping("/authen")
 @RestController
 public class UsersController {
@@ -80,7 +77,7 @@ public class UsersController {
 
 
     /**
-     * 查询个人信息
+     * 查询个人信息1
      * @param
      * @return
      */
@@ -172,7 +169,7 @@ public class UsersController {
     }
 
     /**
-     * 修改用户信息
+     * 修改用户信息1
      * @param id
      * @param state
      * @param options
@@ -193,11 +190,12 @@ public class UsersController {
         user.setUpdateUser("zyx");
         usersService.updateById(user);
 
+
+        //        修改角色权限表
+        System.out.println(id);
+        System.out.println(options);
+        usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id", id));
         if (options!=null) {
-            //        修改角色权限表
-            System.out.println(id);
-            System.out.println(options);
-            usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id", id));
             for (String s : options) {
                 System.out.println(s);
                 UsersRoles usersRoles = new UsersRoles();
@@ -224,19 +222,25 @@ public class UsersController {
      * @return
      */
     //    删除某个用户
-    @RequestMapping("/delUser/{UserId}")
-    public Result<Roles> deleteRole(@PathVariable("UserId") String UserId, HttpServletRequest request){
+    @RequestMapping("/delUser")
+    public Result<Roles> deleteRole(@RequestParam("UserId") String UserId, HttpServletRequest request){
+        System.out.println("11111");
         String token=request.getHeader("token");
-     //   System.out.println("token"+token);
-      //  System.out.println(UserId);
+        String cont=request.getHeader( "content-length");
+        String token1 = request.getParameter("Authorization");
+        System.out.println(cont);
+        //   System.out.println("token"+token);
+        //  System.out.println(UserId);
+        System.out.println("controller:"+token1);
         String userid;
         try {
-            Claims claims = JwtUtil.parseJWT(token);
+            Claims claims = JwtUtil.parseJWT(token1);
             userid = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
         }
+        System.out.println(token1);
         //要删除的用户
         Users user=usersService.getById(UserId);
         //获取登录人信息
@@ -248,10 +252,10 @@ public class UsersController {
         user.setUpdateTime(date);
         user.setIsDelete(0);
         usersMapper.updateById(user);
-       // Users users=usersService.getById(UserId);
+        // Users users=usersService.getById(UserId);
         //System.out.println(users);
         Result result = new Result<>();
-        if (user.getIsDelete().equals(0)){
+        if (users.getIsDelete().equals(1)){
             result.setData("删除成功");
             result.setCode(200);
         }
@@ -308,7 +312,7 @@ public class UsersController {
         users.setEmail(email);
         users.setAddress(address);
         users.setSex(sex);
-       // Date births=(Date)birth;
+        // Date births=(Date)birth;
         users.setBirth(birth);
         Date date=new Date();
         users.setUpdateTime(date);

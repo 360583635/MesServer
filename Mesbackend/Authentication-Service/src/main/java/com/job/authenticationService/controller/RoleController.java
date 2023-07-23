@@ -8,12 +8,17 @@ import com.job.authenticationService.mapper.MenusMapper;
 import com.job.authenticationService.mapper.RolesMapper;
 import com.job.authenticationService.service.MenusRolesService;
 import com.job.authenticationService.service.RolesService;
+import com.job.authenticationService.service.UsersService;
+import com.job.authenticationService.utils.JwtUtil;
 import com.job.common.pojo.Menus;
 import com.job.common.pojo.MenusRoles;
 import com.job.common.pojo.Roles;
 import com.job.common.pojo.Users;
 import com.job.authenticationService.pojo.Result;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +33,7 @@ import java.util.Map;
 /*
 对角色进行增删改查
  */
-//@RequestMapping("/roles")
+@RequestMapping("/authen")
 @RestController
 public class RoleController {
     @Autowired
@@ -39,6 +44,8 @@ public class RoleController {
     private RolesMapper rolesMapper;
     @Autowired
     private MenusMapper menusMapper;
+    @Autowired
+    private UsersService usersService;
 
 
 //    查询所有可用用户角色
@@ -71,25 +78,23 @@ public class RoleController {
     @RequestMapping("/showRoleById/{RoleId}")
     public Result joinQueryExample(@PathVariable("RoleId") String id) {
         System.out.println(id);
-        return null;
-//        List list = new ArrayList<>();
-//        Result<Object> result = new Result<>();
-//        LambdaQueryWrapper<Roles> queryWrapper = new LambdaQueryWrapper<>();
-//        queryWrapper.select(Roles::getRoleId, Roles::getRoleName) // 指定需要查询的字段
-//                .eq(Roles::getRoleId, id); // 添加其他查询条件
-//        List<Map<String, Object>> resultList = rolesMapper.selectMaps(queryWrapper);
-//        list.add(resultList);
-//        System.out.println(resultList);
-//
-//        LambdaQueryWrapper<Menus> wrapper=new LambdaQueryWrapper<>();
-//        wrapper.select(Menus::getMenuID, Menus::getName) // 指定需要查询的字段
-//                .eq(Menus::getIs_delete,1);
-//        List<Map<String, Object>> rolesList=menusMapper.selectMaps(wrapper);
-//        list.add(rolesList);
-//        System.out.println(rolesList);
-//        result.setData(list);
-//        result.setCode(200);
-//        return result;
+        List list = new ArrayList<>();
+        Result<Object> result = new Result<>();
+        LambdaQueryWrapper<Roles> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Roles::getRoleId, Roles::getRoleName) // 指定需要查询的字段
+                .eq(Roles::getRoleId, id); // 添加其他查询条件
+        List<Map<String, Object>> resultList = rolesMapper.selectMaps(queryWrapper);
+        System.out.println(resultList);
+        list.add(resultList);
+        LambdaQueryWrapper<Menus> wrapper=new LambdaQueryWrapper<>();
+        wrapper.select(Menus::getMenuID, Menus::getName) // 指定需要查询的字段
+                .eq(Menus::getIs_delete,1);
+        List<Map<String, Object>> rolesList=menusMapper.selectMaps(wrapper);
+        list.add(rolesList);
+        System.out.println(rolesList);
+        result.setData(list);
+        result.setCode(200);
+        return result;
     }
 
     /**
@@ -97,10 +102,25 @@ public class RoleController {
      * @param RoleId
      * @return
      */
-    @RequestMapping("/delRole/{RoleId}")
-    public Result<Roles> deleteRole(@PathVariable("RoleId") String RoleId){
+    @RequestMapping("/delRole")
+    public Result<Roles> deleteRole(@RequestParam("RoleId") String RoleId, HttpServletRequest request){
+        String token=request.getParameter("Authorization");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取修改人信息
+        Users users=usersService.getById(userid);
+
         Roles roles=rolesService.getById(RoleId);
         roles.setIsDelete(0);
+        roles.setUpdateUser(users.getName());
+        Date date=new Date();
+        roles.setUpdateTime(date);
         rolesService.updateById(roles);
         Roles role=rolesService.getById(RoleId);
         System.out.println(role);
@@ -119,36 +139,49 @@ public class RoleController {
 //    添加某个用户角色
 
     /**
-     * 添加某个用户角色
+     * 添加某个用户角色1
      * @param role_name
      * @param options
      * @return
      */
     @RequestMapping("/addRole")
     public Result<Roles> addRole(@RequestParam(value = "role_name") String role_name,
-                                 @RequestParam(value = "option") List<String> options){
+                                 @RequestParam(value = "option",required = false) List<String> options,HttpServletRequest request){
+        String token=request.getParameter("Authorization");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取添加人信息
+        Users users=usersService.getById(userid);
         Date date=new Date();
         Roles roles=new Roles();
         roles.setRoleName(role_name);
         roles.setCreateTime(date);
         roles.setUpdateTime(date);
-        roles.setCreateUser("zyx");
-        roles.setUpdateUser("zyx");
+        roles.setCreateUser(users.getName());
+        roles.setUpdateUser(users.getName());
         rolesService.save(roles);
         String roleId = roles.getRoleId();
         System.out.println(roleId);
         System.out.println(role_name);
         System.out.println(options);
-        for(String s:options){
-            System.out.println(s);
-            MenusRoles menusRoles=new MenusRoles();
-            menusRoles.setRoleId(roleId);
-            menusRoles.setCreateTime(date);
-            menusRoles.setCreateTime(date);
-            menusRoles.setUpdateUser("zyx");
-            menusRoles.setCreateUser("zyx");
-            menusRoles.setMenuId(s);
-            menusRolesService.save(menusRoles);
+        if (options!=null) {
+            for (String s : options) {
+                System.out.println(s);
+                MenusRoles menusRoles = new MenusRoles();
+                menusRoles.setRoleId(roleId);
+                menusRoles.setCreateTime(date);
+                menusRoles.setCreateTime(date);
+                menusRoles.setUpdateUser(users.getName());
+                menusRoles.setCreateUser(users.getName());
+                menusRoles.setMenuId(s);
+                menusRolesService.save(menusRoles);
+            }
         }
         Result result=new Result();
         result.setCode(200);
@@ -161,7 +194,7 @@ public class RoleController {
     //    修改某个用户角色
 
     /**
-     * 修改某个用户角色
+     * 修改某个用户角色1
      * @param role_name
      * @param role_id
      * @param options
@@ -170,30 +203,42 @@ public class RoleController {
     @RequestMapping("/updateRole")
     public Result<Roles> updateRole(@RequestParam(value = "role_name") String role_name,
                                     @RequestParam(value = "role_id") String role_id,
-                                 @RequestParam(value = "option") List<String> options){
+                                    @RequestParam(value = "option",required = false) List<String> options,HttpServletRequest request){
+        String token=request.getParameter("Authorizaion");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取修改人信息
+        Users users=usersService.getById(userid);
 //        修改角色名
         Date date=new Date();
         Roles roles=rolesService.getById(role_id);
         roles.setRoleName(role_name);
         roles.setUpdateTime(date);
-        roles.setUpdateUser("zyx");
-        UpdateWrapper<Roles> updateWrapper = new UpdateWrapper<>();
-        rolesService.update(roles,updateWrapper);
+        roles.setUpdateUser(users.getName());
+        rolesService.updateById(roles);
 
 //        修改角色权限表
         System.out.println(role_id);
         System.out.println(options);
-        menusRolesService.remove(new QueryWrapper<MenusRoles>().eq("role_id","1"));
-        for(String s:options){
-            System.out.println(s);
-            MenusRoles menusRoles=new MenusRoles();
-            menusRoles.setRoleId(role_id);
-            menusRoles.setCreateTime(date);
-            menusRoles.setCreateTime(date);
-            menusRoles.setUpdateUser("zyx");
-            menusRoles.setCreateUser("zyx");
-            menusRoles.setMenuId(s);
-            menusRolesService.save(menusRoles);
+        menusRolesService.remove(new QueryWrapper<MenusRoles>().eq("role_id",role_id));
+        if (options!=null) {
+            for (String s : options) {
+                System.out.println(s);
+                MenusRoles menusRoles = new MenusRoles();
+                menusRoles.setRoleId(role_id);
+                menusRoles.setCreateTime(date);
+                menusRoles.setCreateTime(date);
+                menusRoles.setUpdateUser(users.getName());
+                menusRoles.setCreateUser(users.getName());
+                menusRoles.setMenuId(s);
+                menusRolesService.save(menusRoles);
+            }
         }
         Result result=new Result();
         result.setCode(200);

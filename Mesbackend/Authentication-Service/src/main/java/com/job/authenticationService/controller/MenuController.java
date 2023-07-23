@@ -58,7 +58,8 @@ public class MenuController {
                            @RequestParam(value = "parentid") String parentid,
                            @RequestParam(value = "permission") String permission,
                            @RequestParam(value = "remark") String remark, HttpServletRequest request) {
-        String token = request.getHeader("token");
+        //  String token = request.getHeader("token");
+        String token=request.getParameter("Authorization");
         //解析token
         String userid;
         try {
@@ -96,10 +97,26 @@ public class MenuController {
      * @param menusid
      * @return
      */
-    @RequestMapping("/delete/{menusid}")
-    public Result deleteMenus(@PathVariable(value ="menusid") String menusid){
+    @RequestMapping("/delete")
+    public Result deleteMenus(@RequestParam("menusid") String menusid,HttpServletRequest request) {
+        String token=request.getParameter("Authorization");
+        //String token=request.getParameter("Authorization");
+        System.out.println("controller:"+token);
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取修改人信息
+        Users users=usersService.getById(userid);
         Menus menus=menusService.getById(menusid);
         menus.setIs_delete(0);
+        menus.setUpdateUser(users.getName());
+        Date date=new Date();
+        menus.setUpdateTime(date);
         int i=menusMapper.updateById(menus);
         System.out.println(i);
         if (i>0){
@@ -123,8 +140,8 @@ public class MenuController {
      * @param request
      * @return
      */
-    @RequestMapping("/update/{menusid}")
-    public Result updateMenus(@PathVariable(value = "menusid") String menusid,
+    @RequestMapping("/update")
+    public Result updateMenus(@RequestParam(value = "menusid") String menusid,
                               @RequestParam(value = "menuname") String menuname,
                               @RequestParam(value = "url") String url,
                               @RequestParam(value = "type") int type,
@@ -132,7 +149,8 @@ public class MenuController {
                               @RequestParam(value = "permission") String permission,
                               @RequestParam(value = "remark") String remark, HttpServletRequest request) {
 
-           String token = request.getHeader("token");
+        //String token = request.getHeader("token");
+        String token=request.getParameter("Authorization");
         //解析token
         String userid;
         try {
@@ -179,7 +197,7 @@ public class MenuController {
         LambdaQueryWrapper<Menus> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Menus::getIs_delete,1);
         List<Menus> menuslist= menusService.list(wrapper);
-       // System.out.println(menuslist);
+        // System.out.println(menuslist);
         return Result.success(menuslist,"展示成功");
         //return Result.success(list,"查询成功");
 //        if (list.size()>0){
@@ -194,8 +212,8 @@ public class MenuController {
      * @param menusid
      * @return
      */
-    @RequestMapping("/update/show/{menusid}")
-    public  Result updateshow(@PathVariable(value = "menusid") String menusid){
+    @RequestMapping("/update/show")
+    public  Result updateshow(@RequestParam(value = "menusid") String menusid){
         Menus menus=menusService.getById(menusid);
         if (menus!=null){
             return Result.success(menus,"展示成功");
@@ -203,7 +221,5 @@ public class MenuController {
             return Result.error("展示失败");
         }
     }
-
-
 
 }
