@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@RequestMapping("/warehouse")
 public class  WarehouseController {
 
     @Resource
@@ -53,9 +53,9 @@ public class  WarehouseController {
      * 原材料入库
      * @return
      */
-    @PostMapping("/MaterialStockin")
+    @PostMapping("/MaterialStockIn")
     @ResponseBody
-    public Result MaterialStockin(HttpServletRequest httpServletRequest ,@RequestBody int materialNumber,@RequestBody String materialName,@RequestBody int warehouseId ,int warehouseType) {
+    public Result MaterialStockin(HttpServletRequest httpServletRequest ,@RequestParam int materialNumber,@RequestParam String materialName,@RequestParam String warehouseId ,@RequestParam int warehouseType) {
 
         int number = 0;
         LambdaQueryWrapper<Warehouse> warehouseLambdaQueryWrapper = new LambdaQueryWrapper<>();
