@@ -20,15 +20,23 @@ import java.util.Objects;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
- 
+
     @Autowired
     private RedisCache redisCache;
- 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        response.addHeader("X-Frame-Options", "DENY");
+        response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+        response.addHeader("Cache-Control", "no-cache='set-cookie'");
+        response.addHeader("Pragma", "no-cache");
+        response.addHeader("Access-Control-Allow-Headers", "Authorization");
         //获取token
-        String token = request.getHeader("token");
-        if (!StringUtils.hasText(token)) {
+        String token = request.getHeader("Authorization");
+        String token1 = request.getParameter("Authorization");
+        System.out.println("filter:"+token);
+        System.out.println("filtertoken1:"+token1);
+        if (!StringUtils.hasText(token1)) {
             //放行
             filterChain.doFilter(request, response);
             return;
@@ -36,7 +44,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //解析token
         String userid;
         try {
-            Claims claims = JwtUtil.parseJWT(token);
+            Claims claims = JwtUtil.parseJWT(token1);
             userid = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
