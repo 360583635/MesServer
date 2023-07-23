@@ -4,9 +4,11 @@ import com.job.common.pojo.Material;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
+
 @Data
 public class FlowVo {
     private String title;
     private String value;
-    private List<String>  material;
+    private Map<String,Integer> material;
 }

@@ -45,7 +45,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @return
      */
     @Override
-    public Result<List<FlowVo>> toAddorder() {
+    public Result<List<FlowVo>> toAddOrder() {
         //获取产品类型名称
         LambdaQueryWrapper wrapper=new LambdaQueryWrapper();
         List<Flow> flowList = flowMapper.selectList(wrapper);
@@ -54,7 +54,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             FlowVo flowVo = new FlowVo();
             flowVo.setTitle(flow.getFlow());
             flowVo.setValue(flow.getId());
-            List<String> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
+            Map<String,Integer> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
             flowVo.setMaterial(materialsList);
             flowVosList.add(flowVo);
         }
