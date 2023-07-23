@@ -38,6 +38,19 @@ public class MaterialController {
         return materialService.list(queryWrapper);
     }
 
+    @PostMapping("/queryMaterialByName")
+    public Result queryMaterialByName(@RequestParam String materialName){
+        LambdaQueryWrapper<Material> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper
+                .eq(Material::getIsDelete,1)
+                .eq(Material::getMaterialName,materialName);
+        Material material = materialService.getOne(lambdaQueryWrapper);
+        if(material!=null){
+            return Result.success(material,"查询成功");
+        }
+        return Result.error("查询失败");
+    }
+
     /**
      * 根据id逻辑删除
      * @param materialId
