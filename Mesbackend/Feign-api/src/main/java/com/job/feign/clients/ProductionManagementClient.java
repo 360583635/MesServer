@@ -5,9 +5,7 @@ import com.job.feign.pojo.Equipment;
 import com.job.feign.pojo.Material;
 import com.job.feign.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,5 +34,13 @@ public interface ProductionManagementClient {
 
     @GetMapping("/productionManagement/equipment/queryEquipments")
     List<Equipment> queryEquipments();
+
+    /**
+     * 根据原材料名称查询原材料实体
+     * @param materialName
+     * @return
+     */
+    @PostMapping("/productionManagement/queryMaterialByName")
+    public Result queryMaterialByName(@RequestParam String materialName);
 
 }
