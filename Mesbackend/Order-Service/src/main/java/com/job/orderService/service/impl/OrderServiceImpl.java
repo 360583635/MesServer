@@ -78,10 +78,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return  Result.error("输入对象不能为空！");
         }else if (order.getOrderNumber() != null  && order.getExpectDate() != null && order.getProductId() !=null
                 && order.getProductName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
-                && order.getRawName() !=null && order.getRawNum() !=null ){
+                && order.getRawName() !=null && order.getRawNum() !=null && order.getPriority()!=null){
 
             order.setOrderDate(new Date());
-            order.setPriority(0);
             order.setProductionStatus(0);
             //TODO: 2023/7/8
             order.setOrderPrice(null);

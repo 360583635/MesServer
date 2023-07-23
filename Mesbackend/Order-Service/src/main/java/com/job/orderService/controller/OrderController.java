@@ -53,18 +53,18 @@ public class OrderController {
     @PostMapping("/addOrder")
     public Result<Order> addOrder(@RequestBody Order order,HttpServletRequest request){
         System.out.println(order);
-//        String token=request.getHeader("token");
-//        System.out.println(token);
-//        try {
-//            Claims claims = JwtUtil.parseJWT(token);
-//            String userId = claims.getSubject();
-//            String name = usersService.getById(userId).getName();
-//            //System.out.println(userId);
-//            order.setAuditor(name);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("token非法");
-//        }
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            System.out.println(userId);
+            String name = usersService.getById(userId).getName();
+            order.setAuditor(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         Result<Order> result = orderService.addOrder(order);
         return result;
 //        //数据验证
