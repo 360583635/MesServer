@@ -47,7 +47,7 @@ public class Warehouse {
      */
     private  int automationEquipment;
     /**
-     * 仓库面积
+     * 仓库总面积
      */
     private float warehouseArea;
     /**
