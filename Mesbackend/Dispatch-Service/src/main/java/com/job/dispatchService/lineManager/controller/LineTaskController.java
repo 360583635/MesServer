@@ -159,7 +159,7 @@ public class LineTaskController {
     }
 
     @Async
-    @Scheduled(initialDelay = 0,fixedRate = 3000)
+    @Scheduled(initialDelay = 0,fixedRate = 3000*60)
     public void queryOrders() throws InterruptedException {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单red
         boolean b = redisCache.hasKey("orderPQ");
