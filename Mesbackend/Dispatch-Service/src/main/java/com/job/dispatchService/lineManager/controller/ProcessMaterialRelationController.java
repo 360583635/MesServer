@@ -112,7 +112,6 @@ public class ProcessMaterialRelationController {
     public Map<String,Integer> queryMaterialsByFlowName(@RequestBody Map<String,String> map) throws Exception {
         String flowName = map.get("flowName");
         Map<String,Integer> materialMap = new HashMap<>();
-        Map<String,Integer> tempMap = new HashMap<>();
 
         LambdaQueryWrapper<FlowProcessRelation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
@@ -121,9 +120,6 @@ public class ProcessMaterialRelationController {
                 .orderBy(true,false,FlowProcessRelation::getSortNum);
         List<FlowProcessRelation> processRelationList = flowProcessRelationService.list(queryWrapper);
 
-//        System.out.println(processRelationList);
-
-        HashSet<String> hashSet = new HashSet<String>();
         //遍历流程工序关系列表
         for(FlowProcessRelation flowProcessRelation:processRelationList){
             String process = flowProcessRelation.getProcess();
