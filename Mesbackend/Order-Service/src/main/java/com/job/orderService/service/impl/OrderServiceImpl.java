@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 
 import java.rmi.MarshalledObject;
 import java.util.*;
@@ -44,7 +45,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private DispatchClient dispatchClient;
     @Autowired
     private ProductionManagementClient productionManagementClient;
+    @Autowired
+    private RestTemplate restTemplate;
     private final Lock lock = new ReentrantLock();
+    private final String urlFlow = "http://127.0.0.1:6031/dispatch/process/material/queryMaterialsByFlowName";
 
     /**
      * 创建订单界面初始化
@@ -61,7 +65,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             FlowVo flowVo = new FlowVo();
             flowVo.setTitle(flow.getFlow());
             flowVo.setValue(flow.getId());
-            Map<String, Integer> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
+            System.out.println(1);
+//            Map<String, Integer> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
+            Map<String, Integer> materialsList = restTemplate.postForObject(urlFlow,flow.getFlow(),Map.class);
+            System.out.println(2);
             flowVo.setMaterial(materialsList);
             flowVosList.add(flowVo);
         }
