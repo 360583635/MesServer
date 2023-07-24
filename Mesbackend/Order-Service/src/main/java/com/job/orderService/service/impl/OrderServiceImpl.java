@@ -5,17 +5,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.job.common.pojo.Flow;
-import com.job.common.pojo.Line;
-import com.job.common.pojo.Order;
-import com.job.common.pojo.Users;
+import com.job.common.pojo.*;
 import com.job.common.redis.RedisCache;
 import com.job.feign.clients.DispatchClient;
+import com.job.feign.clients.ProductionManagementClient;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.FlowMapper;
 //import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.OrderMapper;
+import com.job.orderService.mapper.ProduceMapper;
 import com.job.orderService.service.OrderService;
 import com.job.orderService.vo.FlowVo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,9 +35,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private LineMapper lineMapper;
     @Autowired
+    private ProduceMapper produceMapper;
+    @Autowired
     private RedisCache redisCache;
     @Autowired
     private DispatchClient dispatchClient;
+    @Autowired
+    private ProductionManagementClient productionManagementClient;
 
     /**
      * 创建订单界面初始化
@@ -80,20 +83,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 && order.getProductName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
                 && order.getRawName() !=null && order.getRawNum() !=null && order.getPriority()!=null){
 
-//            switch (order.getPriority().toString()) {
-//                case "普通" -> order.setPriority(0);
-//                case "较急" -> order.setPriority(1);
-//                case "紧急" -> order.setPriority(2);
-//            }
             order.setOrderDate(new Date());
             order.setProductionStatus(0);
-            //TODO: 2023/7/8
-            order.setOrderPrice(null);
+            //查询产品单价
+            LambdaQueryWrapper<Produce> wrapper=new LambdaQueryWrapper<>();
+            wrapper.eq(Produce::getProcessName,order.getProductName());
+            Produce produce = produceMapper.selectOne(wrapper);
+            int producePrice = produce.getProducePrice();
+            order.setOrderPrice(order.getOrderNumber()*producePrice);
             order.setIsDelete(0);
             //查询原材料库存
             Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(order.getProductName());
             Set<String> keySet = materials.keySet();
             for (String material : keySet) {
+                Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(material);
 
             }
             //创建完成
@@ -133,9 +136,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     qq.offer(order);
                     redisCache.setCacheObject("orderPQ",qq);
                 }
-                return Result.success("success");
+                return Result.success("success，订单创建且派发成功");
             }else {
-                return  Result.error("error!");
+                return  Result.error("error,订单创建成功但派发失败!");
             }
         }
         else{
