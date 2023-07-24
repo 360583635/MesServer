@@ -1,6 +1,7 @@
 package com.job.dispatchService.lineManager.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.FlowProcessRelation;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -25,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Stream;
 
 /**
  * @author 庸俗可耐
@@ -162,11 +164,19 @@ public class LineTaskController {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单red
         boolean b = redisCache.hasKey("orderPQ");
         if(b==true){
-            Vector<Order> orderPQ = redisCache.getCacheObject("orderPQ");
+            Vector<Order> orderPQ = new Vector<>();
+            JSONArray array = redisCache.getCacheObject("orderPQ");
+            array.forEach(element ->{
+                try{
+                    orderPQ.add((Order)element);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            });
             if(orderPQ!=null&&orderPQ.size()>0) {
                 for (Order order : orderPQ) {
                     String lineName = order.getProductLine();
-                    if(StringUtil.isNullOrEmpty(lineName)==false) {
+                    if(!StringUtil.isNullOrEmpty(lineName)) {
                         if (redisCache.getCacheList(lineName) == null && StringUtil.isNullOrEmpty(lineName) == false) {
                             Vector<Order> orderQueue = new Vector<>();
                             orderQueue.add(order);
