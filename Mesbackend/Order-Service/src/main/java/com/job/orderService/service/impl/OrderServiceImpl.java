@@ -66,13 +66,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             flowVo.setTitle(flow.getFlow());
             flowVo.setValue(flow.getId());
             System.out.println(1);
-//            Map<String, Integer> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
-            Map<String, Integer> materialsList = restTemplate.postForObject(urlFlow,flow.getFlow(),Map.class);
+            Map<String,String> map = new HashMap<>();
+            map.put("flowName",flow.getFlow());
+            //Map<String, Integer> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
+            Map<String, Integer> materialsList = restTemplate.postForObject(urlFlow, map, Map.class);
+            System.out.println(materialsList);
             System.out.println(2);
             flowVo.setMaterial(materialsList);
             flowVosList.add(flowVo);
         }
-        if (flowVosList != null) {
+        if (flowVosList.size()!= 0) {
             return Result.success(flowVosList, "success");
         } else {
             return Result.error("error");

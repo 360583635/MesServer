@@ -91,7 +91,7 @@ public class ProcessMaterialRelationController {
      * @throws Exception
      */
     @PostMapping("/queryMaterialsByProcess")
-    public List<String> queryMaterialsByProcess(@RequestBody String processName) throws Exception{
+    public List<String> queryMaterialsByProcess(@RequestParam String processName) throws Exception{
         LambdaQueryWrapper<ProcessMaterialRelation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(ProcessMaterialRelation::getIsDelete,1)
@@ -109,8 +109,9 @@ public class ProcessMaterialRelationController {
      *根据流程功能查询原材料
      */
     @PostMapping("/queryMaterialsByFlowName")
-    public Map<String,Integer> queryMaterialsByFlowName(@RequestBody String flowName) throws Exception {
-
+    public Map<String,Integer> queryMaterialsByFlowName(@RequestBody Map<String,String> map) throws Exception {
+        String flowName = map.get("flowName");
+        System.out.println(flowName);
         Map<String,Integer> materialMap = new HashMap<>();
         Map<String,Integer> tempMap = new HashMap<>();
 
@@ -120,6 +121,9 @@ public class ProcessMaterialRelationController {
                 .eq(FlowProcessRelation::getFlow,flowName)
                 .orderBy(true,false,FlowProcessRelation::getSortNum);
         List<FlowProcessRelation> processRelationList = flowProcessRelationService.list(queryWrapper);
+
+//        System.out.println(processRelationList);
+
         HashSet<String> hashSet = new HashSet<String>();
         //遍历流程工序关系列表
         for(FlowProcessRelation flowProcessRelation:processRelationList){
