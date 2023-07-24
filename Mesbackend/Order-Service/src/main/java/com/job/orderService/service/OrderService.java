@@ -17,7 +17,7 @@ public interface OrderService extends IService<Order> {
     Result<Order> showOrderDetail(String orderId);
     Result<Order> deleteOrder(String orderId);
 //    Result<Order> handOrder(String orderId);
-    Result<List<FlowVo>> toAddorder();
+    Result<List<FlowVo>> toAddOrder();
 
 
 

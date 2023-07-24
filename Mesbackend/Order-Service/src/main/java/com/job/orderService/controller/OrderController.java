@@ -42,7 +42,7 @@ public class OrderController {
 //    }
     @GetMapping("/toAddOrder")
    public Result<List<FlowVo>> toAddOrder(){
-       Result<List<FlowVo>> result = orderService.toAddorder();
+       Result<List<FlowVo>> result = orderService.toAddOrder();
        return result;
    }
 

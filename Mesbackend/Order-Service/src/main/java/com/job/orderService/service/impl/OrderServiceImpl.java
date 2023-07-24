@@ -45,7 +45,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @return
      */
     @Override
-    public Result<List<FlowVo>> toAddorder() {
+    public Result<List<FlowVo>> toAddOrder() {
         //获取产品类型名称
         LambdaQueryWrapper wrapper=new LambdaQueryWrapper();
         List<Flow> flowList = flowMapper.selectList(wrapper);
@@ -54,7 +54,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             FlowVo flowVo = new FlowVo();
             flowVo.setTitle(flow.getFlow());
             flowVo.setValue(flow.getId());
-            List<String> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
+            Map<String,Integer> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
             flowVo.setMaterial(materialsList);
             flowVosList.add(flowVo);
         }
@@ -80,22 +80,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 && order.getProductName() != null &&  order.getCustomName() !=null && order.getCustomTel() !=null
                 && order.getRawName() !=null && order.getRawNum() !=null && order.getPriority()!=null){
 
-            switch (order.getPriority().toString()){
-                case "普通":
-                    order.setPriority(0);
-                    break;
-                case "较急":
-                    order.setPriority(1);
-                    break;
-                case "紧急":
-                    order.setPriority(2);
-                    break;
-            }
+//            switch (order.getPriority().toString()) {
+//                case "普通" -> order.setPriority(0);
+//                case "较急" -> order.setPriority(1);
+//                case "紧急" -> order.setPriority(2);
+//            }
             order.setOrderDate(new Date());
             order.setProductionStatus(0);
             //TODO: 2023/7/8
             order.setOrderPrice(null);
             order.setIsDelete(0);
+            //查询原材料库存
+            Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(order.getProductName());
+            Set<String> keySet = materials.keySet();
+            for (String material : keySet) {
+
+            }
             //创建完成
             int i = orderMapper.insert(order);
 

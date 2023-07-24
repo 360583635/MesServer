@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +129,23 @@ public class InventoryController {
         queryWrapper.eq(Inventory::getWarehouseType, warehouseType);
         List<Inventory> productlist = inventoryService.list(queryWrapper);
         return productlist;
+    }
+
+    /**
+     * 查询总个数
+     */
+    @PostMapping("/queryMaterialNumberByMaterialName/{materialName}")
+       Integer queryMaterialNumberByMaterialName(@RequestParam String materialName) {
+        LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Inventory::getMaterialName, materialName);
+       List<Inventory>materialNumberList= inventoryService.list(queryWrapper);
+        int number=0;
+       for (int i = 0 ;i< materialNumberList.size();i++){
+
+          int materialNumbers = materialNumberList.get(i).getNumber();
+           number=number+materialNumbers;
+       }
+        return number;
     }
 
     }
