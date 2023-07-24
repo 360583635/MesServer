@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.rmi.MarshalledObject;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
@@ -42,6 +44,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private DispatchClient dispatchClient;
     @Autowired
     private ProductionManagementClient productionManagementClient;
+    private final Lock lock = new ReentrantLock();
 
     /**
      * 创建订单界面初始化
@@ -135,16 +138,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                                 ? -1
                                 : 1);
                 //创建优先队列并存入redis
-                JSONArray orderPQ = redisCache.getCacheObject("orderPQ");
-                if (orderPQ != null) {
-                    for (Object o : orderPQ) {
-                        qq.offer((Order) o);
-                    }
-                    qq.offer(order);
+                lock.lock();
+                JSONArray orderPQ;
+                try {
+                    orderPQ = redisCache.getCacheObject("orderPQ");
+                } finally {
+                    lock.unlock();
+                }
+                if(!orderPQ.isEmpty()){
+                    for (Object o : orderPQ) qq.offer((Order) o);
+                }
+                lock.lock();
+                try {
                     redisCache.setCacheObject("orderPQ", qq);
-                } else {
-                    qq.offer(order);
-                    redisCache.setCacheObject("orderPQ", qq);
+                } finally {
+                    lock.unlock();
                 }
                 return Result.success("success，订单创建且派发成功");
             } else {
