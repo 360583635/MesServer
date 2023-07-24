@@ -43,4 +43,8 @@ public interface ProductionManagementClient {
     @PostMapping("/productionManagement/queryMaterialByName")
     public Result queryMaterialByName(@RequestParam String materialName);
 
+    @PostMapping("/queryMaterialNumberByMaterialName")
+    Integer queryMaterialNumberByMaterialName(String materialName);
+
+
 }

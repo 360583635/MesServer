@@ -13,6 +13,7 @@ import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.work.controller.WorkController;
 import com.job.dispatchService.work.service.WorkService;
 import io.netty.util.internal.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,6 +23,8 @@ import com.job.common.result.Result;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author 庸俗可耐
@@ -29,6 +32,7 @@ import java.util.List;
  * @description
  */
 @Component
+@Slf4j
 public class LineTaskController {
 
     @Autowired
@@ -58,12 +62,13 @@ public class LineTaskController {
         String lineName = line.getLine();
         String lineId = line.getId();
         Thread.currentThread().setName(lineName+lineId);
-        List<Order> orderQueue = new ArrayList<>();
+        /*List<Order> orderQueue */
+        Vector<Order> orderQueue = new Vector<>();
         if(lineName!=null){
             boolean existsKey = redisCache.hasKey(lineName);
             if(existsKey==true){
                 //订单队列
-                orderQueue = redisCache.getCacheList(lineName);
+                orderQueue = new Vector<Order>(redisCache.getCacheList(lineName));
             }
             while(true) {
                 //判断订单列表是否有数据，流水线状态是否为 空闲或完成
@@ -141,6 +146,7 @@ public class LineTaskController {
                                 //如果工单运行成功，将订单和流水线状态设置为 完成
                                 order.setProductionStatus(4);
                                 line.setLineStatus("4");
+                                line.setSuccessCount(line.getSuccessCount()+1);
                             }
                         }
                     }
@@ -156,18 +162,24 @@ public class LineTaskController {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单red
         boolean b = redisCache.hasKey("orderPQ");
         if(b==true){
-            List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
-            if(orderPQ!=null) {
+            Vector<Order> orderPQ = redisCache.getCacheObject("orderPQ");
+            if(orderPQ!=null&&orderPQ.size()>0) {
                 for (Order order : orderPQ) {
                     String lineName = order.getProductLine();
-                    if(redisCache.getCacheList(lineName)==null&&StringUtil.isNullOrEmpty(lineName)==false){
-                        List<Order> orderQueue = new LinkedList<>();
-                        orderQueue.add(order);
-                        redisCache.setCacheList(lineName, orderQueue);
+                    if(StringUtil.isNullOrEmpty(lineName)==false) {
+                        if (redisCache.getCacheList(lineName) == null && StringUtil.isNullOrEmpty(lineName) == false) {
+                            Vector<Order> orderQueue = new Vector<>();
+                            orderQueue.add(order);
+                            redisCache.setCacheList(lineName, orderQueue);
+                        } else {
+                            redisCache.getCacheList(lineName).add(order);
+                        }
                     }else{
-                        redisCache.getCacheList(lineName).add(order);
+                        log.error("LineTaskController--订单列表中订单未匹配流水线");
                     }
                 }
+            }else{
+                log.error("LineTaskController--订单列表为空");
             }
         }
     }

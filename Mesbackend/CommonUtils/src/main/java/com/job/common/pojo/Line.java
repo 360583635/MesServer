@@ -1,6 +1,8 @@
 package com.job.common.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,7 @@ public class Line {
     /**
      * 流水线ID
      */
+    @TableId(type = IdType.ASSIGN_ID)
     private String id;
     /**
      * 流水线名称
@@ -58,9 +61,9 @@ public class Line {
 
 
     //异常次数
-    private Integer exceptionCount;
+    private Integer exceptionCount = 0;
     //完成次数
-    private Integer successCount;
+    private Integer successCount = 0;
 
     private Integer isDelete;
     @TableField(exist = false)
