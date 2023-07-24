@@ -1,7 +1,7 @@
 package com.job.common.redis;
 
+import com.job.common.pojo.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -128,7 +128,7 @@ public class RedisCache
      * @param key 缓存的键值
      * @return 缓存键值对应的数据
      */
-    public <T> List<T> getCacheList(final String key)
+    public <T> Vector<Order> getCacheList(final String key)
     {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
