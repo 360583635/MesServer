@@ -10,6 +10,6 @@ import java.util.Map;
 public class FlowVo {
     private String text;
     private String value;
-    private Map<String,Integer> material;
-
+    //private Map<String,Integer> material;
+    private List<Map<String,String>> material;
 }

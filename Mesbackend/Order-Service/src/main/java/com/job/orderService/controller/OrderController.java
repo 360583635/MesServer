@@ -42,8 +42,8 @@ public class OrderController {
 //        System.out.println(userId);
 //    }
     @GetMapping("/toAddOrder")
-   public Result<List<Map>> toAddOrder(){
-       Result<List<Map>> result = orderService.toAddOrder();
+   public Result<List<FlowVo>> toAddOrder(){
+       Result<List<FlowVo>> result = orderService.toAddOrder();
        return result;
    }
 
