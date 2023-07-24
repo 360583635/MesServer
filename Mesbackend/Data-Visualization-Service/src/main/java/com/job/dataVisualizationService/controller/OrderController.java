@@ -22,19 +22,26 @@ public class OrderController {
     private OrderService orderService;
 
 
-    @PostMapping("/classification")    //分类占比
+    @GetMapping("/classification")    //分类占比
     public Result<Object> getClassification(@RequestBody OrderData order){
         Map<Object,Object> map = orderService.classification(order);
         return Result.success(map,"success");
     }
 
-    @PostMapping ("/count")    //全部数量金额统计
+    //月份
+    //数量
+    //金额
+    @GetMapping ("/count")    //全部数量金额统计
     public Result<Object> getCount(@RequestBody OrderData order){
         Map<Object,Object> map = orderService.countData(order);
         return Result.success(map,"success");
     }
 
-    @PostMapping("/countone")    //单个数量金额统计
+    //名称
+    //月份
+    //数量
+    //金额
+    @GetMapping("/countone")    //单个数量金额统计
     public Result<Object> getCountOne(@RequestBody OrderData order){
         Map<Object,Object> map = orderService.countOneData(order);
         return Result.success(map,"success");
