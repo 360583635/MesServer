@@ -37,7 +37,7 @@ public class  WarehouseController {
     public Result saveWarehouse(@RequestBody Warehouse tWarehouse) {
 
         long warehouseNumber = warehouseService.count();
-        if (warehouseNumber < 10) {
+        if (warehouseNumber < 15) {
             boolean save = warehouseService.save(tWarehouse);
             if (save) {
                 return Result.success(null, "保存成功");
@@ -48,8 +48,14 @@ public class  WarehouseController {
     }
 
 
-
-
+  /**
+  * 查询可用仓库
+  */@PostMapping("/queryWarehouseByArea")
+   List<Warehouse> queryWarehouseByArea(){
+       LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
+       queryWrapper.select(Warehouse::getWarehouseId).ge(Warehouse::getWarehouseAvailable,0);
+       return warehouseService.list(queryWrapper);
+   }
     /**
      * 原材料入库
      * @return
@@ -86,7 +92,6 @@ public class  WarehouseController {
             return Result.error("无可用仓库");
         }
 
-
         LambdaQueryWrapper<Material> queryMaterialArea = new LambdaQueryWrapper<>();
         queryMaterialArea
                 .select(Material::getMaterialArea)
@@ -99,8 +104,6 @@ public class  WarehouseController {
 
 
         int len = warehouseList.size();
-
-
         for (int i = 0;i < len;i++) {
             if (materialNumber > 0) {
                 LambdaQueryWrapper<Warehouse> queryWarehouseArea = new LambdaQueryWrapper<>();
@@ -136,7 +139,7 @@ public class  WarehouseController {
     LambdaUpdateWrapper<Warehouse> queryWrapper1 = new LambdaUpdateWrapper<>();
     LambdaUpdateWrapper<Inventory> queryUpdateWrapper = new LambdaUpdateWrapper<>();
     LambdaQueryWrapper<Material>queryWrapper2 = new LambdaQueryWrapper<>();
-    for (int i=0;i<inventoryService.list().size();i++){
+    for (int i=0;i<inventoryService.list(queryWrapper).size();i++){
         if (materNumber<(inventoryService.list(queryWrapper).get(i).getNumber())){
             queryUpdateWrapper.eq(Inventory::getMaterialName,inventoryService.list(queryWrapper).get(i).getMaterialName()).setSql("number=number-{materialNumber}");
             queryWrapper2.eq(Material::getMaterialName,inventoryService.list(queryWrapper).get(i).getMaterialName());
