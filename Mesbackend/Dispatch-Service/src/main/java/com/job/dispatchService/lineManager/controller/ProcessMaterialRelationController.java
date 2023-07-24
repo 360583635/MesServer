@@ -130,20 +130,17 @@ public class ProcessMaterialRelationController {
             String process = flowProcessRelation.getProcess();
             List<String> queryMaterialsByProcess = queryMaterialsByProcess(process);
             for(String materialName : queryMaterialsByProcess){
+                LambdaQueryWrapper<ProcessMaterialRelation> processMaterialRelationLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                processMaterialRelationLambdaQueryWrapper
+                        .eq(ProcessMaterialRelation::getIsDelete,1)
+                        .eq(ProcessMaterialRelation::getProcessName,process)
+                        .eq(ProcessMaterialRelation::getMaterialName,materialName);
+                ProcessMaterialRelation processMaterialRelation = processMaterialRelationService.getOne(processMaterialRelationLambdaQueryWrapper);
                 if(materialMap.containsKey(materialName)==false){
                     //根据工序名称，原材料名称查询工序原材料关系表获取原材料数量信息
-                    LambdaQueryWrapper<ProcessMaterialRelation> processMaterialRelationLambdaQueryWrapper = new LambdaQueryWrapper<>();
-                    processMaterialRelationLambdaQueryWrapper
-                            .eq(ProcessMaterialRelation::getIsDelete,1)
-                            .eq(ProcessMaterialRelation::getProcessName,process)
-                            .eq(ProcessMaterialRelation::getMaterialName,materialName);
-                    ProcessMaterialRelation processMaterialRelation = processMaterialRelationService.getOne(processMaterialRelationLambdaQueryWrapper);
-                    if(tempMap.containsKey(materialName)==false){
-                        tempMap.put(materialName, Integer.valueOf(processMaterialRelation.getNumber()));
-                    }
                     materialMap.put(materialName, Integer.valueOf(processMaterialRelation.getNumber()));
                 }else{
-                    materialMap.put(materialName,materialMap.get(materialName)+ tempMap.get(materialName));
+                    materialMap.put(materialName, Integer.valueOf(processMaterialRelation.getNumber())+materialMap.get(materialName));
                 }
             }
         }
