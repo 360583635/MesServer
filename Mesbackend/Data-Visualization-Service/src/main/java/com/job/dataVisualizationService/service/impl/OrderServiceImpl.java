@@ -110,7 +110,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public Map<Object,Object> countData(OrderData order) {
 
-        OrderData orderData = new OrderData();
         //格式化时间日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
@@ -123,16 +122,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         int day = Integer.parseInt(dayString);
         if(mmString.charAt(0) == '0')mmString = mmString.substring(1);
         int mm = Integer.parseInt(mmString);
+
         //获取当前时间
+
         //获得结束时间
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.DAY_OF_MONTH,-day);
+
         Calendar preTime = Calendar.getInstance();
         //获得开始时间
         preTime.add(Calendar.DAY_OF_MONTH,-day);
         preTime.add(Calendar.MONTH,-order.getSeparate());
         //数量 金额 时间
-        int[] time = new int[order.getDataNumber()];
+        String [] time = new String[order.getDataNumber()];
         int[] count = new int[order.getDataNumber()];
         int[] amount = new int[order.getDataNumber()];
 
@@ -142,7 +144,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             q.ge(Order::getOrderDate,preTime);
             long count1 = orderMapper.selectCount(q);
             List<Order> orders = orderMapper.selectList(q);
-            time[i] = i+1;
+            time[i] = endTime.getWeekYear()+"-"+(endTime.getTime().getMonth()+1);
+
             count[i] = (int)count1;
 
             int total = 0;
@@ -154,21 +157,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             preTime.add(Calendar.MONTH,-order.getSeparate());
             amount[i] = total;
         }
-        orderData.setCount(count);
-        orderData.setTime(time);
-        orderData.setAmount(amount);
 
         Map<Object,Object> map = new HashMap<>();
-        int y = 0 ;
-        for (int i : time) {
-            Map<Object,Object> map1 = new HashMap<>();
-            map1.put("订单总数",count[y]);
-            map1.put("金额总数",amount[y]);
-            map.put("第"+i+"份数据",map1);
-            y++;
-        }
-        map.put("请求数据量",order.getDataNumber());
-        map.put("请求数据间隔",order.getSeparate());
+        map.put("时间",time);
+        map.put("数量",count);
+        map.put("金额",amount);
 
         return map;
     }
@@ -246,7 +239,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         preTime.add(Calendar.DAY_OF_MONTH,-day);
         preTime.add(Calendar.MONTH,-order.getSeparate());
         //数量 金额 时间
-        int[] time = new int[order.getDataNumber()];
+        String [] time = new String[order.getDataNumber()];
         int[] count = new int[order.getDataNumber()];
         int[] amount = new int[order.getDataNumber()];
 
@@ -267,7 +260,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
             System.out.println("orders="+orders);
-            time[i] = i+1;
+            time[i] = endTime.getWeekYear()+"-"+(endTime.getTime().getMonth()+1);
             count[i] = (int)count1;
 
             int total = 0;
@@ -280,20 +273,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             preTime.add(Calendar.MONTH,-order.getSeparate());
             amount[i] = total;
         }
-        orderData.setCount(count);
-        orderData.setTime(time);
-        orderData.setAmount(amount);
         Map<Object,Object> map = new HashMap<>();
-
-        for (int i : time) {
-            Map<Object,Object> map1 = new HashMap<>();
-            map1.put("订单总数",count[i-1]);
-            map1.put("金额总数",amount[i-1]);
-            map.put("第"+i+"份数据",map1);
-        }
-
-        map.put("请求数据量",order.getDataNumber());
-        map.put("请求数据间隔",order.getSeparate());
+        map.put("时间",time);
+        map.put("数量",count);
+        map.put("金额",amount);
         map.put("产品id",productID);
 
 
