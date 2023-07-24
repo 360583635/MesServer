@@ -63,7 +63,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<FlowVo> flowVosList = new ArrayList<>();
         for (Flow flow : flowList) {
             FlowVo flowVo = new FlowVo();
-            flowVo.setTitle(flow.getFlow());
+            flowVo.setText(flow.getFlow());
             flowVo.setValue(flow.getId());
             System.out.println(1);
             Map<String,String> map = new HashMap<>();
