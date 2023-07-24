@@ -23,6 +23,8 @@ import com.job.common.result.Result;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author 庸俗可耐
@@ -60,7 +62,8 @@ public class LineTaskController {
         String lineName = line.getLine();
         String lineId = line.getId();
         Thread.currentThread().setName(lineName+lineId);
-        List<Order> orderQueue = new ArrayList<>();
+        /*List<Order> orderQueue */
+        Vector<Order> orderQueue = new Vector<>();
         if(lineName!=null){
             boolean existsKey = redisCache.hasKey(lineName);
             if(existsKey==true){
@@ -159,13 +162,13 @@ public class LineTaskController {
         // TODO: 2023/7/10 每隔3秒执行一次查询订单red
         boolean b = redisCache.hasKey("orderPQ");
         if(b==true){
-            List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
+            Vector<Order> orderPQ = redisCache.getCacheObject("orderPQ");
             if(orderPQ!=null&&orderPQ.size()>0) {
                 for (Order order : orderPQ) {
                     String lineName = order.getProductLine();
                     if(StringUtil.isNullOrEmpty(lineName)==false) {
                         if (redisCache.getCacheList(lineName) == null && StringUtil.isNullOrEmpty(lineName) == false) {
-                            List<Order> orderQueue = new LinkedList<>();
+                            Vector<Order> orderQueue = new Vector<>();
                             orderQueue.add(order);
                             redisCache.setCacheList(lineName, orderQueue);
                         } else {
