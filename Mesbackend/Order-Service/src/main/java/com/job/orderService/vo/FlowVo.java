@@ -11,4 +11,5 @@ public class FlowVo {
     private String text;
     private String value;
     private Map<String,Integer> material;
+
 }

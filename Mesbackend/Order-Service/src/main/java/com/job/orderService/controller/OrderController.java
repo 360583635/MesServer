@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -41,8 +42,8 @@ public class OrderController {
 //        System.out.println(userId);
 //    }
     @GetMapping("/toAddOrder")
-   public Result<List<FlowVo>> toAddOrder(){
-       Result<List<FlowVo>> result = orderService.toAddOrder();
+   public Result<List<Map>> toAddOrder(){
+       Result<List<Map>> result = orderService.toAddOrder();
        return result;
    }
 

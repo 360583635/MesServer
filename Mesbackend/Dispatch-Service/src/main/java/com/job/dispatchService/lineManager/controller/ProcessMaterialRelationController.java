@@ -111,7 +111,6 @@ public class ProcessMaterialRelationController {
     @PostMapping("/queryMaterialsByFlowName")
     public Map<String,Integer> queryMaterialsByFlowName(@RequestBody Map<String,String> map) throws Exception {
         String flowName = map.get("flowName");
-        System.out.println(flowName);
         Map<String,Integer> materialMap = new HashMap<>();
         Map<String,Integer> tempMap = new HashMap<>();
 

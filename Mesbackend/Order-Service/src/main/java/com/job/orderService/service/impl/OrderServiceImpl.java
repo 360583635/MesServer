@@ -56,25 +56,39 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @return
      */
     @Override
-    public Result<List<FlowVo>> toAddOrder() {
+    public Result<List<Map>> toAddOrder() {
         //获取产品类型名称
         LambdaQueryWrapper wrapper = new LambdaQueryWrapper();
         List<Flow> flowList = flowMapper.selectList(wrapper);
-        List<FlowVo> flowVosList = new ArrayList<>();
+        List<Map> flowVosList = new ArrayList<>();
         for (Flow flow : flowList) {
-            FlowVo flowVo = new FlowVo();
-            flowVo.setText(flow.getFlow());
-            flowVo.setValue(flow.getId());
-            System.out.println(1);
-            Map<String,String> map = new HashMap<>();
-            map.put("flowName",flow.getFlow());
-            //Map<String, Integer> materialsList = dispatchClient.queryMaterialsByFlowName(flow.getFlow());
-            Map<String, Integer> materialsList = restTemplate.postForObject(urlFlow, map, Map.class);
-            System.out.println(materialsList);
-            System.out.println(2);
-            flowVo.setMaterial(materialsList);
-            flowVosList.add(flowVo);
+            Map<String,String> map=new HashMap<>();
+            map.put("text",flow.getFlow());
+            map.put("value",flow.getId());
+            Map<String,String> map1 = new HashMap<>();
+            String flowName = flow.getFlow();
+            map1.put("flowName",flowName);
+            Map<String, Integer> materialsList = restTemplate.postForObject(urlFlow, map1, Map.class);
+            for (String s : materialsList.keySet()) {
+                map.put(s,materialsList.get(s).toString());
+            }
+            flowVosList.add(map);
+
+//            FlowVo flowVo = new FlowVo();
+//            flowVo.setText(flow.getFlow());
+//            flowVo.setValue(flow.getId());
+//            System.out.println(1);
+//            Map<String,String> map = new HashMap<>();
+//            String flowName = flow.getFlow();
+//            map.put("flowName",flowName);
+////            Map<String, Integer> materialsList = dispatchClient.queryMaterialsByFlowName(map);
+//            Map<String, Integer> materialsList = restTemplate.postForObject(urlFlow, map, Map.class);
+//            System.out.println(materialsList);
+//            System.out.println(2);
+//            flowVo.setMaterial(materialsList);
+//            flowVosList.add(flowVo);
         }
+        System.out.println(flowVosList);
         if (flowVosList.size()!= 0) {
             return Result.success(flowVosList, "success");
         } else {
@@ -108,13 +122,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setOrderPrice(order.getOrderNumber() * producePrice);
             order.setIsDelete(0);
             //计算订单原材料
-            Map<String, Integer> rawMap = dispatchClient.queryMaterialsByFlowName(order.getProductName());
+            Map<String, Integer> rawMap = dispatchClient.queryMaterialsByFlowName(/*order.getProductName()*/new HashMap<>());
             Set<Map.Entry<String, Integer>> rawSet = rawMap.entrySet();
             for (Map.Entry<String, Integer> rawset : rawSet) {
                 rawMap.put(rawset.getKey(), rawset.getValue() * order.getOrderNumber());
             }
             //查询原材料库存
-            Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(order.getProductName());
+            Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(/*order.getProductName()*/new HashMap<>());
             Set<String> keySet = materials.keySet();
             for (String material : keySet) {
                 Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(material);
