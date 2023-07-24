@@ -13,6 +13,7 @@ import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.work.controller.WorkController;
 import com.job.dispatchService.work.service.WorkService;
 import io.netty.util.internal.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,6 +30,7 @@ import java.util.List;
  * @description
  */
 @Component
+@Slf4j
 public class LineTaskController {
 
     @Autowired
@@ -141,6 +143,7 @@ public class LineTaskController {
                                 //如果工单运行成功，将订单和流水线状态设置为 完成
                                 order.setProductionStatus(4);
                                 line.setLineStatus("4");
+                                line.setSuccessCount(line.getSuccessCount()+1);
                             }
                         }
                     }
@@ -157,17 +160,23 @@ public class LineTaskController {
         boolean b = redisCache.hasKey("orderPQ");
         if(b==true){
             List<Order> orderPQ = redisCache.getCacheObject("orderPQ");
-            if(orderPQ!=null) {
+            if(orderPQ!=null&&orderPQ.size()>0) {
                 for (Order order : orderPQ) {
                     String lineName = order.getProductLine();
-                    if(redisCache.getCacheList(lineName)==null&&StringUtil.isNullOrEmpty(lineName)==false){
-                        List<Order> orderQueue = new LinkedList<>();
-                        orderQueue.add(order);
-                        redisCache.setCacheList(lineName, orderQueue);
+                    if(StringUtil.isNullOrEmpty(lineName)==false) {
+                        if (redisCache.getCacheList(lineName) == null && StringUtil.isNullOrEmpty(lineName) == false) {
+                            List<Order> orderQueue = new LinkedList<>();
+                            orderQueue.add(order);
+                            redisCache.setCacheList(lineName, orderQueue);
+                        } else {
+                            redisCache.getCacheList(lineName).add(order);
+                        }
                     }else{
-                        redisCache.getCacheList(lineName).add(order);
+                        log.error("LineTaskController--订单列表中订单未匹配流水线");
                     }
                 }
+            }else{
+                log.error("LineTaskController--订单列表为空");
             }
         }
     }

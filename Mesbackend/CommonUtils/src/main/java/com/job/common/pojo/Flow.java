@@ -1,5 +1,7 @@
 package com.job.common.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.Date;
 public class Flow {
 
    // 流程ID
+   @TableId(type = IdType.ASSIGN_ID)
     private String id;
 
 
