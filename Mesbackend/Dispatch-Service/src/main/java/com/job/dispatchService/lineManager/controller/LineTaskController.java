@@ -68,7 +68,7 @@ public class LineTaskController {
             boolean existsKey = redisCache.hasKey(lineName);
             if(existsKey==true){
                 //订单队列
-                orderQueue = redisCache.getCacheList(lineName);
+                orderQueue = new Vector<Order>(redisCache.getCacheList(lineName));
             }
             while(true) {
                 //判断订单列表是否有数据，流水线状态是否为 空闲或完成
