@@ -3,6 +3,7 @@ package com.job.dispatchService.lineManager.controller;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +58,9 @@ public class ProcessController {
      */
     @PostMapping("/page")
     public Result page(ProcessPageReq req){
-        IPage result = processService.page(req);
+        LambdaQueryWrapper<Process> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Process::getIsDelete,IS_DELETE);
+        IPage result = processService.page(req,queryWrapper);
         return Result.success(result,"查询成功");
     }
 
@@ -100,13 +104,13 @@ public class ProcessController {
     }
 
     /**
-     * 删除工序
+     * 逻辑删除工序
      * @param processId
      * @return
      */
     @PostMapping("/remove")
     @ResponseBody
-    public Result removePeocess(@RequestBody String processId){
+    public Result removePeocess(@RequestParam String processId){
         LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper();
         queryWrapper.eq(FlowProcessRelation::getProcessId,processId);
         long count = processRelationService.count(queryWrapper);
@@ -114,7 +118,9 @@ public class ProcessController {
         if(count>0){
             return Result.error("请先删除与本工序有关的流程");
         }
-        boolean b = processService.removeById(processId);
+        LambdaUpdateWrapper<Process> updateWrapper=new LambdaUpdateWrapper<>();
+        updateWrapper.set(Process::getIsDelete,0).eq(Process::getId,processId);
+        boolean b = processService.update(updateWrapper);
         if(b){
             return Result.success(null,"删除成功");
         }
@@ -160,15 +166,21 @@ public class ProcessController {
 
     /**
      * 根据工序名模糊查询
-     * @param procrssName
-     * @param req
+     * @param processName
      * @return
      */
-    @PostMapping("/query/{processName}")
-    @ResponseBody
-    public Result<ProcessPageReq> query(@PathVariable("process") String procrssName, @RequestBody ProcessPageReq req){
+    @PostMapping("/likeQuery")
+    public Result<ProcessPageReq> query(@RequestParam String processName,@RequestParam int size,@RequestParam int current){
+        ProcessPageReq req=new ProcessPageReq();
+        req.setCurrent(current);
+        req.setSize(size);
+        if(processName.isEmpty()){
+            processService.page(req);
+           return Result.success(req,"查询成功");
+       }
+
         LambdaQueryWrapper<Process> lambdaQueryWrapper=new LambdaQueryWrapper();
-        lambdaQueryWrapper.like(Process::getProcess,procrssName);
+        lambdaQueryWrapper.like(Process::getProcess,processName);
         ProcessPageReq page = processService.page(req, lambdaQueryWrapper);
         return Result.success(page,"查询成功");
     }
@@ -235,5 +247,18 @@ public class ProcessController {
         }
 
         return Result.success(equipmentVoList,"查询成功");
+    }
+
+    /**
+     * 根据id查询信息
+     * @param id
+     * @return
+     */
+    @PostMapping("/queryById")
+    public Result queryById(@RequestParam String id){
+        Process byId = processService.getById(id);
+
+
+        return Result.success(byId,"查询成功");
     }
 }

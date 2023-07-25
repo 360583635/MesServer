@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RequestMapping("/warehouse")
+@RestController
 public class  WarehouseController {
 
     @Resource
@@ -32,7 +33,6 @@ public class  WarehouseController {
      * @return
      */
     @PostMapping("/saveWarehouse")
-    @ResponseBody
     public Result saveWarehouse(@RequestBody Warehouse tWarehouse, HttpServletRequest httpServletRequest) {
 
         long warehouseNumber = warehouseService.count();

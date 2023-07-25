@@ -146,6 +146,7 @@ public class ProcessMaterialRelationController {
             MaterialVo materialVo = new MaterialVo();
             materialVo.setTitle(material.getMaterialName());
             materialVo.setValue(String.valueOf(material.getMaterialId()));
+            materialVoList.add(materialVo);
         }
         return materialVoList;
     }

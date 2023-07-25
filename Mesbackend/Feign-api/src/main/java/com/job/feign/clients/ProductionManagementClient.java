@@ -15,7 +15,7 @@ import java.util.List;
  * @description
  */
 
-@FeignClient(value = "PRODUCTIONMANAGEMENTSERVICE")
+@FeignClient(value = "PRODUCTIONMANAGEMENTSERVICE",url = "http://localhost:6041")
 public interface ProductionManagementClient {
 
     /**
