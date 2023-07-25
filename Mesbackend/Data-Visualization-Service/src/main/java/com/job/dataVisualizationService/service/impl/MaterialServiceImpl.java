@@ -131,7 +131,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 
         //获取仓库总空间和剩余空间
         QueryWrapper<Warehouse> q2 = new QueryWrapper<>();
-        q2.select("warehouse_capacity","warehouse_available","warehouseLayers","warehouseLayers");
+        q2.select("warehouse_capacity","warehouse_available","warehouse_layers","warehouse_area");
         List<Warehouse> list2 = warehouseMapper.selectList(q2);
         int sumWarehouseCapacity = 0;
         int sumWarehouseAvailable = 0;
@@ -150,6 +150,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 
         map.put("所有仓库剩余空间",sumWarehouseAvailable);
         map.put("所有仓库总空间",sumWarehouseCapacity);
+        map.put("所有仓库占面积",sumWarehouseArea);
 
         //获取原材料100个使用空间
         QueryWrapper<Material> q3 = new QueryWrapper<>();
