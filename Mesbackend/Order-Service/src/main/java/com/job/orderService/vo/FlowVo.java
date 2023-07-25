@@ -8,7 +8,8 @@ import java.util.Map;
 
 @Data
 public class FlowVo {
-    private String title;
+    private String text;
     private String value;
-    private Map<String,Integer> material;
+    //private Map<String,Integer> material;
+    private List<Map<String,String>> material;
 }
