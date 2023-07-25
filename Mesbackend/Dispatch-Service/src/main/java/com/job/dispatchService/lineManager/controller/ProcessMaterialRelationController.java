@@ -91,7 +91,7 @@ public class ProcessMaterialRelationController {
      * @throws Exception
      */
     @PostMapping("/queryMaterialsByProcess")
-    public List<String> queryMaterialsByProcess(@RequestBody String processName) throws Exception{
+    public List<String> queryMaterialsByProcess(@RequestParam String processName) throws Exception{
         LambdaQueryWrapper<ProcessMaterialRelation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(ProcessMaterialRelation::getIsDelete,1)
@@ -109,28 +109,37 @@ public class ProcessMaterialRelationController {
      *根据流程功能查询原材料
      */
     @PostMapping("/queryMaterialsByFlowName")
-    public Map<String,Integer> queryMaterialsByFlowName(@RequestBody String flowName) throws Exception {
+    public Map<String,Integer> queryMaterialsByFlowName(@RequestBody Map<String,String> map) throws Exception {
+        String flowName = map.get("flowName");
+        Map<String,Integer> materialMap = new HashMap<>();
+
         LambdaQueryWrapper<FlowProcessRelation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(FlowProcessRelation::getIsDelete,1)
                 .eq(FlowProcessRelation::getFlow,flowName)
                 .orderBy(true,false,FlowProcessRelation::getSortNum);
         List<FlowProcessRelation> processRelationList = flowProcessRelationService.list(queryWrapper);
-        HashSet<String> hashSet = new HashSet<String>();
+
+        //遍历流程工序关系列表
         for(FlowProcessRelation flowProcessRelation:processRelationList){
             String process = flowProcessRelation.getProcess();
             List<String> queryMaterialsByProcess = queryMaterialsByProcess(process);
-            for(String MaterialName : queryMaterialsByProcess){
-                hashSet.add(MaterialName);
+            for(String materialName : queryMaterialsByProcess){
+                LambdaQueryWrapper<ProcessMaterialRelation> processMaterialRelationLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                processMaterialRelationLambdaQueryWrapper
+                        .eq(ProcessMaterialRelation::getIsDelete,1)
+                        .eq(ProcessMaterialRelation::getProcessName,process)
+                        .eq(ProcessMaterialRelation::getMaterialName,materialName);
+                ProcessMaterialRelation processMaterialRelation = processMaterialRelationService.getOne(processMaterialRelationLambdaQueryWrapper);
+                if(materialMap.containsKey(materialName)==false){
+                    //根据工序名称，原材料名称查询工序原材料关系表获取原材料数量信息
+                    materialMap.put(materialName, Integer.valueOf(processMaterialRelation.getNumber()));
+                }else{
+                    materialMap.put(materialName, Integer.valueOf(processMaterialRelation.getNumber())+materialMap.get(materialName));
+                }
             }
         }
-        List<String> materialList = new ArrayList<>();
-        materialList.addAll(hashSet);
-        Map<String,Integer> materialMap = new HashMap<>();
-        for(String materialName : materialList){
-            Material material = (Material) productionManagementClient.queryMaterialByName(materialName).getData();
-            materialMap.put(materialName, Integer.valueOf(material.getMaterialCost()));
-        }
+
         return materialMap;
     }
 

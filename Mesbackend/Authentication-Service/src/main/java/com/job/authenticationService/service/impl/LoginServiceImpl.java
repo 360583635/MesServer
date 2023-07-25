@@ -61,7 +61,7 @@ public class  LoginServiceImpl implements LoginService {
         //把完整的用户信息存入redis userid作为key
         redisCache.setCacheObject("login" + userid, loignUser);
         //把token响应给前端
-        return new ResponseResult(200, "登录成功", map);
+        return new ResponseResult(200, "登录成功",map);
     }
 
     @Override

@@ -41,7 +41,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         //原材料名称
         String [] name = new String[list.size()];
         //占地面积
-        int[] area = new int[list.size()];
+        float[] area = new float[list.size()];
         //占仓库体积
         int[] volume = new int[list.size()];
         //占货款
@@ -71,13 +71,8 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
                     System.out.println(material.getMaterialCost());
                     System.out.println("cost="+cost);
                     //获取区域面积
-                    String materialArea = "";
-                    for (int i1 = 0; i1 < material.getMaterialArea().length(); i1++) {
-                        if (material.getMaterialArea().charAt(i1)>=48 && material.getMaterialArea().charAt(i1)<=57) {
-                            materialArea += material.getMaterialArea().charAt(i1);
-                        }
-                    }
-                    int area1 = Integer.parseInt(materialArea);
+
+                    float area1 = material.getMaterialArea();
                     //获取体积
                     String materialVolume = "";
                     for (int i1 = 0; i1 < material.getMaterialVolume().length(); i1++) {
@@ -136,15 +131,22 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
 
         //获取仓库总空间和剩余空间
         QueryWrapper<Warehouse> q2 = new QueryWrapper<>();
-        q2.select("warehouse_capacity","warehouse_available");
+        q2.select("warehouse_capacity","warehouse_available","warehouseLayers","warehouseLayers");
         List<Warehouse> list2 = warehouseMapper.selectList(q2);
         int sumWarehouseCapacity = 0;
         int sumWarehouseAvailable = 0;
+        int sumWarehouseArea = 0;
+
 
         for (Warehouse warehouse : list2) {
             sumWarehouseCapacity += warehouse.getWarehouseCapacity();
             sumWarehouseAvailable += warehouse.getWarehouseAvailable();
+            sumWarehouseArea += warehouse.getWarehouseLayers()*warehouse.getWarehouseArea();
+
         }
+
+
+        //仓库总面积 仓库剩余面积 总的
 
         map.put("所有仓库剩余空间",sumWarehouseAvailable);
         map.put("所有仓库总空间",sumWarehouseCapacity);

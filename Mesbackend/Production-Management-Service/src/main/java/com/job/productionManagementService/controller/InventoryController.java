@@ -9,8 +9,7 @@ import com.job.productionManagementService.service.ProduceService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +18,8 @@ import java.util.List;
  * @create 2023-07-18-15:14
  * @description
  */
+@RestController
+@RequestMapping("/inventory")
 @Component
 public class InventoryController {
 
@@ -74,14 +75,14 @@ public class InventoryController {
     }
 
     /**
-     * 根据产品名称插叙数量（模糊查询）
+     * 根据产品名称查询数量（模糊查询）
      * @param produceName
      * @return
      */
     @GetMapping("/queryProductNumberByName/{produceName}")
     List<Integer> queryProductNumberByName(@PathVariable("produceName") String produceName) {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(Inventory::getProcessName, produceName);
+        queryWrapper.like(Inventory::getProduceName, produceName);
         List<Inventory> producelist = inventoryService.list(queryWrapper);
         List<Integer> produceNumberList = new ArrayList<>();
         for (Inventory inventory : producelist) {
@@ -127,6 +128,24 @@ public class InventoryController {
         queryWrapper.eq(Inventory::getWarehouseType, warehouseType);
         List<Inventory> productlist = inventoryService.list(queryWrapper);
         return productlist;
+    }
+
+    /**
+     * 查询总个数
+     */
+    @PostMapping("/queryMaterialNumberByMaterialName")
+       Integer queryMaterialNumberByMaterialName(@RequestParam String materialName) {
+        LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
+        System.out.println(materialName);
+        queryWrapper.eq(Inventory::getMaterialName, materialName);
+       List<Inventory> materialNumberList= inventoryService.list(queryWrapper);
+        int number=0;
+       for (int i = 0 ;i< materialNumberList.size();i++){
+
+          int materialNumbers = materialNumberList.get(i).getNumber();
+           number=number+materialNumbers;
+       }
+        return number;
     }
 
     }

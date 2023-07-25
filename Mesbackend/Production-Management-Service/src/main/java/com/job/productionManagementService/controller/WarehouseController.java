@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@RequestMapping("/warehouse")
 @RestController
+@RequestMapping("/warehouse")
 public class  WarehouseController {
 
     @Resource
@@ -33,10 +33,11 @@ public class  WarehouseController {
      * @return
      */
     @PostMapping("/saveWarehouse")
-    public Result saveWarehouse(@RequestBody Warehouse tWarehouse, HttpServletRequest httpServletRequest) {
+    @ResponseBody
+    public Result saveWarehouse(@RequestBody Warehouse tWarehouse) {
 
         long warehouseNumber = warehouseService.count();
-        if (warehouseNumber < 10) {
+        if (warehouseNumber < 15) {
             boolean save = warehouseService.save(tWarehouse);
             if (save) {
                 return Result.success(null, "保存成功");
@@ -47,8 +48,14 @@ public class  WarehouseController {
     }
 
 
-
-
+  /**
+  * 查询可用仓库
+  */@PostMapping("/queryWarehouseByArea")
+   List<Warehouse> queryWarehouseByArea(){
+       LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
+       queryWrapper.select(Warehouse::getWarehouseName).gt(Warehouse::getWarehouseAvailable,0);
+       return warehouseService.list(queryWrapper);
+   }
     /**
      * 原材料入库
      * @return
@@ -60,6 +67,7 @@ public class  WarehouseController {
         int number = 0;
         LambdaQueryWrapper<Warehouse> warehouseLambdaQueryWrapper = new LambdaQueryWrapper<>();
         warehouseLambdaQueryWrapper.eq(Warehouse::getWarehouseId, warehouseId);
+        //通过仓库
         LambdaUpdateWrapper<Warehouse> warehouseLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
 
         float wareArea = warehouseService.getOne(warehouseLambdaQueryWrapper).getWarehouseArea();
@@ -70,7 +78,9 @@ public class  WarehouseController {
         for (int i = 0; i < materiallist.size(); i++) {
             int materialNumbers = materiallist.get(i).getNumber();
             materialLambdaQueryWrapper.eq(Material::getMaterialName, materiallist.get(i).getMaterialName());
-            float area = materialService.getOne(materialLambdaQueryWrapper).getMaterialArea();
+            System.out.println(materialService.getOne(materialLambdaQueryWrapper) + "---------------------------------");
+            float area = materialService.getOne(materialLambdaQueryWrapper).getMaterialArea();//
+
             float wareAbArea = warehouseService.getOne(warehouseLambdaQueryWrapper).getWarehouseAvailable();
             wareAbArea = wareArea - (materialNumbers * area);
             warehouseLambdaUpdateWrapper.eq(Warehouse::getWarehouseId, warehouseId).set(Warehouse::getWarehouseAvailable, wareAbArea);
@@ -80,11 +90,10 @@ public class  WarehouseController {
         LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
         List<Warehouse> warehouseList = (List<Warehouse>) queryWrapper
                 .select(Warehouse::getWarehouseAvailable, Warehouse::getWarehouseId)
-                .ge(Warehouse::getWarehouseAvailable, 0);
+                .gt(Warehouse::getWarehouseAvailable, 0);
         if (warehouseList.size() <= 0) {
             return Result.error("无可用仓库");
         }
-
 
         LambdaQueryWrapper<Material> queryMaterialArea = new LambdaQueryWrapper<>();
         queryMaterialArea
@@ -98,8 +107,6 @@ public class  WarehouseController {
 
 
         int len = warehouseList.size();
-
-
         for (int i = 0;i < len;i++) {
             if (materialNumber > 0) {
                 LambdaQueryWrapper<Warehouse> queryWarehouseArea = new LambdaQueryWrapper<>();
@@ -135,7 +142,7 @@ public class  WarehouseController {
     LambdaUpdateWrapper<Warehouse> queryWrapper1 = new LambdaUpdateWrapper<>();
     LambdaUpdateWrapper<Inventory> queryUpdateWrapper = new LambdaUpdateWrapper<>();
     LambdaQueryWrapper<Material>queryWrapper2 = new LambdaQueryWrapper<>();
-    for (int i=0;i<inventoryService.list().size();i++){
+    for (int i=0;i<inventoryService.list(queryWrapper).size();i++){
         if (materNumber<(inventoryService.list(queryWrapper).get(i).getNumber())){
             queryUpdateWrapper.eq(Inventory::getMaterialName,inventoryService.list(queryWrapper).get(i).getMaterialName()).setSql("number=number-{materialNumber}");
             queryWrapper2.eq(Material::getMaterialName,inventoryService.list(queryWrapper).get(i).getMaterialName());
