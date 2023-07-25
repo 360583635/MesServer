@@ -75,7 +75,7 @@ public class InventoryController {
     }
 
     /**
-     * 根据产品名称插叙数量（模糊查询）
+     * 根据产品名称查询数量（模糊查询）
      * @param produceName
      * @return
      */
