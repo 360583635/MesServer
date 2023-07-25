@@ -125,18 +125,24 @@ public class LineController {
      * @param lineId
      * @return
      */
-    @GetMapping("/removeLine/{lineId}")
+    @DeleteMapping ("/removeLine/{lineId}")
     public Result removeLine(@PathVariable String lineId){
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
                 .eq(Line::getId,lineId);
-        Line byId = lineService.getById(lineId);
+        Line byId = lineService.getOne(queryWrapper);
         if(!"1".equals(byId.getLineStatus())){
             return Result.error("流水线未关闭，请先关闭流水线");
         }
         byId.setIsDelete(0);
-        return Result.success(null,"删除成功");
+        boolean b = lineService.updateById(byId);
+        if(b){
+            return Result.success(null,"删除成功");
+        }else{
+            return Result.error("删除失败");
+        }
+
     }
 
     /**

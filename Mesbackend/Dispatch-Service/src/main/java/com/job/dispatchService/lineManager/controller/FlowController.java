@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.job.common.pojo.Flow;
-import com.job.common.pojo.FlowProcessRelation;
-import com.job.common.pojo.Line;
-import com.job.common.pojo.Users;
+import com.job.common.pojo.*;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
@@ -24,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 庸俗可耐
@@ -167,6 +166,11 @@ public class FlowController {
         return Result.success(flow,"查询成功");
     }
 
+    /**
+     * 模糊查询，根据id和名字
+     * @param searchName
+     * @return
+     */
     @PostMapping("/likeSearch")
     public Result likeSearch(@RequestParam String searchName ){
         if(searchName.isEmpty()){
@@ -186,6 +190,28 @@ public class FlowController {
 
     }
 
+    /**
+     * 查询所有流程类型
+     * @return
+     */
+
+    @GetMapping("/queryFlowType")
+    public Result queryFlowType(){
+        LambdaQueryWrapper<Flow> queryWrapper = new LambdaQueryWrapper<>();
+        List<Flow> list = flowService.list();
+        List<String> functionNames = new ArrayList<>();
+        Set<String> uniqueFunctionNames = new HashSet<>();
+        for (Flow flow : list) {
+            String functionName = flow.getFlow();
+            if (!uniqueFunctionNames.contains(functionName)) {
+                functionNames.add(functionName);
+                uniqueFunctionNames.add(functionName);
+            }
+        }
+        return Result.success(functionNames,"查询成功");
+
+
+    }
 
 
 }
