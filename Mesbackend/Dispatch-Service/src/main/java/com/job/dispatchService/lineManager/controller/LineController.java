@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Users;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
+import com.job.dispatchService.lineManager.request.FlowPageReq;
 import com.job.dispatchService.lineManager.request.LinePageReq;
 import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
@@ -40,17 +42,20 @@ public class LineController {
     @Autowired
     private AuthenticationClient authenticationClient;
 
-    //初始的订单数量，默认为0
-    private static int ORDER_COUNT=0;
+    //逻辑删除1未删除0已删除
+    private static int IS_DELETE_NO=1;
+    private static int IS_DELETE_YES=0;
 
     /**
      * 流水线分页查询
      * @param req
      * @return
      */
-    @PostMapping
+    @PostMapping("/page")
     public Result page(LinePageReq req){
-        IPage result = lineService.page(req);
+        LambdaQueryWrapper<Line> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Line::getIsDelete,IS_DELETE_NO);
+        IPage result = lineService.page(req,queryWrapper);
         return Result.success(result,"查询成功");
     }
 
@@ -181,9 +186,9 @@ public class LineController {
     }
 
     /**
-     * 根据id查询流水线
+     * 根据流水线id查询流水线
      */
-    @GetMapping("/selectLineById/{id}")
+    @GetMapping("/queryLineById/{id}")
     public Result selectLineById(@PathVariable("id") String id){
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
         queryWrapper
@@ -194,6 +199,22 @@ public class LineController {
             return Result.error("查询失败");
         }
         return Result.success(line,"查询成功");
+    }
+
+    /**
+     * 根据流程id查询流水线
+     */
+    @PostMapping("/queryLineByFlowId")
+    public Result selectLineByFlowId(@RequestParam String flowId,@RequestParam int size,@RequestParam int current){
+        FlowPageReq req=new FlowPageReq();
+        req.setCurrent(current);
+        req.setSize(size);
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper
+                .eq(Line::getIsDelete,1)
+                .eq(Line::getLineFlowId,flowId);
+        FlowPageReq page = lineService.page(req, queryWrapper);
+        return Result.success(page,"查询成功");
     }
 
 
