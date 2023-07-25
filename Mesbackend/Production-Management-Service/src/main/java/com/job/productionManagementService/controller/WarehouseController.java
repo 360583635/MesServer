@@ -53,7 +53,7 @@ public class  WarehouseController {
   */@PostMapping("/queryWarehouseByArea")
    List<Warehouse> queryWarehouseByArea(){
        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
-       queryWrapper.select(Warehouse::getWarehouseId).ge(Warehouse::getWarehouseAvailable,0);
+       queryWrapper.select(Warehouse::getWarehouseName).gt(Warehouse::getWarehouseAvailable,0);
        return warehouseService.list(queryWrapper);
    }
     /**
@@ -67,6 +67,7 @@ public class  WarehouseController {
         int number = 0;
         LambdaQueryWrapper<Warehouse> warehouseLambdaQueryWrapper = new LambdaQueryWrapper<>();
         warehouseLambdaQueryWrapper.eq(Warehouse::getWarehouseId, warehouseId);
+        //通过仓库
         LambdaUpdateWrapper<Warehouse> warehouseLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
 
         float wareArea = warehouseService.getOne(warehouseLambdaQueryWrapper).getWarehouseArea();
@@ -77,7 +78,9 @@ public class  WarehouseController {
         for (int i = 0; i < materiallist.size(); i++) {
             int materialNumbers = materiallist.get(i).getNumber();
             materialLambdaQueryWrapper.eq(Material::getMaterialName, materiallist.get(i).getMaterialName());
-            float area = materialService.getOne(materialLambdaQueryWrapper).getMaterialArea();
+            System.out.println(materialService.getOne(materialLambdaQueryWrapper) + "---------------------------------");
+            float area = materialService.getOne(materialLambdaQueryWrapper).getMaterialArea();//
+
             float wareAbArea = warehouseService.getOne(warehouseLambdaQueryWrapper).getWarehouseAvailable();
             wareAbArea = wareArea - (materialNumbers * area);
             warehouseLambdaUpdateWrapper.eq(Warehouse::getWarehouseId, warehouseId).set(Warehouse::getWarehouseAvailable, wareAbArea);
@@ -87,7 +90,7 @@ public class  WarehouseController {
         LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
         List<Warehouse> warehouseList = (List<Warehouse>) queryWrapper
                 .select(Warehouse::getWarehouseAvailable, Warehouse::getWarehouseId)
-                .ge(Warehouse::getWarehouseAvailable, 0);
+                .gt(Warehouse::getWarehouseAvailable, 0);
         if (warehouseList.size() <= 0) {
             return Result.error("无可用仓库");
         }

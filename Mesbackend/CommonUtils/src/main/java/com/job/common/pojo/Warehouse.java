@@ -61,7 +61,7 @@ public class Warehouse {
     /**
      * 仓库总容量
      */
-   private  int warehouseCapacity;
+    private  int warehouseCapacity;
     /**
      * 逻辑删除
      */
