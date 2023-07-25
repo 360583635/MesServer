@@ -2,17 +2,18 @@ package com.job.platformService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.job.common.pojo.Roles;
 import com.job.common.pojo.Users;
-import com.job.platformService.pojo.User;
+import com.job.common.utils.JwtUtil;
 import com.job.platformService.result.Result;
 import com.job.platformService.service.UsersService;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -70,22 +71,39 @@ public class WhiteListController {
      * @return
      */
 
-
     @RequestMapping("/add")
     //传入id值
-    public Result add (@RequestParam(value = "IDS") List<Integer>IDS)
+    public Result add (@RequestParam(value = "IDS") List<Integer>IDS, HttpServletRequest request)
     {
+        //获取token
+        String token=request.getParameter("Authorization");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取添加人信息
+        Users user=usersService.getById(userid);
+        Date date=new Date();
+
         UpdateWrapper<Users> updateWrapper = new UpdateWrapper<>();
         for (int ID : IDS) {
             //System.out.println(ID);
             Users users=usersService.getById(ID);
             if (users.getIsBlack().equals(WHITESTATE)){
                 users.setIsBlack(Integer.valueOf(BLACKSTATE));
+                users.setUpdateUser(user.getName());
+                users.setUpdateTime(date);
                 //usersService.save(users);
                 usersService.update(users,updateWrapper);
             }else {
                 users.setIsBlack(Integer.valueOf(WHITESTATE));
                 usersService.update(users,updateWrapper);
+                users.setUpdateUser(user.getName());
+                users.setUpdateTime(date);
               //  usersService.save(users);
             }
         }
@@ -98,17 +116,36 @@ public class WhiteListController {
      * @return
      */
     @RequestMapping("/del")
-    public Result del(@RequestParam(value ="idS") List<Integer> idS){
+    public Result del(@RequestParam(value ="idS") List<Integer> idS,HttpServletRequest request){
+        //获取token
+        String token=request.getParameter("Authorization");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+
+        //获取修改人信息
+        Users user=usersService.getById(userid);
+        Date date=new Date();
+
         UpdateWrapper<Users> updateWrapper = new UpdateWrapper<>();
         for (int ID : idS) {
             //System.out.println(ID);
             Users users=usersService.getById(ID);
             if (users.getIsBlack().equals(WHITESTATE)){
                 users.setIsBlack(Integer.valueOf(BLACKSTATE));
+                users.setUpdateUser(user.getName());
+                users.setUpdateTime(date);
                 //usersService.save(users);
                 usersService.update(users,updateWrapper);
             }else {
                 users.setIsBlack(Integer.valueOf(WHITESTATE));
+                users.setUpdateUser(user.getName());
+                users.setUpdateTime(date);
                 usersService.update(users,updateWrapper);
                 //  usersService.save(users);
             }

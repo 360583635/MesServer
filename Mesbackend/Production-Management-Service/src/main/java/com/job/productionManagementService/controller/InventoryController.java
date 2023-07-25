@@ -138,7 +138,7 @@ public class InventoryController {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
         System.out.println(materialName);
         queryWrapper.eq(Inventory::getMaterialName, materialName);
-       List<Inventory>materialNumberList= inventoryService.list(queryWrapper);
+       List<Inventory> materialNumberList= inventoryService.list(queryWrapper);
         int number=0;
        for (int i = 0 ;i< materialNumberList.size();i++){
 
