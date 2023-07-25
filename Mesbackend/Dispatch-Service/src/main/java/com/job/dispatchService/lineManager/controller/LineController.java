@@ -64,11 +64,11 @@ public class LineController {
      * @param pipeLine
      * @return
      */
-    @RequestMapping("/saveLine")
+    @PostMapping("/saveLine")
     @ResponseBody
     public Result saveLine(@RequestBody Line pipeLine, HttpServletRequest request){
 
-        String token=request.getHeader("token");
+        /*String token=request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
@@ -81,14 +81,20 @@ public class LineController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
-        }
+        }*/
+        pipeLine.setUpdateUsername("扶云");
+        pipeLine.setCreateUsername("扶云");
         pipeLine.setCreateTime(DateUtil.date());
         pipeLine.setUpdateTime(DateUtil.date());
         pipeLine.setOrderCount(0);
         pipeLine.setLineStatus("0"); //设置状态为空闲
-        lineService.save(pipeLine);
+        pipeLine.setIsDelete(0);
+        boolean b = lineService.save(pipeLine);
         //ToDo 调用日志接口
-        return Result.success(null,"添加成功");
+        if(b){
+            return Result.success(null,"添加成功");
+        }
+        return Result.error("添加失败");
     };
 
     /**

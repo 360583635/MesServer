@@ -20,10 +20,7 @@ import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 庸俗可耐
@@ -198,19 +195,16 @@ public class FlowController {
     @GetMapping("/queryFlowType")
     public Result queryFlowType(){
         LambdaQueryWrapper<Flow> queryWrapper = new LambdaQueryWrapper<>();
-        List<Flow> list = flowService.list();
-        List<String> functionNames = new ArrayList<>();
-        Set<String> uniqueFunctionNames = new HashSet<>();
+        queryWrapper
+                .eq(Flow::getIsDelete,1);
+        List<Flow> list = flowService.list(queryWrapper);
+        Map<String,String> functionNames = new HashMap<>();
         for (Flow flow : list) {
+            String functionId = flow.getId();
             String functionName = flow.getFlow();
-            if (!uniqueFunctionNames.contains(functionName)) {
-                functionNames.add(functionName);
-                uniqueFunctionNames.add(functionName);
-            }
+            functionNames.put(functionId,functionName);
         }
         return Result.success(functionNames,"查询成功");
-
-
     }
 
 
