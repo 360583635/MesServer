@@ -58,14 +58,8 @@ public class Warehouse {
      *仓库层数
      */
     private int warehouseLayers;
-    /**
-     *仓库总容量
-     */
-    private int warehouseCapacity;
-    /**
-     * 逻辑删除
-     */
-    private int isDelete ;
+
+
 
 
 
