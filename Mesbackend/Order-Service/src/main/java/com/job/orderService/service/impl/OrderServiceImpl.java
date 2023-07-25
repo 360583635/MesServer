@@ -62,21 +62,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<Flow> flowList = flowMapper.selectList(wrapper);
         List<FlowVo> flowVosList = new ArrayList<>();
         List<Map> materialList=new ArrayList<>();
-//        Map[] materialArr=new Map[flowList.size()];
-//        int i=0;
         for (Flow flow : flowList) {
-//            Map<String,String> map=new HashMap<>();
-//            map.put("text",flow.getFlow());
-//            map.put("value",flow.getId());
-//            Map<String,String> map1 = new HashMap<>();
-//            String flowName = flow.getFlow();
-//            map1.put("flowName",flowName);
-//            Map<String, Integer> materialsList = restTemplate.postForObject(urlFlow, map1, Map.class);
-//            for (String s : materialsList.keySet()) {
-//                map.put(s,materialsList.get(s).toString());
-//            }
-//            flowVosList.add(map);
-
             FlowVo flowVo = new FlowVo();
             flowVo.setText(flow.getFlow());
             flowVo.setValue(flow.getId());
@@ -93,12 +79,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 map1.put("value",materialsMap.get(s).toString());
                 list.add(map1);
             }
-//            materialArr[i]=materialsList;
             flowVo.setMaterial(list);
             System.out.println();
             System.out.println(2);
             flowVosList.add(flowVo);
-            //i++;
         }
         System.out.println(flowVosList);
         if (flowVosList.size()!= 0) {
