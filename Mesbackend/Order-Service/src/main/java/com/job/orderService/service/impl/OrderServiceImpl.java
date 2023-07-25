@@ -70,9 +70,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             Map<String,String> map = new HashMap<>();
             String flowName = flow.getFlow();
             map.put("flowName",flowName);
-//            Map<String, Integer> materialsList = dispatchClient.queryMaterialsByFlowName(map);
+            Map<String, Integer> materialsMap = dispatchClient.queryMaterialsByFlowName(map);
             List<Map<String,String>> list = new ArrayList<>();
-            Map<String, Integer> materialsMap = restTemplate.postForObject(urlFlow, map, Map.class);
+            //Map<String, Integer> materialsMap = restTemplate.postForObject(urlFlow, map, Map.class);
             for (String s : materialsMap.keySet()) {
                 Map<String,String> map1 = new HashMap<>();
                 map1.put("text",s);
