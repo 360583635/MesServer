@@ -33,11 +33,11 @@ public class Inventory {
     /**
      * 数量
      */
-    private Integer number;
+    private Integer Number;
     /**
      * 逻辑删除
      */
-    private int is_delete;
+    private int isDelete;
 
 }
 
