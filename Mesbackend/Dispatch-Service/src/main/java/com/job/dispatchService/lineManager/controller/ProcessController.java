@@ -107,10 +107,24 @@ public class ProcessController {
         processDto.setUpdateTime(nowTime);
         Process process = new Process();
         BeanUtils.copyProperties(processDto,process);
+
+        LambdaQueryWrapper<Process> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(Process::getIsDelete,1)
+                .eq(Process::getProcess, processDto.getProcess());
+
+        long count = processService.count(queryWrapper);
+        if(count>0){
+            return Result.error("工序名称不可重复，请重新添加");
+        }
         boolean b = processService.saveOrUpdate(process);
-        Result result = processMaterialRelationController.addOrUpdate(processDto);
-        if(result.getCode()==1&&b==true){
-            return Result.success(null,"增加成功");
+        if(b==true) {
+            Process process1 = processService.getOne(queryWrapper);
+            processDto.setId(process1.getId());
+            Result result = processMaterialRelationController.addOrUpdate(processDto);
+            if(result.getCode()==1){
+                return Result.success(null,"增加成功");
+            }
         }
         return Result.error("删除失败");
     }

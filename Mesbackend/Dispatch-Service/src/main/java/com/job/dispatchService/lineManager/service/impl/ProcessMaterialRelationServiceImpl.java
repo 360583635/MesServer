@@ -45,6 +45,7 @@ public class ProcessMaterialRelationServiceImpl extends ServiceImpl<ProcessMater
 
         for (MaterialVo materialVo :materialVoList) {
             ProcessMaterialRelation processMaterialRelation=new ProcessMaterialRelation(processDto.getId(),processDto.getProcess());
+            processMaterialRelation.setProcessId(processDto.getId());
             processMaterialRelation.setMaterialId(materialVo.getValue());
             processMaterialRelation.setMaterialName(materialVo.getTitle());
             processMaterialRelation.setNumber(materialVo.getNumber());

@@ -21,7 +21,7 @@ public class ProcessDto extends Process {
         return materialVoList;
     }
 
-    public void setMaterialVoList(List<MaterialVo> MaterialVoList) {
+    public void setMaterialVoList(List<MaterialVo> materialVoList) {
         this.materialVoList = materialVoList;
     }
 }
