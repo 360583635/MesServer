@@ -7,13 +7,11 @@ import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Material;
 import com.job.common.pojo.Warehouse;
 import com.job.common.result.Result;
-import com.job.productionManagementService.mapper.MaterialMapper;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.MaterialService;
 import com.job.productionManagementService.service.WarehouseService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -70,9 +68,6 @@ public class  WarehouseController {
       }
       return warehouses;
    }
-
-   @Autowired
-   private MaterialMapper materialMapper;
 
     /**
      * 原材料入库
@@ -225,7 +220,9 @@ public class  WarehouseController {
 
 return Result.success("null","出库成功");
 
-
+/**
+ * 更新仓库可用面积
+ */
 }
 @PostMapping("updateWarehouseAbArea")
 @ResponseBody
