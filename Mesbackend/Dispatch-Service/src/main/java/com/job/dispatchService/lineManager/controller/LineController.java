@@ -82,13 +82,21 @@ public class LineController {
             e.printStackTrace();
             throw new RuntimeException("token非法");
         }*/
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(Line::getIsDelete,1)
+                .eq(Line::getLine,pipeLine.getLine());
+        long count = lineService.count(queryWrapper);
+        if(count>0){
+            return Result.error("流水线实体名称不能重复，请重新添加");
+        }
         pipeLine.setUpdateUsername("扶云");
         pipeLine.setCreateUsername("扶云");
         pipeLine.setCreateTime(DateUtil.date());
         pipeLine.setUpdateTime(DateUtil.date());
         pipeLine.setOrderCount(0);
         pipeLine.setLineStatus("0"); //设置状态为空闲
-        pipeLine.setIsDelete(0);
+        pipeLine.setIsDelete(1);
         boolean b = lineService.save(pipeLine);
         //ToDo 调用日志接口
         if(b){

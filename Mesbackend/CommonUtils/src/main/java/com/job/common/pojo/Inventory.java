@@ -29,11 +29,11 @@ public class Inventory {
     /**
      *产品名称
      */
-    private String ProduceName;
+    private String produceName;
     /**
      * 数量
      */
-    private Integer Number;
+    private Integer number;
     /**
      * 逻辑删除
      */

@@ -204,6 +204,9 @@ public class FlowController {
             String functionName = flow.getFlow();
             functionNames.put(functionId,functionName);
         }
+        if(functionNames==null){
+            return Result.error("流水线所属流程类型查询失败");
+        }
         return Result.success(functionNames,"查询成功");
     }
 
