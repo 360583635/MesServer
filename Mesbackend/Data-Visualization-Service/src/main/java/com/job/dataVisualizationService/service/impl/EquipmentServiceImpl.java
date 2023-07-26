@@ -61,7 +61,7 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
             map4.put("equipment_code",equipment.getEquipmentCode());
             map4.put("production_Capacity",equipment.getProductionCapacity());
             map4.put("maximum_Load",equipment.getMaximumLoad());
-            map4.put("Operating_Speed",equipment.getOperating_Speed());
+            map4.put("Operating_Speed",equipment.getOperatingSpeed());
             map3.put(equipment.getEquipmentId(),map4);
         }
 

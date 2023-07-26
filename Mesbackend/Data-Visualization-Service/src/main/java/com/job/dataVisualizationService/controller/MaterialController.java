@@ -17,12 +17,14 @@ import java.util.Map;
 public class MaterialController {
     @Autowired
     private MaterialService materialService;
+    //原材料统计已完成
     @GetMapping("/classification")    //分类占比   金额 体积 面积
     @ResponseBody
     public Result<Object> getClassification(){
         Map<Object,Object> map = materialService.classification();
         return Result.success(map,"success");
     }
+    //仓库统计已完成
     @GetMapping("/warehouse")    //分类占比   金额 体积 面积
     public Result<Object> getWarehouse(){
         Map<Object,Object> map = materialService.getWarehouse();
