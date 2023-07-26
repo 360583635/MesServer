@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Users;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
+import com.job.dispatchService.lineManager.request.FlowPageReq;
 import com.job.dispatchService.lineManager.request.LinePageReq;
 import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
@@ -40,17 +42,20 @@ public class LineController {
     @Autowired
     private AuthenticationClient authenticationClient;
 
-    //初始的订单数量，默认为0
-    private static int ORDER_COUNT=0;
+    //逻辑删除1未删除0已删除
+    private static int IS_DELETE_NO=1;
+    private static int IS_DELETE_YES=0;
 
     /**
      * 流水线分页查询
      * @param req
      * @return
      */
-    @PostMapping
+    @PostMapping("/page")
     public Result page(LinePageReq req){
-        IPage result = lineService.page(req);
+        LambdaQueryWrapper<Line> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Line::getIsDelete,IS_DELETE_NO);
+        IPage result = lineService.page(req,queryWrapper);
         return Result.success(result,"查询成功");
     }
 
@@ -59,11 +64,11 @@ public class LineController {
      * @param pipeLine
      * @return
      */
-    @RequestMapping("/saveLine")
+    @PostMapping("/saveLine")
     @ResponseBody
     public Result saveLine(@RequestBody Line pipeLine, HttpServletRequest request){
 
-        String token=request.getHeader("token");
+        /*String token=request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
@@ -76,14 +81,28 @@ public class LineController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
+        }*/
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(Line::getIsDelete,1)
+                .eq(Line::getLine,pipeLine.getLine());
+        long count = lineService.count(queryWrapper);
+        if(count>0){
+            return Result.error("流水线实体名称不能重复，请重新添加");
         }
+        pipeLine.setUpdateUsername("扶云");
+        pipeLine.setCreateUsername("扶云");
         pipeLine.setCreateTime(DateUtil.date());
         pipeLine.setUpdateTime(DateUtil.date());
         pipeLine.setOrderCount(0);
         pipeLine.setLineStatus("0"); //设置状态为空闲
-        lineService.save(pipeLine);
+        pipeLine.setIsDelete(1);
+        boolean b = lineService.save(pipeLine);
         //ToDo 调用日志接口
-        return Result.success(null,"添加成功");
+        if(b){
+            return Result.success(null,"添加成功");
+        }
+        return Result.error("添加失败");
     };
 
     /**
@@ -120,18 +139,24 @@ public class LineController {
      * @param lineId
      * @return
      */
-    @GetMapping("/removeLine/{lineId}")
+    @DeleteMapping ("/removeLine/{lineId}")
     public Result removeLine(@PathVariable String lineId){
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
                 .eq(Line::getId,lineId);
-        Line byId = lineService.getById(lineId);
+        Line byId = lineService.getOne(queryWrapper);
         if(!"1".equals(byId.getLineStatus())){
             return Result.error("流水线未关闭，请先关闭流水线");
         }
         byId.setIsDelete(0);
-        return Result.success(null,"删除成功");
+        boolean b = lineService.updateById(byId);
+        if(b){
+            return Result.success(null,"删除成功");
+        }else{
+            return Result.error("删除失败");
+        }
+
     }
 
     /**
@@ -181,9 +206,9 @@ public class LineController {
     }
 
     /**
-     * 根据id查询流水线
+     * 根据流水线id查询流水线
      */
-    @GetMapping("/selectLineById/{id}")
+    @GetMapping("/queryLineById/{id}")
     public Result selectLineById(@PathVariable("id") String id){
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
         queryWrapper
@@ -194,6 +219,22 @@ public class LineController {
             return Result.error("查询失败");
         }
         return Result.success(line,"查询成功");
+    }
+
+    /**
+     * 根据流程id查询流水线
+     */
+    @PostMapping("/queryLineByFlowId")
+    public Result selectLineByFlowId(@RequestParam String flowId,@RequestParam int size,@RequestParam int current){
+        FlowPageReq req=new FlowPageReq();
+        req.setCurrent(current);
+        req.setSize(size);
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper
+                .eq(Line::getIsDelete,1)
+                .eq(Line::getLineFlowId,flowId);
+        FlowPageReq page = lineService.page(req, queryWrapper);
+        return Result.success(page,"查询成功");
     }
 
 

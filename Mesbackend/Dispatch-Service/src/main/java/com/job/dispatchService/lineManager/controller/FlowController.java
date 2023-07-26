@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.job.common.pojo.Flow;
-import com.job.common.pojo.FlowProcessRelation;
-import com.job.common.pojo.Line;
-import com.job.common.pojo.Users;
+import com.job.common.pojo.*;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
@@ -23,8 +20,7 @@ import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author 庸俗可耐
@@ -57,7 +53,9 @@ public class FlowController {
     @PostMapping("/page")
     @ResponseBody
     public Result page(FlowPageReq req){
-        IPage result = flowService.page(req);
+        LambdaQueryWrapper<Flow> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Flow::getIsDelete,IS_DELETE_NO);
+        IPage result = flowService.page(req,queryWrapper);
         return Result.success(result,"查询成功");
     }
 
@@ -95,19 +93,20 @@ public class FlowController {
 
     /**
      * 根据id删除
-     * @param felowId
+     * @param flowId
      * @return
      */
     @PostMapping("removeByid")
-    public Result FlowRemove(@RequestParam String felowId){
+    public Result FlowRemove(@RequestParam String flowId){
         LambdaQueryWrapper<Line> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(Line::getLineFlowId,felowId);
+        queryWrapper.eq(Line::getLineFlowId,flowId);
         long count = lineService.count(queryWrapper);
         if(count>0){
            return Result.error("删除失败，请先删除对应的流水线");
         }else {
             LambdaUpdateWrapper<Flow> updateWrapper=new LambdaUpdateWrapper<>();
             updateWrapper.set(Flow::getIsDelete,IS_DELETE_YES);
+            updateWrapper.eq(Flow::getId,flowId);
             boolean update = flowService.update(updateWrapper);
             if (update){
                 return Result.success(null,"删除成功");
@@ -164,7 +163,52 @@ public class FlowController {
         return Result.success(flow,"查询成功");
     }
 
+    /**
+     * 模糊查询，根据id和名字
+     * @param searchName
+     * @return
+     */
+    @PostMapping("/likeSearch")
+    public Result likeSearch(@RequestParam String searchName ){
+        if(searchName.isEmpty()){
+            return Result.success(flowService.list(),"成功");
+        }
+        boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
+        LambdaQueryWrapper<Flow> queryWrapper=new LambdaQueryWrapper<>();
+        if(matches){
+            queryWrapper.like(Flow::getId,searchName);
+        }else {
+            queryWrapper.like(Flow::getFlow, searchName);
+        }
 
+        List<Flow> list = flowService.list(queryWrapper);
+        return Result.success(list,"查询成功");
+
+
+    }
+
+    /**
+     * 查询所有流程类型
+     * @return
+     */
+
+    @GetMapping("/queryFlowType")
+    public Result queryFlowType(){
+        LambdaQueryWrapper<Flow> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(Flow::getIsDelete,1);
+        List<Flow> list = flowService.list(queryWrapper);
+        Map<String,String> functionNames = new HashMap<>();
+        for (Flow flow : list) {
+            String functionId = flow.getId();
+            String functionName = flow.getFlow();
+            functionNames.put(functionId,functionName);
+        }
+        if(functionNames==null){
+            return Result.error("流水线所属流程类型查询失败");
+        }
+        return Result.success(functionNames,"查询成功");
+    }
 
 
 }

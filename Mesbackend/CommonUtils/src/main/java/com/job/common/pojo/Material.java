@@ -10,46 +10,45 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Material {
+    /**
+     * 原材料id
+     * */
     private int materialId;
-     /**
-      * 原材料id
-      * */
-    private String materialName;
     /**
      * 原材料名称
      */
-    private String materialSpecification;
+    private String materialName;
     /**
      * 原材料规格
      */
-    private String supplierId;
+    private String materialSpecification;
     /**
      * 供应商id
      */
-    private int warehouseId ;
+    private String supplierId;
     /**
      *所存储的仓库id
      */
-    private String materialUnit;
+    private int warehouseId ;
     /**
      * 原材料单位
      */
+    private String materialUnit;
+    /**
+     * 所占面积
+     */
     private Float materialArea;
     /**
-     * * 100个所占面积
+     *原材料所占体积
      */
-     private String materialVolume;
-    /**
-     * 100个原材料所占体积
-     */
-
-    private Double materialCost;
+    private String materialVolume;
     /**
      * 成本
      */
-
-//    private String weight;
-    //逻辑删除
+    private Double materialCost;
+    /**
+     * 逻辑删除
+     */
     private int isDelete;
 
 

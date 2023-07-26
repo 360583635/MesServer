@@ -30,9 +30,8 @@ public class Line {
      */
     private String lineDesc;
     /**
-     * 流水线所属流程
+     * 流水线所属流程Id
      */
-    @TableField("line_flow")
     private String lineFlowId;
     /**
      * 状态
@@ -40,7 +39,7 @@ public class Line {
      */
     private String lineStatus;
     /**
-     *
+     *订单数量
      */
     private Integer orderCount;
 

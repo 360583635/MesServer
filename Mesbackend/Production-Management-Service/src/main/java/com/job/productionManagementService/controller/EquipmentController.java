@@ -49,8 +49,9 @@ public class EquipmentController {
     /**
      * 根据设备功能类型查询设备
      */
-    @GetMapping("/queryEquipmentsByType/{functionName}")
-    List<Equipment> queryEquipmentsByType(@PathVariable("functionName") String functionName){
+    @PostMapping("/queryEquipmentsByType")
+    @ResponseBody
+    List<Equipment> queryEquipmentsByType(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Equipment::getFunctionName,functionName);
         List<Equipment> equipmentList = equipmentService.list(queryWrapper);

@@ -1,5 +1,6 @@
 package com.job.dispatchService.lineManager.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.job.common.pojo.Flow;
 import com.job.common.result.Result;
@@ -9,6 +10,7 @@ import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.ProcessVo;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -87,14 +89,19 @@ public class FlowProcessRelationController {
 
 
     /**
-     * 流程与工序关系管理新增+修改
+     * 流程与工序关系管理新增+修改 (包含流程的添加)
      * @param flowDto
      * @return
      * @throws Exception
      */
     @PostMapping("/add-or-update")
     @ResponseBody
-    public Result addOrUpdate(@RequestBody FlowDto flowDto) throws Exception {
+    public Result addOrUpdate(@RequestBody FlowDto flowDto, HttpServletRequest httpServletRequest) throws Exception {
+        //        String userId= UserUtil.getUserId(httpServletRequest);
+        flowDto.setCreateTime(DateUtil.date());
+        flowDto.setUpdateTime(DateUtil.date());
+        flowDto.setUpdateUsername("userId");
+        flowDto.setCreateUsername("userId");
         return flowProcessRelationService.addOrUpdate(flowDto);
     }
 
