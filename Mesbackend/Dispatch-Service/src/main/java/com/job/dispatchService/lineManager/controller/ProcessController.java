@@ -1,5 +1,6 @@
 package com.job.dispatchService.lineManager.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -12,6 +13,7 @@ import com.job.common.pojo.Process;
 //import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 //import com.job.dispatchService.LineManager.pojo.TProcess;
 import com.job.common.result.Result;
+import com.job.dispatchService.lineManager.dto.ProcessDto;
 import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.ProcessService;
@@ -19,6 +21,7 @@ import com.job.dispatchService.lineManager.vo.EquipmentVo;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Equipment;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +51,9 @@ public class ProcessController {
 
     @Autowired
     private ProductionManagementClient productionManagementClient;
+
+    @Autowired
+    private ProcessMaterialRelationController processMaterialRelationController;
 
     //逻辑删除1未删除0已删除
     private static int IS_DELETE=1;
@@ -86,21 +92,27 @@ public class ProcessController {
 
     /**
      * 增加工序
-     * @param tProcess
+     * @param processDto
      * @return
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result saveProcess(@RequestBody Process tProcess, HttpServletRequest httpServletRequest){
+    public Result saveProcess(@RequestBody ProcessDto processDto, HttpServletRequest httpServletRequest) throws Exception {
         //获得用户信息
         //String userId= UserUtil.getUserId(httpServletRequest);
         String userinf="郭帅比";
-        tProcess.setUpdateUsername(userinf);
-        tProcess.setCreateUsername(userinf);
+        processDto.setUpdateUsername(userinf);
+        processDto.setCreateUsername(userinf);
         DateTime nowTime = DateUtil.date();
-        tProcess.setUpdateTime(nowTime);
-        processService.saveOrUpdate(tProcess);
-        return Result.success(null,"增加成功");
+        processDto.setUpdateTime(nowTime);
+        Process process = new Process();
+        BeanUtils.copyProperties(processDto,process);
+        boolean b = processService.saveOrUpdate(process);
+        Result result = processMaterialRelationController.addOrUpdate(processDto);
+        if(result.getCode()==1&&b==true){
+            return Result.success(null,"增加成功");
+        }
+        return Result.error("删除失败");
     }
 
     /**

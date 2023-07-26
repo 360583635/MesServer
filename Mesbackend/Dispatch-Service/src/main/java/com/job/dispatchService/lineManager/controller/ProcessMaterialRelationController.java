@@ -12,6 +12,7 @@ import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.MaterialVo;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Material;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -29,6 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/dispatch/process/material")
 @CrossOrigin
+@Slf4j
 public class ProcessMaterialRelationController {
 
     @Autowired
@@ -76,6 +78,7 @@ public class ProcessMaterialRelationController {
     @ResponseBody
     public Result addOrUpdate(@RequestBody ProcessDto processDto) throws Exception {
         List<ProcessMaterialRelation> processMaterialRelationList = processMaterialRelationService.addOrUpdate(processDto);
+        log.info("返回的工序与原材料关系集合有"+String.valueOf(processMaterialRelationList)+"条数据。");
         boolean saveBatch = processMaterialRelationService.saveBatch(processMaterialRelationList);
         if(saveBatch == true){
             return Result.success(null,"更新成功");

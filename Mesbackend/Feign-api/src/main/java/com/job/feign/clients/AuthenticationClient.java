@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @create 2023-07-19-16:39
  * @description
  */
-@FeignClient(value = "AUTHENTICATIONSERVICE")
+@FeignClient(value = "AUTHENTICATIONSERVICE",url = "http://localhost:6051")
 public interface AuthenticationClient {
 
     @GetMapping("/authen/showdetail/{UserId}")
