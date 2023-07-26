@@ -127,7 +127,7 @@ public class InventoryController {
     /**
      * 根据原材料名称查询总个数
      */
-    @PostMapping("/queryMaterialNumberByMaterialName")
+    @PostMapping("/queryMaterialNumberByMaterial")
        Integer queryMaterialNumberByMaterialName(@RequestParam String materialName) {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
         System.out.println(materialName);
