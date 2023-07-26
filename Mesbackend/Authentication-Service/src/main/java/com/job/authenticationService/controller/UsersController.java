@@ -268,12 +268,24 @@ public class UsersController {
 
     /**
      * 展示个人用户信息
-     * @param UserId
+     * @param
      * @return
      */
-    @RequestMapping("/showdetail/{UserId}")
-    public Result showdetail(@PathVariable("UserId") String UserId){
-        Users users=usersService.getById(UserId);
+    @RequestMapping("/showdetail")
+    public Result showdetail(HttpServletRequest request){
+        String token=request.getParameter("Authorization");
+        System.out.println("进入showdetail"+token);
+        //解析token
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        Users users=usersService.getById(userid);
+
         if (users!=null){
             return Result.success(users,"用户返回成功");
         }else {
@@ -324,22 +336,6 @@ public class UsersController {
         return Result.success(null,"修改成功");
 
     }
-    /*
-    User user = UserMapper.seleteOne("条件参数")
-
-User newUser = new User();
-
-newUser.setId(user.getId());
-
-newUser.setUserName("张三");
-
-UserMapper.updateById(newUser);
-
-User user = new User();
-user.setUserId(1);
-user.setAge(29);
- userMapper.updateById(user);
-     */
 
 
 }

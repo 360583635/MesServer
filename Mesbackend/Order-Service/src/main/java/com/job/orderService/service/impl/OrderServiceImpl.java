@@ -79,9 +79,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 map1.put("value",materialsMap.get(s).toString());
                 list.add(map1);
             }
-            flowVo.setMaterial(list);
-            System.out.println();
-            System.out.println(2);
             flowVosList.add(flowVo);
         }
         System.out.println(flowVosList);

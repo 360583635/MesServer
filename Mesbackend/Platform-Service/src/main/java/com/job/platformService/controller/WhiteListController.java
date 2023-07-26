@@ -22,18 +22,18 @@ public class WhiteListController {
     @Autowired
     private UsersService usersService;
     //白名单状态值
-   private static String WHITESTATE= "1";
+   private static Integer WHITESTATE= 1;
    //黑名单状态值
-   private static String BLACKSTATE="0";
+   private static Integer BLACKSTATE=0;
 
     /**
      * 展示黑白名单用户
      * @param option
      * @return
      */
-
     @RequestMapping("/show")
     public Result show(@RequestParam(value = "option") String option){
+
         List<Users> usersList=query(option);
         System.out.println(usersList);
         //前端读取list,去除list对象中的name(展示)
@@ -41,6 +41,7 @@ public class WhiteListController {
     }
 
     public List<Users> query(String state){
+        System.out.println(state);
         LambdaQueryWrapper<Users> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Users::getIsBlack,state);
         List<Users> list=usersService.list(wrapper);
@@ -54,12 +55,12 @@ public class WhiteListController {
      */
     @RequestMapping("/add/show")
     public Result addshow(@RequestParam(value = "option") String option){
-        if (option.equals(WHITESTATE)){
-           List<Users> BlackList=query(BLACKSTATE);
+        if (option.equals(WHITESTATE.toString())){
+           List<Users> BlackList=query(BLACKSTATE.toString());
             System.out.println(BlackList);
             return Result.success(BlackList,"展示黑名单用户");
         }else {
-            List<Users> WhiteList=query(WHITESTATE);
+            List<Users> WhiteList=query(WHITESTATE.toString());
             System.out.println(WhiteList);
             return Result.success(WhiteList,"展示白名单用户");
         }
@@ -75,6 +76,7 @@ public class WhiteListController {
     //传入id值
     public Result add (@RequestParam(value = "IDS") List<Integer>IDS, HttpServletRequest request)
     {
+        System.out.println(IDS);
         //获取token
         String token=request.getParameter("Authorization");
         String userid;
@@ -91,20 +93,19 @@ public class WhiteListController {
 
         UpdateWrapper<Users> updateWrapper = new UpdateWrapper<>();
         for (int ID : IDS) {
-            //System.out.println(ID);
             Users users=usersService.getById(ID);
             if (users.getIsBlack().equals(WHITESTATE)){
-                users.setIsBlack(Integer.valueOf(BLACKSTATE));
+                users.setIsBlack(BLACKSTATE);
                 users.setUpdateUser(user.getName());
                 users.setUpdateTime(date);
                 //usersService.save(users);
-                usersService.update(users,updateWrapper);
+                usersService.updateById(users);
             }else {
-                users.setIsBlack(Integer.valueOf(WHITESTATE));
-                usersService.update(users,updateWrapper);
+                users.setIsBlack(WHITESTATE);
                 users.setUpdateUser(user.getName());
                 users.setUpdateTime(date);
               //  usersService.save(users);
+                usersService.updateById(users);
             }
         }
         return Result.success(null,"添加成功");
@@ -116,7 +117,7 @@ public class WhiteListController {
      * @return
      */
     @RequestMapping("/del")
-    public Result del(@RequestParam(value ="idS") List<Integer> idS,HttpServletRequest request){
+    public Result del(@RequestParam(value ="IDS") List<String> idS,HttpServletRequest request){
         //获取token
         String token=request.getParameter("Authorization");
         String userid;
@@ -133,21 +134,20 @@ public class WhiteListController {
         Date date=new Date();
 
         UpdateWrapper<Users> updateWrapper = new UpdateWrapper<>();
-        for (int ID : idS) {
-            //System.out.println(ID);
+        for (String ID : idS) {
             Users users=usersService.getById(ID);
             if (users.getIsBlack().equals(WHITESTATE)){
-                users.setIsBlack(Integer.valueOf(BLACKSTATE));
+                users.setIsBlack(BLACKSTATE);
                 users.setUpdateUser(user.getName());
                 users.setUpdateTime(date);
                 //usersService.save(users);
-                usersService.update(users,updateWrapper);
+                usersService.updateById(users);
             }else {
-                users.setIsBlack(Integer.valueOf(WHITESTATE));
+                users.setIsBlack(WHITESTATE);
                 users.setUpdateUser(user.getName());
                 users.setUpdateTime(date);
-                usersService.update(users,updateWrapper);
                 //  usersService.save(users);
+                usersService.updateById(users);
             }
         }
         return Result.success(null,"删除成功");
