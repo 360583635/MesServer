@@ -22,7 +22,6 @@ public class LineController {
     @GetMapping("/lineInfo")
     public Result<Object> getLine(Line line){
         //查找全部
-        //line==null&&line.getId()==null
         if(!(line!=null&&line.getId()!=null)){
             return Result.success(lineService.getall(),"success");
         }
