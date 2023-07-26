@@ -115,19 +115,19 @@ public class LineController {
     public Result updateLine(@RequestBody Line pipeLine, HttpServletRequest request){
         UpdateWrapper updateWrapper=new UpdateWrapper();
 
-        String token=request.getHeader("token");
-        System.out.println(token);
-        try {
-            Claims claims = JwtUtil.parseJWT(token);
-            String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
-            String name = users.getName();
-            //System.out.println(userId);
-            pipeLine.setUpdateUsername(name);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("token非法");
-        }
+//        String token=request.getHeader("token");
+//        System.out.println(token);
+//        try {
+//            Claims claims = JwtUtil.parseJWT(token);
+//            String userId = claims.getSubject();
+//            Users users = (Users) authenticationClient.showdetail(userId).getData();
+//            String name = users.getName();
+//            //System.out.println(userId);
+//            pipeLine.setUpdateUsername(name);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("token非法");
+//        }
 
         pipeLine.setUpdateTime(DateUtil.date());
         lineService.updateById(pipeLine);
