@@ -223,6 +223,31 @@ public class  WarehouseController {
 return Result.success("null","出库成功");
 
 }
+@PostMapping("updateWarehouseAbArea")
+@ResponseBody
+public Result updateWarehouseAbArea(@RequestParam  String warehouseId,HttpServletRequest httpServletRequest){
+
+    LambdaQueryWrapper<Warehouse>queryWrapper =new LambdaQueryWrapper<>();
+    queryWrapper.eq(Warehouse::getWarehouseId,warehouseId);
+    warehouseService.getOne(queryWrapper).getWarehouseAvailable();
+    LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper =new LambdaQueryWrapper<>();
+    inventoryLambdaQueryWrapper.eq(Inventory::getWarehouseId,warehouseId);
+    List<Inventory>inventoryList =inventoryService.list(inventoryLambdaQueryWrapper);
+    int size = inventoryList.size();
+    for (int i=0;i<size;i++){
+        LambdaQueryWrapper<Warehouse> warehouseLambdaQueryWrapper =new LambdaQueryWrapper<>();
+        warehouseLambdaQueryWrapper.eq(Warehouse::getWarehouseId,inventoryList.get(i).getWarehouseId());
+        float abArea =warehouseService.getOne(warehouseLambdaQueryWrapper).getWarehouseAvailable();
+        LambdaQueryWrapper<Material>materialLambdaQueryWrapper =new LambdaQueryWrapper<>();
+        materialLambdaQueryWrapper.eq(Material::getMaterialName,inventoryList.get(i).getMaterialName());
+        float maArea =materialService.getOne(materialLambdaQueryWrapper).getMaterialArea();
+        LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper1=new LambdaQueryWrapper<>();
+        int number =inventoryService.getOne(inventoryLambdaQueryWrapper1).getNumber();
+        abArea=abArea-(maArea*(number/5));
+        LambdaUpdateWrapper<Warehouse>inventoryLambdaUpdateWrapper=new LambdaUpdateWrapper<>();
+        inventoryLambdaUpdateWrapper.eq(Warehouse::getWarehouseId,inventoryList.get(i).getWarehouseId()).set(Warehouse::getWarehouseAvailable,abArea);
+    }
+}
 
 }
 
