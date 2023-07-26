@@ -214,6 +214,7 @@ public class MenuController {
      */
     @RequestMapping("/update/show")
     public  Result updateshow(@RequestParam(value = "menusid") String menusid){
+        System.out.println(menusid);
         Menus menus=menusService.getById(menusid);
         if (menus!=null){
             return Result.success(menus,"展示成功");
