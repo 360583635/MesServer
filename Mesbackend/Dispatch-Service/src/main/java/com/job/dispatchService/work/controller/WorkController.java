@@ -112,11 +112,11 @@ public class WorkController {
             Map hashMap = new HashMap<>();
             Order order = orderMapper.selectById(work.getWOrderId());
             hashMap.put("workId", work.getWId());
-            hashMap.put("orderName", "小米");
+            hashMap.put("orderName", order.getProductName());
             hashMap.put("nums", work.getWProdNums());
             Process process = processMapper.selectById(work.getWProcessId());
             hashMap.put("processName", process.getProcess());
-            hashMap.put("flowName", "流水线1");
+            hashMap.put("flowName", process.getProcess());
             if(StateConfig.EXCEPTION_STATE.equals(work.getWState())){
                 hashMap.put("finish", "异常");
                 hashMap.put("errorTime", work.getWErrorTime());

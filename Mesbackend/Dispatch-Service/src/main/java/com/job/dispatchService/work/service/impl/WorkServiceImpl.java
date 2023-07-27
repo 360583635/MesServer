@@ -51,9 +51,9 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
     public String insertWork(String processId, String  orderId){
         Work work = WorkBean.getWork();
 
-        Order order = orderMapper.selectById("1");
+        Order order = orderMapper.selectById(orderId);
 
-        Process process = processMapper.selectById("11");
+        Process process = processMapper.selectById(processId);
 
         //雪花算法生产工单id、设置状态（创建工单）、工序id、订单id、生产数量、创建时间、设备id
         work.setWId(String.valueOf(snowflake.nextId()));
