@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.management.ObjectName;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,8 @@ public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements Li
     private ProcessMapper processMapper;
     @Autowired
     private EquipmentMapper equipmentMapper;
+    @Autowired
+    private WorkMapper workMapper;
     @Override
     public Map<Object, Object> getall() {
         Map<Object,Object> map = new HashMap<>();
@@ -37,17 +40,23 @@ public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements Li
         Line line = lineMapper.selectOne(q1);
 
         QueryWrapper<Line> q2 = new QueryWrapper<>();
-        q2.select("id","line_status");
+        q2.select("line","line_status");
         List<Line> list = lineMapper.selectList(q2);
 
-        Map<Object,Object> map1 =new HashMap<>();
+        String[] linenames = new String[list.size()];
+        String[] states = new String[list.size()];
+
+        int i = 0;
         for (Line line1 : list) {
-            map1.put(line1.getId(),line1.getLineStatus());
+            linenames[i] = line1.getLine();
+            states[i] = line1.getLineStatus();
+            i++;
         }
         map.put("执行成功总数",line.getTotalSuccessCount());
         map.put("执行异常总数",line.getTotalExceptionCount());
         map.put("执行订单总数",line.getTotalSuccessCount()+line.getTotalExceptionCount());
-        map.put("流水线状态",map1);
+        map.put("流水线名称",linenames);
+        map.put("流水线状态",states);
         return map;
     }
 
@@ -77,18 +86,15 @@ public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements Li
         q3.orderByAsc("sort_num");
         List<FlowProcessRelation> list = flowProcessRelationMapper.selectList(q3);
 
-        Map<Object,Object> map1 = new HashMap<>();
+        List<Work> works = new ArrayList<>();
         for (FlowProcessRelation flowProcessRelation : list) {
-            QueryWrapper<Process> q4 = new QueryWrapper<>();
-            q4.eq("id",flowProcessRelation.getProcessId());
-            Process process = processMapper.selectOne(q4);
-            QueryWrapper<Equipment> q5 = new QueryWrapper<>();
-            q5.eq("equipment_id",process.getEquipmentId());
-            Equipment equipment = equipmentMapper.selectOne(q5);
-            process.setEquipment(equipment);
-            map1.put(flowProcessRelation.getSortNum(),process);
+            QueryWrapper<Work> q4 = new QueryWrapper<>();
+            q4.select();
+            q4.eq("w_process_id",flowProcessRelation.getProcessId());
+            Work work = workMapper.selectOne(q4);
+            works.add(work);
         }
-        map.put("流水线流程",map1);
+        map.put("流水线流程",works);
 
         return map;
     }
