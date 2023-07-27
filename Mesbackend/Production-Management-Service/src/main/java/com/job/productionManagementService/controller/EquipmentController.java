@@ -100,6 +100,12 @@ public class EquipmentController {
         }
         return Result.error("保存失败");
     }
+
+    /**
+     * 修改设备信息
+     * @param equipment
+     * @return
+     */
     @PostMapping("/update")
     @ResponseBody
     public Result updateEquipment(@RequestBody Equipment equipment){
