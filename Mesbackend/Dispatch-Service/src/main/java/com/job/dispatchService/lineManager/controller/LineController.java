@@ -174,7 +174,7 @@ public class LineController {
     @PostMapping("/batchRmove")
     public Result batchRemoveById(@RequestParam List<String> idList ){
         List<Line> lines = lineService.listByIds(idList);
-        boolean hasStatusOne = lines.stream().anyMatch(line -> line.getLineStatus() != "0");
+        boolean hasStatusOne = lines.stream().anyMatch(line -> line.getLineStatus().equals("0"));
 
         if (hasStatusOne) {
             return Result.error("请先保证流水线状态为关闭");
