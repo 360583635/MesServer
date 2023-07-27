@@ -15,13 +15,13 @@ public class ProcessDto extends Process {
     /**
      * 工序与原材料关系集合
      */
-    private List<MaterialVo> MaterialVoList;
+    private List<MaterialVo> materialVoList;
 
     public List<MaterialVo> getMaterialVoList() {
-        return MaterialVoList;
+        return materialVoList;
     }
 
-    public void setMaterialVoList(List<MaterialVo> MaterialVoList) {
-        this.MaterialVoList = MaterialVoList;
+    public void setMaterialVoList(List<MaterialVo> materialVoList) {
+        this.materialVoList = materialVoList;
     }
 }

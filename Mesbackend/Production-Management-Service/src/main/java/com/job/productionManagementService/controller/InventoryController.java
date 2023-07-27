@@ -41,18 +41,12 @@ public class InventoryController {
      * @param materialName
      *
      */
-    @GetMapping("/queryMaterialNumberByName/{materialName}")
-    List<Integer> queryMaterialNumberByName(@PathVariable("materialName") String materialName){
+    @PostMapping("/queryMaterialNumberByMaterialName")
+    List<Inventory> MaterialNumberByMaterialName(@RequestParam String materialName) {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(Inventory::getMaterialName,materialName);
-        List<Inventory> materiallist =inventoryService.list(queryWrapper);
-        List<Integer> materialNumberlist = new ArrayList<>();
-        for (Inventory inventory : materiallist){
-           Integer materialNumber =inventory.getNumber();
-           materialNumberlist.add(materialNumber);
-        }
-        return materialNumberlist;
-
+        List<Inventory>inventoryList=inventoryService.list();
+        return inventoryList;
     }
 
     /**
@@ -131,9 +125,9 @@ public class InventoryController {
     }
 
     /**
-     * 查询总个数
+     * 根据原材料名称查询总个数
      */
-    @PostMapping("/queryMaterialNumberByMaterialName")
+    @PostMapping("/queryMaterialNumberByMaterial")
        Integer queryMaterialNumberByMaterialName(@RequestParam String materialName) {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
         System.out.println(materialName);
