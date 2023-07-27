@@ -207,21 +207,27 @@ public class ProcessController {
 
     /**
      * 根据工序名模糊查询
-     * @param processName
+     * @param searchName
      * @return
      */
     @PostMapping("/likeQuery")
-    public Result<ProcessPageReq> query(@RequestParam String processName,@RequestParam int size,@RequestParam int current){
+    public Result<ProcessPageReq> likeQuery(@RequestParam String searchName,@RequestParam int size,@RequestParam int current){
         ProcessPageReq req=new ProcessPageReq();
         req.setCurrent(current);
         req.setSize(size);
-        if(processName.isEmpty()){
-            processService.page(req);
-           return Result.success(req,"查询成功");
+        if(searchName.isEmpty()){
+            ProcessPageReq page = processService.page(req);
+            return Result.success(page,"查询成功");
        }
 
         LambdaQueryWrapper<Process> lambdaQueryWrapper=new LambdaQueryWrapper();
-        lambdaQueryWrapper.like(Process::getProcess,processName);
+        boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
+        LambdaQueryWrapper<Process> queryWrapper=new LambdaQueryWrapper<>();
+        if(matches){
+            queryWrapper.like(Process::getId,searchName);
+        }else {
+            queryWrapper.like(Process::getProcess, searchName);
+        };
         ProcessPageReq page = processService.page(req, lambdaQueryWrapper);
         return Result.success(page,"查询成功");
     }

@@ -59,6 +59,30 @@ public class LineController {
         return Result.success(result,"查询成功");
     }
 
+    @PostMapping("/likeSearch")
+    public Result likeSearch(@RequestParam String searchName,@RequestParam int size,@RequestParam int current){
+        LinePageReq req = new LinePageReq();
+        req.setCurrent(current);
+        req.setSize(size);
+        if(searchName.isEmpty()){
+            LinePageReq page = lineService.page(req);
+            return Result.success(page,"成功");
+        }
+        boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
+        LambdaQueryWrapper<Line> queryWrapper=new LambdaQueryWrapper<>();
+        if(matches){
+            queryWrapper
+                    .eq(Line::getIsDelete,IS_DELETE_NO)
+                    .eq(Line::getId,searchName);
+        }else {
+            queryWrapper
+                    .eq(Line::getIsDelete,IS_DELETE_NO)
+                    .like(Line::getLine, searchName);
+        }
+        LinePageReq page = lineService.page(req, queryWrapper);
+        return Result.success(page,"查询成功");
+    }
+
     /**
      * 添加流水线
      * @param pipeLine
@@ -112,21 +136,6 @@ public class LineController {
     @ResponseBody
     public Result updateLine(@RequestBody Line pipeLine, HttpServletRequest request){
         UpdateWrapper updateWrapper=new UpdateWrapper();
-
-//        String token=request.getHeader("token");
-//        System.out.println(token);
-//        try {
-//            Claims claims = JwtUtil.parseJWT(token);
-//            String userId = claims.getSubject();
-//            Users users = (Users) authenticationClient.showdetail(userId).getData();
-//            String name = users.getName();
-//            //System.out.println(userId);
-//            pipeLine.setUpdateUsername(name);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("token非法");
-//        }
-
         pipeLine.setUpdateTime(DateUtil.date());
         lineService.updateById(pipeLine);
         //ToDo 调用日志接口
@@ -198,7 +207,8 @@ public class LineController {
     @RequestMapping("/list")
     @ResponseBody
     public Result list(){
-        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Line::getIsDelete,1);
         List<Line> list = lineService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }

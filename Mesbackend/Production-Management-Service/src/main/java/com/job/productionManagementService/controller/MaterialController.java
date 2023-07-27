@@ -38,6 +38,7 @@ public class MaterialController {
         return materialService.list(queryWrapper);
     }
 
+
     @PostMapping("/queryMaterialByName")
     public Result queryMaterialByName(@RequestParam String materialName){
         LambdaQueryWrapper<Material> lambdaQueryWrapper = new LambdaQueryWrapper<>();

@@ -6,7 +6,6 @@ package com.job.zuulMaster.filter;
 //import com.job.zuulMaster.redis.RedisCache;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.Menus;
-import com.job.common.utils.GetUserId;
 import com.job.zuulMaster.utils.Query;
 import com.job.zuulMaster.mapper.MenusMapper;
 import com.job.zuulMaster.utils.JwtUtil;
