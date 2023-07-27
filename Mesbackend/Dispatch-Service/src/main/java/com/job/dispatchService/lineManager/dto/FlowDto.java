@@ -14,13 +14,13 @@ public class FlowDto extends Flow {
     /**
      * 流程与工序关系集合
      */
-    private List<ProcessVo> ProcessVoList;
+    private List<ProcessVo> processVoList;
 
     public List<ProcessVo> getProcessVoList() {
-        return ProcessVoList;
+        return processVoList;
     }
 
-    public void setProcessVoList(List<ProcessVo> ProcessVoList) {
-        this.ProcessVoList = ProcessVoList;
+    public void setProcessVoList(List<ProcessVo> processVoList) {
+        this.processVoList = processVoList;
     }
 }

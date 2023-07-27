@@ -52,7 +52,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 创建订单界面初始化
-     *
      * @return
      */
     @Override
@@ -78,6 +77,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 map1.put("text",s);
                 map1.put("value",materialsMap.get(s).toString());
                 list.add(map1);
+                flowVo.setMaterial(list);
             }
             flowVosList.add(flowVo);
         }
