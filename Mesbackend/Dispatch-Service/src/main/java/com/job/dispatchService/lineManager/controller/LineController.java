@@ -68,7 +68,7 @@ public class LineController {
     @ResponseBody
     public Result saveLine(@RequestBody Line pipeLine, HttpServletRequest request){
 
-        /*String token=request.getHeader("token");
+        String token=request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
@@ -81,7 +81,7 @@ public class LineController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
-        }*/
+        }
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
@@ -90,8 +90,6 @@ public class LineController {
         if(count>0){
             return Result.error("流水线实体名称不能重复，请重新添加");
         }
-        pipeLine.setUpdateUsername("扶云");
-        pipeLine.setCreateUsername("扶云");
         pipeLine.setCreateTime(DateUtil.date());
         pipeLine.setUpdateTime(DateUtil.date());
         pipeLine.setOrderCount(0);

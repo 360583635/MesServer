@@ -3,13 +3,17 @@ package com.job.dispatchService.lineManager.controller;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.job.common.pojo.Flow;
+import com.job.common.pojo.Users;
 import com.job.common.result.Result;
+import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.FlowDto;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.ProcessVo;
+import com.job.feign.clients.AuthenticationClient;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +48,9 @@ public class FlowProcessRelationController {
      */
     @Autowired
     public FlowProcessRelationService flowProcessRelationService;
+
+    @Autowired
+    private AuthenticationClient authenticationClient;
 
 
     /**
@@ -96,12 +103,24 @@ public class FlowProcessRelationController {
      */
     @PostMapping("/add-or-update")
     @ResponseBody
-    public Result addOrUpdate(@RequestBody FlowDto flowDto, HttpServletRequest httpServletRequest) throws Exception {
+    public Result addOrUpdate(@RequestBody FlowDto flowDto, HttpServletRequest request) throws Exception {
         //        String userId= UserUtil.getUserId(httpServletRequest);
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            flowDto.setUpdateUsername(name);
+            flowDto.setCreateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         flowDto.setCreateTime(DateUtil.date());
         flowDto.setUpdateTime(DateUtil.date());
-        flowDto.setUpdateUsername("userId");
-        flowDto.setCreateUsername("userId");
         return flowProcessRelationService.addOrUpdate(flowDto);
     }
 
