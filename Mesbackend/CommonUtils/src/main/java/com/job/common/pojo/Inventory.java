@@ -13,7 +13,7 @@ public class Inventory {
     /**
      * 仓库id
      */
-    private String warehouseId;
+    private int warehouseId;
     /**
      * 仓库类型
      */

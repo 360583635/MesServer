@@ -15,7 +15,11 @@ public class Warehouse {
      */
     private int warehouseId;
     /**
-     *仓库名称
+     *仓库地址
+     */
+    private String warehouseAddress;
+    /**
+     * 仓库名称
      */
     private String warehouseName;
     /**
