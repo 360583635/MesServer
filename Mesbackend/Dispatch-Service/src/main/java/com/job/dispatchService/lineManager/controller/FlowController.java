@@ -76,13 +76,25 @@ public class FlowController {
 
 
     @PostMapping("/save")
-    public Result flowSave(@RequestBody Flow flow, HttpServletRequest httpServletRequest){
+    public Result flowSave(@RequestBody Flow flow, HttpServletRequest request){
 
 //        String userId= UserUtil.getUserId(httpServletRequest);
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            flow.setUpdateUsername(name);
+            flow.setCreateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         flow.setCreateTime(DateUtil.date());
         flow.setUpdateTime(DateUtil.date());
-        flow.setUpdateUsername("userId");
-        flow.setCreateUsername("userId");
         boolean save = flowService.save(flow);
         if(save){
             return Result.success(null,"保存成功");
