@@ -67,7 +67,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping("/page")
-    public Result page(ProcessPageReq req){
+    public Result page(@RequestBody ProcessPageReq req){
         LambdaQueryWrapper<Process> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Process::getIsDelete,IS_DELETE);
         IPage result = processService.page(req,queryWrapper);

@@ -52,7 +52,7 @@ public class FlowController {
      */
     @PostMapping("/page")
     @ResponseBody
-    public Result page(FlowPageReq req){
+    public Result page(@RequestBody FlowPageReq req){
         LambdaQueryWrapper<Flow> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Flow::getIsDelete,IS_DELETE_NO);
         IPage result = flowService.page(req,queryWrapper);
