@@ -145,9 +145,13 @@ public class  WarehouseController {
 
                     Float WarehouseAbArea =warehouseService.getOne(queryWrapper2).getWarehouseAvailable();
                     WarehouseAbArea=(WarehouseAbArea-(materialArea*materialNumber));
+                    if (WarehouseAbArea<0){
+                        return Result.error("仓库已经吃饱啦吃不下了");
+                    }
                     LambdaUpdateWrapper<Warehouse> wrapper = new LambdaUpdateWrapper<>();
                     wrapper.eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId()).set(Warehouse::getWarehouseAvailable,WarehouseAbArea);
                     warehouseService.update(wrapper);
+
                     break;
                 }
                 else {materialNumber = (materialNumber - maxNumber);}
@@ -247,6 +251,7 @@ public Result updateWarehouseAbArea(@RequestParam  String warehouseId,HttpServle
         abArea=abArea-(maArea*(number/5));
         LambdaUpdateWrapper<Warehouse>inventoryLambdaUpdateWrapper=new LambdaUpdateWrapper<>();
         inventoryLambdaUpdateWrapper.eq(Warehouse::getWarehouseId,inventoryList.get(i).getWarehouseId()).set(Warehouse::getWarehouseAvailable,abArea);
+
     }
     return Result.success(null,"更新成功");
 }

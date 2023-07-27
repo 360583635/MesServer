@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.common.pojo.Order;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.Work;
-
 import com.job.common.redis.RedisCache;
 import com.job.dispatchService.work.config.StateConfig;
 import com.job.dispatchService.work.mapper.WOrderMapper;
@@ -14,8 +13,6 @@ import com.job.dispatchService.work.mapper.WProcessMapper;
 import com.job.dispatchService.work.mapper.WorkMapper;
 import com.job.dispatchService.work.service.WorkBean;
 import com.job.dispatchService.work.service.WorkService;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -51,9 +48,9 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
     public String insertWork(String processId, String  orderId){
         Work work = WorkBean.getWork();
 
-        Order order = orderMapper.selectById(orderId);
+        Order order = orderMapper.selectById("1");
 
-        Process process = processMapper.selectById(processId);
+        Process process = processMapper.selectById("11");
 
         //雪花算法生产工单id、设置状态（创建工单）、工序id、订单id、生产数量、创建时间、设备id
         work.setWId(String.valueOf(snowflake.nextId()));
@@ -215,8 +212,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         Set typles = new HashSet();
         for (Work work : works) {
             Timestamp timestamp = Timestamp.valueOf(work.getWCreateTime());
-            long time = timestamp.getTime();
-            String score = String.valueOf(time);
+            String score = String.valueOf(timestamp);
             ZSetOperations.TypedTuple<String> objectDefaultTypedTuple = new DefaultTypedTuple(work, Double.valueOf(score));
             typles.add(objectDefaultTypedTuple);
         }

@@ -13,11 +13,11 @@ public class Produce {
     /**
      * 产品id
      */
-    private String processId;
+    private String produceId;
     /**
      * 产品名称
      */
-    private String ProcessName ;
+    private String ProduceName ;
     /**
      * 所属仓库名称
      */
@@ -34,7 +34,9 @@ public class Produce {
      * 产品高度
      */
     private int produceHeight;
-
+    /**
+     * 逻辑删除
+     */
     private int is_delete;
 
 }
