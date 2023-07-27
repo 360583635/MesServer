@@ -17,8 +17,10 @@ import com.job.dispatchService.lineManager.request.LinePageReq;
 import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
+import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -64,12 +66,13 @@ public class LineController {
         LinePageReq req = new LinePageReq();
         req.setCurrent(current);
         req.setSize(size);
-        if(searchName.isEmpty()){
+        if(StringUtil.isNullOrEmpty(searchName)){
             LinePageReq page = lineService.page(req);
             return Result.success(page,"成功");
         }
         boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
         LambdaQueryWrapper<Line> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Line::getIsDelete,IS_DELETE_NO);
         if(matches){
             queryWrapper
                     .eq(Line::getIsDelete,IS_DELETE_NO)
@@ -80,7 +83,7 @@ public class LineController {
                     .like(Line::getLine, searchName);
         }
         LinePageReq page = lineService.page(req, queryWrapper);
-        return Result.success(page,"查询成功");
+        return Result.success(page,"搜索查询成功");
     }
 
     /**

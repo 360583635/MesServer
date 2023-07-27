@@ -15,6 +15,7 @@ import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
+import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.http.HttpRequest;
@@ -186,7 +187,7 @@ public class FlowController {
         FlowPageReq req=new FlowPageReq();
         req.setCurrent(current);
         req.setSize(size);
-        if(searchName.isEmpty()){
+        if(StringUtil.isNullOrEmpty(searchName)){
             FlowPageReq page = flowService.page(req);
             return Result.success(page,"成功");
         }
