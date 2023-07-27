@@ -23,7 +23,7 @@ public class OrderController {
 
 
     @GetMapping("/classification")    //分类占比
-    public Result<Object> getClassification(@RequestBody OrderData order){
+    public Result<Object> getClassification( OrderData order){
         Map<Object,Object> map = orderService.classification(order);
         return Result.success(map,"success");
     }
@@ -32,7 +32,8 @@ public class OrderController {
     //数量
     //金额
     @GetMapping ("/count")    //全部数量金额统计
-    public Result<Object> getCount(@RequestBody OrderData order){
+    public Result<Object> getCount(OrderData order){
+        System.out.println(order);
         Map<Object,Object> map = orderService.countData(order);
         return Result.success(map,"success");
     }
@@ -42,7 +43,7 @@ public class OrderController {
     //数量
     //金额
     @GetMapping("/countone")    //单个数量金额统计
-    public Result<Object> getCountOne(@RequestBody OrderData order){
+    public Result<Object> getCountOne( OrderData order){
         Map<Object,Object> map = orderService.countOneData(order);
         return Result.success(map,"success");
     }

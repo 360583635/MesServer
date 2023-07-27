@@ -21,6 +21,7 @@ import com.job.feign.clients.AuthenticationClient;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Equipment;
 import io.jsonwebtoken.Claims;
+import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping("/page")
-    public Result page(ProcessPageReq req){
+    public Result page(@RequestBody ProcessPageReq req){
         LambdaQueryWrapper<Process> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Process::getIsDelete,IS_DELETE);
         IPage result = processService.page(req,queryWrapper);
@@ -207,22 +208,26 @@ public class ProcessController {
 
     /**
      * 根据工序名模糊查询
-     * @param processName
+     * @param searchName
      * @return
      */
     @PostMapping("/likeQuery")
-    public Result<ProcessPageReq> query(@RequestParam String processName,@RequestParam int size,@RequestParam int current){
+    public Result<ProcessPageReq> likeQuery(@RequestParam String searchName,@RequestParam int size,@RequestParam int current){
         ProcessPageReq req=new ProcessPageReq();
         req.setCurrent(current);
         req.setSize(size);
-        if(processName.isEmpty()){
-            processService.page(req);
-           return Result.success(req,"查询成功");
+        if(StringUtil.isNullOrEmpty(searchName)){
+            ProcessPageReq page = processService.page(req);
+            return Result.success(page,"查询成功");
        }
-
-        LambdaQueryWrapper<Process> lambdaQueryWrapper=new LambdaQueryWrapper();
-        lambdaQueryWrapper.like(Process::getProcess,processName);
-        ProcessPageReq page = processService.page(req, lambdaQueryWrapper);
+        boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
+        LambdaQueryWrapper<Process> queryWrapper=new LambdaQueryWrapper<>();
+        if(matches){
+            queryWrapper.eq(Process::getId,searchName);
+        }else {
+            queryWrapper.like(Process::getProcess, searchName);
+        };
+        ProcessPageReq page = processService.page(req, queryWrapper);
         return Result.success(page,"查询成功");
     }
     /**

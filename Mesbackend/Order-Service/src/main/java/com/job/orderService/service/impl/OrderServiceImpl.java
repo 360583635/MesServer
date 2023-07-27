@@ -109,7 +109,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setProductionStatus(0);
             //查询产品单价
             LambdaQueryWrapper<Produce> wrapper = new LambdaQueryWrapper<>();
-            wrapper.eq(Produce::getProcessName, order.getProductName());
+            wrapper.eq(Produce::getProduceName, order.getProductName());
             Produce produce = produceMapper.selectOne(wrapper);
             int producePrice = produce.getProducePrice();
             order.setOrderPrice(order.getOrderNumber() * producePrice);

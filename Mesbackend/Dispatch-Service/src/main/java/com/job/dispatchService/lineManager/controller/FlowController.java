@@ -9,11 +9,13 @@ import com.job.common.pojo.*;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
+import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
+import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.http.HttpRequest;
@@ -52,7 +54,7 @@ public class FlowController {
      */
     @PostMapping("/page")
     @ResponseBody
-    public Result page(FlowPageReq req){
+    public Result page(@RequestBody FlowPageReq req){
         LambdaQueryWrapper<Flow> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Flow::getIsDelete,IS_DELETE_NO);
         IPage result = flowService.page(req,queryWrapper);
@@ -181,20 +183,28 @@ public class FlowController {
      * @return
      */
     @PostMapping("/likeSearch")
-    public Result likeSearch(@RequestParam String searchName ){
-        if(searchName.isEmpty()){
-            return Result.success(flowService.list(),"成功");
+    public Result likeSearch(@RequestParam String searchName,@RequestParam int size,@RequestParam int current ){
+        FlowPageReq req=new FlowPageReq();
+        req.setCurrent(current);
+        req.setSize(size);
+        if(StringUtil.isNullOrEmpty(searchName)){
+            FlowPageReq page = flowService.page(req);
+            return Result.success(page,"成功");
         }
         boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
         LambdaQueryWrapper<Flow> queryWrapper=new LambdaQueryWrapper<>();
         if(matches){
-            queryWrapper.like(Flow::getId,searchName);
+            queryWrapper
+                    .eq(Flow::getIsDelete, 1)
+                    .eq(Flow::getId,searchName);
         }else {
-            queryWrapper.like(Flow::getFlow, searchName);
+            queryWrapper
+                    .eq(Flow::getIsDelete, 1)
+                    .like(Flow::getFlow, searchName);
         }
 
-        List<Flow> list = flowService.list(queryWrapper);
-        return Result.success(list,"查询成功");
+        FlowPageReq page = flowService.page(req,queryWrapper);
+        return Result.success(page,"查询成功");
 
 
     }
