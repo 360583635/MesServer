@@ -1,22 +1,22 @@
 package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Produce;
 import com.job.common.result.Result;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.ProduceService;
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/produce")
+@Component
 public class ProduceController {
 
     @Resource
@@ -42,6 +42,21 @@ public class ProduceController {
        }
 
    }
+    /**
+     * 初始化产品入库
+     * @return
+     */
+    @PostMapping("/initializationProduce")
+    public Result initializationProduce(@RequestParam String produceName,int warehouseId){
+        Inventory inventory=new Inventory();
+        inventory.setProduceName(produceName);
+        inventory.setWarehouseId(warehouseId);
+        inventory.setWarehouseType(2);
+        inventory.setIsDelete(1);
+        inventory.setNumber(0);
+        inventoryService.save(inventory);
+        return null ;
+    }
     /**
      * 通过产品名称查询产品数据
      */

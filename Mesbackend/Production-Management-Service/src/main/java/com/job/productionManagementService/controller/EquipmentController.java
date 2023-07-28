@@ -3,9 +3,11 @@ package com.job.productionManagementService.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Equipment;
+import com.job.common.pojo.Inventory;
 import com.job.common.result.Result;
-import com.job.productionManagementService.service.EquipmentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.job.productionManagementService.service.*;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +23,39 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping("/productionManagement/equipment")
+@Component
 public class EquipmentController {
-    @Autowired
-    private EquipmentService equipmentService;
 
+    @Resource
+    private WarehouseService warehouseService;
+
+    @Resource
+    private InventoryService inventoryService;
+    @Resource
+    private MaterialService materialService;
+    @Resource
+    private EquipmentService equipmentService;
+    @Resource
+    private ProduceService produceService;
+
+
+    /**
+     * 初始化设备入库
+     * @param equipmentName
+     * @param warehouseId
+     * @return
+     */
+    @PostMapping("/initializationEquipment")
+    public Result initializationEquipment(@RequestParam String equipmentName,int warehouseId){
+        Inventory inventory=new Inventory();
+        inventory.setProduceName(equipmentName);
+        inventory.setWarehouseId(warehouseId);
+        inventory.setWarehouseType(1);
+        inventory.setIsDelete(1);
+        inventory.setNumber(0);
+        inventoryService.save(inventory);
+        return null ;
+    }
     /**
      * 查询所有设备功能类型
      * @return
@@ -58,14 +89,6 @@ public class EquipmentController {
         return equipmentList;
     }
 
-    /**
-     * 查询所有设备
-     */
-    @GetMapping("/queryEquipments")
-    List<Equipment> queryEquipments(){
-        List<Equipment> equipmentList = equipmentService.list();
-        return equipmentList;
-    }
 
     /**
      * 根据id逻辑删除

@@ -47,8 +47,6 @@ public class Equipment {
 
     //缺少该字段 修改人：梁晋豪
     private int OperatingSpeed;
-
-
     /**
      * 设备状态数
      */

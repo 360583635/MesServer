@@ -3,13 +3,9 @@ package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.job.common.pojo.Inventory;
-import com.job.common.pojo.Material;
-import com.job.common.pojo.Warehouse;
+import com.job.common.pojo.*;
 import com.job.common.result.Result;
-import com.job.productionManagementService.service.InventoryService;
-import com.job.productionManagementService.service.MaterialService;
-import com.job.productionManagementService.service.WarehouseService;
+import com.job.productionManagementService.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-                                                                                                                                                                                                                                                                                                                                                                                                                                    @RequestMapping("/warehouse")
+@RequestMapping("/warehouse")
 public class  WarehouseController {
 
     @Resource
@@ -31,6 +27,50 @@ public class  WarehouseController {
     private InventoryService inventoryService;
     @Resource
     private MaterialService materialService;
+    @Resource
+    private EquipmentService equipmentService;
+    @Resource
+    private ProduceService produceService;
+    /**
+     * 查询所有设备
+     */
+    @PostMapping("/queryEquipments")
+    List<Equipment> queryEquipments(@RequestParam int warehouseId){
+        LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Inventory::getWarehouseId,warehouseId);
+         List<Inventory>insventoryList=inventoryService.list(queryWrapper);
+          int size =insventoryList.size();
+          List list=new ArrayList<>();
+          for (int i= 0 ;i<size;i++) {
+              LambdaQueryWrapper<Equipment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+              lambdaQueryWrapper.eq(Equipment::getEquipmentName,insventoryList.get(i).getEquipmentName());
+             list.add(equipmentService.list(lambdaQueryWrapper));
+          }
+          return list;
+    }
+    @PostMapping("/queryProduce")
+    List<Produce>queryProduce(@RequestParam int warehouseId){
+        LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Inventory::getWarehouseId,warehouseId);
+        List<Inventory>insventoryList=inventoryService.list(queryWrapper);
+        int size =insventoryList.size();
+        List list=new ArrayList<>();
+
+        for (int i= 0 ;i<size;i++) {
+            LambdaQueryWrapper<Produce> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(Produce::getProduceName,insventoryList.get(i).getProduceName());
+            LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper =new LambdaQueryWrapper<>();
+            inventoryLambdaQueryWrapper.eq(Inventory::getProduceName,insventoryList.get(i).getProduceName());
+            list.add(inventoryService.list(inventoryLambdaQueryWrapper));
+
+            list.add(produceService.list(lambdaQueryWrapper));
+
+
+
+        }
+        return list;
+    }
+
     /**
      *
      * 增加仓库
@@ -75,6 +115,15 @@ public class  WarehouseController {
       return warehouses;
    }
 
+    /**
+     * 根据仓库名称查询仓库（模糊查询）
+     */
+    @PostMapping("/warehousesByWarehouseName")
+    List<Warehouse> warehousesByWarehouseName(@RequestParam String warehouseName,@RequestParam int warehouseType) {
+        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Warehouse::getWarehouseName,warehouseName).eq(Warehouse::getWarehouseType,warehouseType);
+        return  warehouseService.list(queryWrapper);
+    }
 
     /**
      * 原材料入库
@@ -174,7 +223,7 @@ public class  WarehouseController {
 /**
  * 原材料出库
  */
-@PostMapping("/MaterialStockOut")
+    @PostMapping("/MaterialStockOut")
 @ResponseBody
     public Result MaterialStockOut(HttpServletRequest httpServletRequest , @RequestParam String materialName, @RequestParam int materialNumber){
 
@@ -192,7 +241,7 @@ public class  WarehouseController {
     for (int i=0;i<size;i++){
 
         if (materialNumber<(inventoryService.list(queryWrapper).get(i).getNumber())){
-            lambdaQueryWrapper.eq(Inventory::getWarehouseId,inventoryService.list(queryWrapper).get(i).getWarehouseId());
+            lambdaQueryWrapper.eq(Inventory::getWarehouseId,inventoryService.list(queryWrapper).get(i).getWarehouseId()).eq(Inventory::getMaterialName,materialName);
             int number =inventoryService.getOne(lambdaQueryWrapper).getNumber();
             number=number-materialNumber;
             queryUpdateWrapper.eq(Inventory::getWarehouseId,inventoryService.list(queryWrapper).get(i).getWarehouseId()).set(Inventory::getNumber,number);
@@ -329,11 +378,10 @@ public Result updateWarehouseAbArea(@RequestParam int warehouseId,HttpServletReq
     /**
      * 修改仓库数据
      */
-    @PostMapping("/updataWarehouse")
-    @ResponseBody
-    public Result updataWarehouse(@RequestBody Warehouse tWarehouse) {
-        warehouseService.save(tWarehouse);
-        return Result.success(null,null);
+    @PostMapping("/updateWarehouse")
+    public Result updateWarehouse(@RequestBody Warehouse twarehouse) {
+        warehouseService.updateById(twarehouse);
+        return Result.success("null","恭喜你修改成功");
     }
 }
 
