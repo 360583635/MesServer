@@ -41,17 +41,22 @@ public class  WarehouseController {
     public Result saveWarehouse(@RequestBody Warehouse tWarehouse) {
 
         long warehouseNumber = warehouseService.count();
-        if (warehouseNumber < 15) {
-            boolean save = warehouseService.save(tWarehouse);
-            if (save) {
+        if (warehouseNumber < 30) {
+            LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(Warehouse::getWarehouseId, tWarehouse.getWarehouseId());
+            LambdaUpdateWrapper<Warehouse> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.eq(Warehouse::getWarehouseName, tWarehouse.getWarehouseName());
+            warehouseService.getOne(queryWrapper);
+            warehouseService.getOne(lambdaUpdateWrapper);
+            if (warehouseService.getOne(queryWrapper) == null && warehouseService.getOne(lambdaUpdateWrapper) == null) {
+                warehouseService.save(tWarehouse);
                 return Result.success(null, "保存成功");
+            } else {
+                return Result.error("保存失败");
             }
-            return Result.error("保存失败");
         }
-            return Result.error("仓库个数已满无法创建新仓库");
+        return null;
     }
-
-
   /**
   * 查询可用仓库
   */@PostMapping("/queryWarehouseByArea")
