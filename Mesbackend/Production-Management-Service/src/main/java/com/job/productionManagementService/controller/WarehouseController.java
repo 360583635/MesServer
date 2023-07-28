@@ -75,6 +75,7 @@ public class  WarehouseController {
       return warehouses;
    }
 
+
     /**
      * 原材料入库
      * @return
@@ -325,7 +326,15 @@ public Result updateWarehouseAbArea(@RequestParam int warehouseId,HttpServletReq
         lambdaQueryWrapper.eq(Warehouse::getWarehouseType,2);
         return warehouseService.list(lambdaQueryWrapper);
     }
-
+    /**
+     * 修改仓库数据
+     */
+    @PostMapping("/updataWarehouse")
+    @ResponseBody
+    public Result updataWarehouse(@RequestBody Warehouse tWarehouse) {
+        warehouseService.save(tWarehouse);
+        return Result.success(null,null);
+    }
 }
 
 
