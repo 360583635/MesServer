@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
                                                                                                                                                                                                                                                                                                                                                                                                                                     @RequestMapping("/warehouse")
 public class  WarehouseController {
 
@@ -284,6 +285,16 @@ public Result updateWarehouseAbArea(@RequestParam int warehouseId,HttpServletReq
     lambdaQueryWrapper.eq(Warehouse::getWarehouseType,0);
     return warehouseService.list(lambdaQueryWrapper);
 }
+    /**
+     * 查询原材料仓库详情
+     * @return
+     */
+    @PostMapping("/queryMaterialWarehouseByWarehouseId")
+    List<Warehouse>queryWarehouseByWarehouseId(@RequestParam int warehouseId){
+        LambdaQueryWrapper<Warehouse> lambdaQueryWrapper =new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Warehouse::getWarehouseId,warehouseId);
+        return warehouseService.list(lambdaQueryWrapper);
+    }
     /**
      *通过仓库id查询库存信息
      * @return
