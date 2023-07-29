@@ -1,6 +1,7 @@
 package com.job.common.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import   com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Equipment {
-
+    @TableId("equipment_id")
     private int equipmentId;
     /**
      * 设备id
@@ -47,8 +48,6 @@ public class Equipment {
 
     //缺少该字段 修改人：梁晋豪
     private int OperatingSpeed;
-
-
     /**
      * 设备状态数
      */

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("t_inventory")
-public class Inventory {
+public class  Inventory {
     /**
      * 仓库id
      */

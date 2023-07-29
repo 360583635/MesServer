@@ -3,13 +3,9 @@ package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.job.common.pojo.Inventory;
-import com.job.common.pojo.Material;
-import com.job.common.pojo.Warehouse;
+import com.job.common.pojo.*;
 import com.job.common.result.Result;
-import com.job.productionManagementService.service.InventoryService;
-import com.job.productionManagementService.service.MaterialService;
-import com.job.productionManagementService.service.WarehouseService;
+import com.job.productionManagementService.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-                                                                                                                                                                                                                                                                                                                                                                                                                                    @RequestMapping("/warehouse")
+@CrossOrigin
+@RequestMapping("/warehouse")
 public class  WarehouseController {
 
     @Resource
@@ -30,6 +27,50 @@ public class  WarehouseController {
     private InventoryService inventoryService;
     @Resource
     private MaterialService materialService;
+    @Resource
+    private EquipmentService equipmentService;
+    @Resource
+    private ProduceService produceService;
+    /**
+     * 查询所有设备
+     */
+    @PostMapping("/queryEquipments")
+    List<Equipment> queryEquipments(@RequestParam int warehouseId){
+        LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Inventory::getWarehouseId,warehouseId);
+         List<Inventory>insventoryList=inventoryService.list(queryWrapper);
+          int size =insventoryList.size();
+          List list=new ArrayList<>();
+          for (int i= 0 ;i<size;i++) {
+              LambdaQueryWrapper<Equipment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+              lambdaQueryWrapper.eq(Equipment::getEquipmentName,insventoryList.get(i).getEquipmentName());
+             list.add(equipmentService.list(lambdaQueryWrapper));
+          }
+          return list;
+    }
+    @PostMapping("/queryProduce")
+    List<Produce>queryProduce(@RequestParam int warehouseId){
+        LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Inventory::getWarehouseId,warehouseId);
+        List<Inventory>insventoryList=inventoryService.list(queryWrapper);
+        int size =insventoryList.size();
+        List list=new ArrayList<>();
+
+        for (int i= 0 ;i<size;i++) {
+            LambdaQueryWrapper<Produce> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(Produce::getProduceName,insventoryList.get(i).getProduceName());
+            LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper =new LambdaQueryWrapper<>();
+            inventoryLambdaQueryWrapper.eq(Inventory::getProduceName,insventoryList.get(i).getProduceName());
+            list.add(inventoryService.list(inventoryLambdaQueryWrapper));
+
+            list.add(produceService.list(lambdaQueryWrapper));
+
+
+
+        }
+        return list;
+    }
+
     /**
      *
      * 增加仓库
@@ -74,6 +115,15 @@ public class  WarehouseController {
       return warehouses;
    }
 
+    /**
+     * 根据仓库名称查询仓库（模糊查询）
+     */
+    @PostMapping("/warehousesByWarehouseName")
+    List<Warehouse> warehousesByWarehouseName(@RequestParam String warehouseName,@RequestParam int warehouseType) {
+        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Warehouse::getWarehouseName,warehouseName).eq(Warehouse::getWarehouseType,warehouseType);
+        return  warehouseService.list(queryWrapper);
+    }
 
     /**
      * 原材料入库
@@ -81,99 +131,105 @@ public class  WarehouseController {
      */
     @PostMapping("/MaterialStockIn")
     @ResponseBody
-    public Result MaterialStockIn(HttpServletRequest httpServletRequest ,@RequestParam int materialNumber,@RequestParam String materialName,@RequestParam String warehouseId ,@RequestParam int warehouseType) {
+    public Result MaterialStockIn(HttpServletRequest httpServletRequest ,@RequestParam int materialNumber,@RequestParam String materialName) {
+      LambdaQueryWrapper<Warehouse> queryWrapper=new LambdaQueryWrapper<>();
+      queryWrapper.gt(Warehouse::getWarehouseAvailable,0).eq(Warehouse::getWarehouseType,0);
+     List<Warehouse>warehouseList=warehouseService.list(queryWrapper);
+     //用List存入可用面积大于0以及仓库类型是原材料仓库的仓库列表
+        LambdaQueryWrapper<Material>materialLambdaQueryWrapper=new LambdaQueryWrapper<>();
+        materialLambdaQueryWrapper.eq(Material::getMaterialName,materialName);
+        float maArea=materialService.getOne(materialLambdaQueryWrapper).getMaterialArea();
+        //获取入库原材料的面积
+     for (int i =0 ;i<warehouseList.size();i++){
+         /**
+          *首先计算出第一个仓库可以存入的最大数量是多少
+          */
+         LambdaQueryWrapper<Warehouse>wrapper=new LambdaQueryWrapper<>();
+         wrapper.eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId());
 
-        int number = 0;
-        LambdaQueryWrapper<Warehouse> warehouseLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        warehouseLambdaQueryWrapper.eq(Warehouse::getWarehouseId, warehouseId);
-        //封装根据仓库id来查询仓库表
-        LambdaUpdateWrapper<Warehouse> warehouseLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        //根据仓库id查询仓库面积
-        LambdaQueryWrapper<Inventory> inventoryLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        inventoryLambdaQueryWrapper.eq(Inventory::getWarehouseId, warehouseId).eq(Inventory::getWarehouseType,warehouseType);
-        //封装根据仓库id和仓库类型来查询库存表
-        List<Inventory> materiallist = inventoryService.list(inventoryLambdaQueryWrapper);
-        //根据这个仓库来查询原材料的种类的集合
-        LambdaQueryWrapper<Material> materialLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        //遍历原材料种类来算出可用面积
-        for (int i = 0; i < materiallist.size(); i++) {
-            int materialNumbers = materiallist.get(i).getNumber();
-            materialLambdaQueryWrapper.eq(Material::getMaterialName, materiallist.get(i).getMaterialName());
-            //根据存在这个仓库的原材料名称去原材料表里查询数据原材料所占面积
-            float area = materialService.getOne(materialLambdaQueryWrapper).getMaterialArea();
-            //通过仓库id和仓库类型查询仓库可用面积
-            float wareAbArea = warehouseService.getOne(warehouseLambdaQueryWrapper).getWarehouseAvailable();
+         //取出List集合里的数据在仓库表里查询仓库表的可用面积
+         float warehouseAbArea = warehouseService.getOne(wrapper).getWarehouseAvailable();
 
-            wareAbArea = (wareAbArea-(((float) materialNumbers /5)*area));
-            //计算出仓库可用面积并更新
-            warehouseLambdaUpdateWrapper.eq(Warehouse::getWarehouseId, warehouseId).set(Warehouse::getWarehouseAvailable, wareAbArea);
-            warehouseService.update(warehouseLambdaUpdateWrapper);
-        }
+         int warehouseLayers =warehouseService.getOne(wrapper).getWarehouseLayers();
 
-        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
-          queryWrapper.select(Warehouse::getWarehouseAvailable,Warehouse::getWarehouseId)
-                  .gt(Warehouse::getWarehouseAvailable, 0);
-        //查询仓库可用面积大于0的面积数和仓库id
-          List<Warehouse> warehouseList= warehouseService.list(queryWrapper);
-        LambdaQueryWrapper<Material> queryMaterialArea = new LambdaQueryWrapper<>();
-        queryMaterialArea
-                .eq(Material::getMaterialName, materialName);
-        //查询原材料的所占面积
-        Float materialArea = materialService.getOne(queryMaterialArea).getMaterialArea();
-        //仓库id和名字所匹配
+         //定义最大数量
+         int maxNumber = (int) ((warehouseAbArea/maArea)*warehouseLayers);
+         //如果第一个仓库可存储的最大数量已经大于所存储数量则直接存
+         if(maxNumber>=materialNumber){
+             //用查询出来的可用面积来减去原材料所占的面积算出入库后原材料的可用面积然后存储
+             warehouseAbArea=warehouseAbArea-(maArea*((float) materialNumber /warehouseLayers));
+             //存储
+         LambdaUpdateWrapper<Warehouse>warehouseLambdaUpdateWrapper=new LambdaUpdateWrapper<>();
+         warehouseLambdaUpdateWrapper
+                 .eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId())
+                 .set(Warehouse::getWarehouseAvailable,warehouseAbArea);
+         //更改库存表的数据
+             LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
+             inventoryLambdaQueryWrapper
+                     .eq(Inventory::getMaterialName,materialName)
+                     .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
 
-        int len = warehouseList.size();
-        for (int i = 0;i < len;i++) {
-            if (materialNumber > 0) {
-                LambdaQueryWrapper<Warehouse> queryWarehouseArea = new LambdaQueryWrapper<>();
-                queryWarehouseArea
-                        .eq(Warehouse::getWarehouseId, warehouseList.get(i).getWarehouseId());
-                //根据仓库id查询可用面积大于0的仓库可用面积多少
-                LambdaQueryWrapper<Inventory> inventoryLambdaQueryWrapper1 =new LambdaQueryWrapper<>();
-                inventoryLambdaQueryWrapper1.eq(Inventory::getMaterialName,materialName).eq(Inventory::getWarehouseId,warehouseId);
+            //如果仓库里已经存过这个原材料则查出他的数据然后加上存入的数据
+             if (inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber()!=null) {
+                 int materialNumbers = inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber();
+                 materialNumbers = materialNumber + materialNumbers;
+                 LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                 inventoryLambdaUpdateWrapper
+                         .eq(Inventory::getMaterialName, materialName)
+                         .set(Inventory::getNumber, materialNumbers);
+             }
+             else {
+                 Inventory inventory= new Inventory();
+                 inventory.setNumber(materialNumber);
+                 inventory.setWarehouseType(0);
+                 inventory.setIsDelete(1);
+                 inventory.setWarehouseId(warehouseList.get(i).getWarehouseId());
+                 inventory.setMaterialName(materialName);
 
-                Inventory inventory = inventoryService.getOne(inventoryLambdaQueryWrapper1);
-                int materialNumbers = inventory.getNumber();
-                Float warehouseArea = warehouseService.getOne(queryWarehouseArea).getWarehouseAvailable();//获取更新后的可用面积
-                //获取仓库层数
-                int layers = warehouseService.getOne(queryWarehouseArea).getWarehouseLayers();
+             }
+             return Result.success("null","入库成功");
+         }
+         //如果第一个仓库不能存入更多原材料了
+         else {
+             //就存入这个仓库最大可存储个数
+             warehouseAbArea=0;
+             LambdaUpdateWrapper<Warehouse>warehouseLambdaUpdateWrapper=new LambdaUpdateWrapper<>();
+             warehouseLambdaUpdateWrapper
+                     .eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId())
+                     .set(Warehouse::getWarehouseAvailable,warehouseAbArea);
+             //数量也加进去
+             LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
+             inventoryLambdaQueryWrapper
+                     .eq(Inventory::getMaterialName,materialName)
+                     .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
+             //如果仓库里面原本有这个原材料
+             if (inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber()!=null) {
+                 int materialNumbers = inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber();
+                 materialNumbers = maxNumber + materialNumbers;
+                 LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+                 inventoryLambdaUpdateWrapper
+                         .eq(Inventory::getMaterialName, materialName)
+                         .set(Inventory::getNumber, materialNumbers);
+             }
+             //如果仓库原本里面没有这个原材料就在库存表里初始化这个原材料数据
+             else {
+                 Inventory inventory= new Inventory();
+                 inventory.setNumber(maxNumber);
+                 inventory.setWarehouseType(0);
+                 inventory.setIsDelete(1);
+                 inventory.setWarehouseId(warehouseList.get(i).getWarehouseId());
+                 inventory.setMaterialName(materialName);
+             }
+             materialNumber=(materialNumber-maxNumber);
+         }
 
-                int maxNumber = (int) ((warehouseArea/materialArea) * layers);//获取最大可存储的个数
-
-                if (maxNumber>=materialNumber) {
-                    materialNumbers=(materialNumbers+materialNumber);
-                    LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-                    inventoryLambdaUpdateWrapper
-                            .eq(Inventory::getMaterialName, materialName).eq(Inventory::getWarehouseId,warehouseId).set(Inventory::getNumber,materialNumbers);
-                    inventoryService.update(inventoryLambdaUpdateWrapper);
-                     LambdaQueryWrapper<Warehouse> queryWrapper2 =new LambdaQueryWrapper<>();
-                     queryWrapper2.eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId());
-
-                    Float WarehouseAbArea =warehouseService.getOne(queryWrapper2).getWarehouseAvailable();
-                    WarehouseAbArea=(WarehouseAbArea-(materialArea*materialNumber));
-                    if (WarehouseAbArea<0){
-                        return Result.error("仓库已经吃饱啦吃不下了");
-                    }
-                    LambdaUpdateWrapper<Warehouse> wrapper = new LambdaUpdateWrapper<>();
-                    wrapper.eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId()).set(Warehouse::getWarehouseAvailable,WarehouseAbArea);
-                    warehouseService.update(wrapper);
-
-                    break;
-                }
-                else {materialNumber = (materialNumber - maxNumber);}
-
-            }
-            else {
-             break;
-            }
-        }
-        return Result.success("null", "入库成功");
+     }
+     return Result.success("null","入库成功");
     }
-
 /**
  * 原材料出库
  */
-@PostMapping("/MaterialStockOut")
+    @PostMapping("/MaterialStockOut")
 @ResponseBody
     public Result MaterialStockOut(HttpServletRequest httpServletRequest , @RequestParam String materialName, @RequestParam int materialNumber){
 
@@ -191,7 +247,7 @@ public class  WarehouseController {
     for (int i=0;i<size;i++){
 
         if (materialNumber<(inventoryService.list(queryWrapper).get(i).getNumber())){
-            lambdaQueryWrapper.eq(Inventory::getWarehouseId,inventoryService.list(queryWrapper).get(i).getWarehouseId());
+            lambdaQueryWrapper.eq(Inventory::getWarehouseId,inventoryService.list(queryWrapper).get(i).getWarehouseId()).eq(Inventory::getMaterialName,materialName);
             int number =inventoryService.getOne(lambdaQueryWrapper).getNumber();
             number=number-materialNumber;
             queryUpdateWrapper.eq(Inventory::getWarehouseId,inventoryService.list(queryWrapper).get(i).getWarehouseId()).set(Inventory::getNumber,number);
@@ -286,6 +342,16 @@ public Result updateWarehouseAbArea(@RequestParam int warehouseId,HttpServletReq
     return warehouseService.list(lambdaQueryWrapper);
 }
     /**
+     * 查询原材料仓库详情
+     * @return
+     */
+    @PostMapping("/queryMaterialWarehouseByWarehouseId")
+    List<Warehouse>queryWarehouseByWarehouseId(@RequestParam int warehouseId){
+        LambdaQueryWrapper<Warehouse> lambdaQueryWrapper =new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Warehouse::getWarehouseId,warehouseId);
+        return warehouseService.list(lambdaQueryWrapper);
+    }
+    /**
      *通过仓库id查询库存信息
      * @return
      */
@@ -318,11 +384,10 @@ public Result updateWarehouseAbArea(@RequestParam int warehouseId,HttpServletReq
     /**
      * 修改仓库数据
      */
-    @PostMapping("/updataWarehouse")
-    @ResponseBody
-    public Result updataWarehouse(@RequestBody Warehouse tWarehouse) {
-        warehouseService.save(tWarehouse);
-        return Result.success(null,null);
+    @PostMapping("/updateWarehouse")
+    public Result updateWarehouse(@RequestBody Warehouse twarehouse) {
+        warehouseService.updateById(twarehouse);
+        return Result.success("null","恭喜你修改成功");
     }
 }
 

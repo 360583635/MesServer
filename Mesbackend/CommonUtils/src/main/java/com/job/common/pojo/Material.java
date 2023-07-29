@@ -26,13 +26,7 @@ public class Material {
      * 供应商id
      */
     private String supplierId;
-    /**
-     *所存储的仓库id
-     */
-    private int warehouseId ;
-    /**
-     * 原材料单位
-     */
+
     private String materialUnit;
     /**
      * 所占面积
