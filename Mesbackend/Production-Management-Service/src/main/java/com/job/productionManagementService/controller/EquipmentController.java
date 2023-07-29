@@ -63,7 +63,6 @@ public class EquipmentController {
     @GetMapping("/queryEquipmentTypes")
     @ResponseBody
     List<String> queryEquipmentTypes(){
-        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         List<Equipment> list = equipmentService.list();
         List<String> functionNames = new ArrayList<>();
         Set<String> uniqueFunctionNames = new HashSet<>();
@@ -76,6 +75,12 @@ public class EquipmentController {
         }
         return functionNames;
     }
+    @PostMapping("/queryEquipmentByFunction")
+    List<Equipment>queryEquipmentByFunction(@RequestParam String functionName){
+        LambdaQueryWrapper<Equipment>lambdaQueryWrapper=new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Equipment::getFunctionName,functionName);
+        return equipmentService.list(lambdaQueryWrapper);
+    }
 
     /**
      * 根据设备功能类型查询设备
@@ -84,11 +89,10 @@ public class EquipmentController {
     @ResponseBody
     List<Equipment> queryEquipmentsByType(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Equipment::getFunctionName,functionName);
+        queryWrapper.like(Equipment::getFunctionName,functionName);
         List<Equipment> equipmentList = equipmentService.list(queryWrapper);
         return equipmentList;
     }
-
 
     /**
      * 根据id逻辑删除
@@ -99,7 +103,7 @@ public class EquipmentController {
     @ResponseBody
     public Result removeById(@RequestParam long equipmentId){
         LambdaUpdateWrapper<Equipment> lambdaUpdateWrapper=new LambdaUpdateWrapper<>();
-        lambdaUpdateWrapper.set(Equipment::getIsDelete,0);
+        lambdaUpdateWrapper.eq(Equipment::getEquipmentId,equipmentId).set(Equipment::getIsDelete,0);
         boolean update = equipmentService.update(lambdaUpdateWrapper);
         if(update){
             return Result.success(null,"成功删除");
@@ -109,7 +113,7 @@ public class EquipmentController {
     }
 
     /**
-     *
+     *添加设备信息
      * @param equipment
      * @return
      */
@@ -126,14 +130,14 @@ public class EquipmentController {
 
     /**
      * 修改设备信息
-     * @param equipment
+     * @param tequipment
      * @return
      */
     @PostMapping("/update")
     @ResponseBody
-    public Result updateEquipment(@RequestBody Equipment equipment){
+    public Result updateEquipment(@RequestBody Equipment tequipment){
 
-        boolean b = equipmentService.updateById(equipment);
+        boolean b = equipmentService.updateById(tequipment);
         if(b){
             return Result.success(null,"保存成功");
         }

@@ -51,7 +51,23 @@ public class MaterialController {
         return materialService.list(queryWrapper);
     }
 
+    /**
+     * 通过名称查询原材料信息
+     * @param
+     * @return
+     */
+    @PostMapping ("/queryMaterialsByName")
+    List<Material> queryMaterialsByName(@RequestParam String materialName){
+        LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Material::getMaterialId,materialName);
+        return materialService.list(queryWrapper);
+    }
 
+    /**
+     * 逻辑删除
+     * @param materialName
+     * @return
+     */
     @PostMapping("/queryMaterialByName")
     public Result queryMaterialByName(@RequestParam String materialName){
         LambdaQueryWrapper<Material> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -86,13 +102,12 @@ public class MaterialController {
 
     /**
      * 保存材料
-     * @param material
      * @return
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result saveMaterial(@RequestBody Material material){
-        boolean save = materialService.save(material);
+    public Result saveMaterial(@RequestBody Material tmaterial){
+        boolean save = materialService.save(tmaterial);
         if(save){
             return Result.success(null,"保存成功");
         }
@@ -100,7 +115,7 @@ public class MaterialController {
     }
 
     /**
-     * 初始化原材料入库
+     * 初始化原材料
      * @return
      */
     @PostMapping("/initializationMaterial")

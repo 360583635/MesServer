@@ -24,13 +24,9 @@ public class Produce {
      * 所占面积
      */
     private int produceArea;
-    /**
-     * 产品高度
-     */
-    private int is_delete;
 
-/**
- *
- */
+    private int isDelete;
+
+
 }
 
