@@ -44,4 +44,8 @@ public class Order{
     //统计订单总金额
     @TableField(exist = false)
     private Integer orderTotal;
+    @TableField(exist = false)
+    private Date startTime;
+    @TableField(exist = false)
+    private Date endTime;
 }

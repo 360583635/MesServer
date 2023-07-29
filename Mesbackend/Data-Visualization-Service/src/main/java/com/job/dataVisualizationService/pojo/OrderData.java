@@ -1,5 +1,6 @@
 package com.job.dataVisualizationService.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.job.common.pojo.Order;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,8 +26,9 @@ public class OrderData extends Order {
     private Integer separate;
     //几个柱形图
     private Integer dataNumber;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     private String[] productType;
