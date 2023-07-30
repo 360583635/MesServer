@@ -77,6 +77,12 @@ public class FlowController {
     }
 
 
+    /**
+     * 添加流程
+     * @param flow
+     * @param request
+     * @return
+     */
     @PostMapping("/save")
     public Result flowSave(@RequestBody Flow flow, HttpServletRequest request){
 
@@ -230,6 +236,34 @@ public class FlowController {
             return Result.error("流水线所属流程类型查询失败");
         }
         return Result.success(functionNames,"查询成功");
+    }
+
+
+    @PostMapping("/flowProcessByFlowId")
+    public Result flowProcessByFlowId(@RequestParam String flowId){
+        LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(FlowProcessRelation::getFlowId,flowId);
+
+
+        List<FlowProcessRelation> list = relationService.list(queryWrapper);
+        return Result.success(list,"查询成功");
+    }
+
+    /**
+     * 修改流程通过id
+     * @param flow
+     * @return
+     */
+    @PostMapping("/updateFlowById")
+    public Result updateFlowById(@RequestBody Flow flow){
+
+        boolean b = flowService.updateById(flow);
+        if (b){
+            return Result.success(null,"修改成功");
+        }else {
+            return Result.error("修改失败");
+        }
+
     }
 
 

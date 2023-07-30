@@ -178,6 +178,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         int[] total = new int[Math.toIntExact(typeCount)];
         String[] id = new String[Math.toIntExact(typeCount)];
 
+        System.out.println(order);
+
         //sql语句
         QueryWrapper<Order> q = new QueryWrapper<>();
         q.select("product_name","SUM(order_price*order_number) AS orderTotal");

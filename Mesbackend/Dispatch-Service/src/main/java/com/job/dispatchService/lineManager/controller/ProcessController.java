@@ -238,6 +238,7 @@ public class ProcessController {
         LambdaQueryWrapper<Process> queryWrapper = new LambdaQueryWrapper();
         queryWrapper
                 .eq(Process::getIsDelete,IS_DELETE);
+//                .eq(Process::getEquipmentId,0);
         List<Process> list = processService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }

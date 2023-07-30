@@ -1,5 +1,6 @@
 package com.job.dispatchService.lineManager.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
@@ -66,7 +67,10 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
         String flowId = flow.getId();
         String flowName = flow.getFlow();
         if(StringUtils.isNotEmpty(flowId)){
-            flowProcessRelationMapper.deleteProcessRelationByFlowId(flowId);
+            LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper<>();
+            queryWrapper.eq(FlowProcessRelation::getFlowId,flowId);
+            flowProcessRelationMapper.delete(queryWrapper);
+//            flowProcessRelationMapper.deleteProcessRelationByFlowId(flowId);
         }else{
             //如果流程头表为空先创建一下
             flowService.saveOrUpdate(flow);
