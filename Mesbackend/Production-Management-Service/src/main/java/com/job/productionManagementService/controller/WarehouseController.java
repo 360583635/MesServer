@@ -55,18 +55,11 @@ public class  WarehouseController {
         List<Inventory>insventoryList=inventoryService.list(queryWrapper);
         int size =insventoryList.size();
         List list=new ArrayList<>();
-
         for (int i= 0 ;i<size;i++) {
             LambdaQueryWrapper<Produce> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             lambdaQueryWrapper.eq(Produce::getProduceName,insventoryList.get(i).getProduceName());
-            LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper =new LambdaQueryWrapper<>();
-            inventoryLambdaQueryWrapper.eq(Inventory::getProduceName,insventoryList.get(i).getProduceName());
-            list.add(inventoryService.list(inventoryLambdaQueryWrapper));
-
+            System.out.println(produceService.list(lambdaQueryWrapper));
             list.add(produceService.list(lambdaQueryWrapper));
-
-
-
         }
         return list;
     }
@@ -80,6 +73,7 @@ public class  WarehouseController {
     @PostMapping("/saveWarehouse")
     @ResponseBody
     public Result saveWarehouse(@RequestBody Warehouse tWarehouse) {
+        System.out.println(tWarehouse);
 
         long warehouseNumber = warehouseService.count();
         if (warehouseNumber < 30) {
@@ -103,18 +97,26 @@ public class  WarehouseController {
   */@PostMapping("/queryWarehouseByArea")
    List<Warehouse> queryWarehouseByArea(){
        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
-       queryWrapper.select(Warehouse::getWarehouseId).gt(Warehouse::getWarehouseAvailable,0);
+       queryWrapper.select(Warehouse::getWarehouseId).gt(Warehouse::getWarehouseAvailable,0).eq(Warehouse::getWarehouseType,0);
       List<Warehouse> list = warehouseService.list(queryWrapper);
       List warehouses = new ArrayList<>();
       for (Warehouse warehouse : list) {
           Map<Object, Object> map = new HashMap<>();
-          map.put("value", warehouse.toString());
+          map.put("value", warehouse.getWarehouseId());
           map.put("text", warehouse.getWarehouseId());
           warehouses.add(map);
       }
       return warehouses;
    }
-
+    /**
+     *仓库id默认值
+     */
+    @PostMapping("warehouseId")
+    Integer warehouseId(){
+        List<Warehouse>warehouseList=warehouseService.list();
+        int size=warehouseList.size();
+        return size+1;
+    }
     /**
      * 根据仓库名称查询仓库（模糊查询）
      */

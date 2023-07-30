@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.job.common.pojo.Equipment;
 import com.job.common.pojo.Inventory;
+import com.job.common.pojo.Warehouse;
 import com.job.common.result.Result;
 import com.job.productionManagementService.service.*;
 import jakarta.annotation.Resource;
@@ -11,10 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 猫
@@ -127,7 +125,21 @@ public class EquipmentController {
         }
         return Result.error("保存失败");
     }
-
+   @PostMapping("/queryWarehouseByType")
+   @ResponseBody
+    List<Warehouse> queryWarehouseByType(){
+        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Warehouse::getWarehouseId).gt(Warehouse::getWarehouseAvailable,0).eq(Warehouse::getWarehouseType,1);
+        List<Warehouse> list = warehouseService.list(queryWrapper);
+        List warehouses = new ArrayList<>();
+        for (Warehouse warehouse : list) {
+            Map<Object, Object> map = new HashMap<>();
+            map.put("value", warehouse.getWarehouseId());
+            map.put("text", warehouse.getWarehouseId());
+            warehouses.add(map);
+        }
+        return warehouses;
+    }
     /**
      * 修改设备信息
      * @param tequipment

@@ -53,4 +53,8 @@ public class Equipment {
      */
     @TableField(exist = false)
     private Integer count;
+    /**
+     * 设备所占面积
+     */
+    private float equipmentArea;
 }

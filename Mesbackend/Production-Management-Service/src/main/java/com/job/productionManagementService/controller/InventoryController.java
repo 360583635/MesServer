@@ -88,38 +88,36 @@ public class InventoryController {
 
     /**
      * 根据库存类型查询原材料库存信息
-     * @param warehouseType
      * @return
      */
-    @GetMapping("/queryMaterialNameByWarehouseType/{warehouseType}")
-    List<Inventory>queryMaterialNameByWarehouseType(@PathVariable("warehouseType") String warehouseType) {
+    @PostMapping ("/queryMaterialNameByWarehouseType")
+    List<Inventory>queryMaterialNameByWarehouseType() {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Inventory::getWarehouseType, warehouseType);
+        queryWrapper.eq(Inventory::getWarehouseType,0);
         List<Inventory> materiallist = inventoryService.list(queryWrapper);
         return materiallist;
     }
     /**
      * 根据库存类型查询设备库存信息
-     * @param warehouseType
      * @return
      */
-    @GetMapping("/queryEquipmentNameByWarehouseType/{warehouseType}")
-    List<Inventory>queryEquipmentByWarehouseType(@PathVariable("warehouseType") String warehouseType) {
+    @PostMapping ("/queryEquipmentNameByWarehouseType")
+    List<Inventory>queryEquipmentByWarehouseType() {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Inventory::getWarehouseType, warehouseType);
+        queryWrapper.eq(Inventory::getWarehouseType,1);
         List<Inventory> equipmentlist = inventoryService.list(queryWrapper);
         return equipmentlist;
     }
 
     /**
      * 根据库存类型查询成品库存信息
-     * @param warehouseType
+
      * @return
      */
-    @GetMapping("/queryProductNameByWarehouseType/{warehouseType}")
-    List<Inventory>queryProductNameByWarehouseType(@PathVariable("warehouseType") String warehouseType) {
+    @PostMapping ("/queryProductNameByWarehouseType/{warehouseType}")
+    List<Inventory>queryProductNameByWarehouseType() {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Inventory::getWarehouseType, warehouseType);
+        queryWrapper.eq(Inventory::getWarehouseType,2);
         List<Inventory> productlist = inventoryService.list(queryWrapper);
         return productlist;
     }

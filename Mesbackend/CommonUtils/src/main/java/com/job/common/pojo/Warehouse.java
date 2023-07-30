@@ -27,7 +27,7 @@ public class Warehouse {
     /**
      * 仓库类型
      */
-    private String warehouseType;
+    private int warehouseType;
     /**
      * 仓库负责人
      */
