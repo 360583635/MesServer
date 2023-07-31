@@ -332,6 +332,9 @@ public class ProcessController {
         String equipmentId = process.getEquipmentId();
 
         Equipment equipment = productionManagementClient.queryEquipmentById(equipmentId);
+        if(equipment==null){
+            return Result.error("设备未查询成功");
+        }
         processUpdateDto.setFunction(equipment.getFunctionName());
         processUpdateDto.setEquipmentName(equipment.getEquipmentName());
 
