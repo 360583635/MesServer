@@ -58,4 +58,8 @@ public interface ProductionManagementClient {
     @RequestMapping("/productionManagement/produce/queryProduceIdByProduceName")
     Integer queryProduceIdByProduceName(@RequestParam String produceName);
 
+    @PostMapping("/productionManagement/equipment/queryEquipmentById")
+    @ResponseBody
+    public Equipment queryEquipmentById(@RequestParam String id);
+
 }
