@@ -1,5 +1,6 @@
 package com.job.common.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,15 +14,20 @@ public class Warehouse {
     /**
      * 仓库id
      */
+    @TableId("warehouse_id")
     private int warehouseId;
     /**
-     *仓库名称
+     *仓库地址
+     */
+    private String warehouseAddress;
+    /**
+     * 仓库名称
      */
     private String warehouseName;
     /**
      * 仓库类型
      */
-    private String warehouseType;
+    private int warehouseType;
     /**
      * 仓库负责人
      */

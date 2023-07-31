@@ -17,8 +17,10 @@ import com.job.dispatchService.lineManager.request.LinePageReq;
 import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
+import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -59,6 +61,31 @@ public class LineController {
         return Result.success(result,"查询成功");
     }
 
+    @PostMapping("/likeSearch")
+    public Result likeSearch(@RequestParam String searchName,@RequestParam int size,@RequestParam int current){
+        LinePageReq req = new LinePageReq();
+        req.setCurrent(current);
+        req.setSize(size);
+        if(StringUtil.isNullOrEmpty(searchName)){
+            LinePageReq page = lineService.page(req);
+            return Result.success(page,"成功");
+        }
+        boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
+        LambdaQueryWrapper<Line> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Line::getIsDelete,IS_DELETE_NO);
+        if(matches){
+            queryWrapper
+                    .eq(Line::getIsDelete,IS_DELETE_NO)
+                    .eq(Line::getId,searchName);
+        }else {
+            queryWrapper
+                    .eq(Line::getIsDelete,IS_DELETE_NO)
+                    .like(Line::getLine, searchName);
+        }
+        LinePageReq page = lineService.page(req, queryWrapper);
+        return Result.success(page,"搜索查询成功");
+    }
+
     /**
      * 添加流水线
      * @param pipeLine
@@ -68,7 +95,7 @@ public class LineController {
     @ResponseBody
     public Result saveLine(@RequestBody Line pipeLine, HttpServletRequest request){
 
-        /*String token=request.getHeader("token");
+        String token=request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
@@ -81,7 +108,7 @@ public class LineController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
-        }*/
+        }
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
@@ -90,8 +117,6 @@ public class LineController {
         if(count>0){
             return Result.error("流水线实体名称不能重复，请重新添加");
         }
-        pipeLine.setUpdateUsername("扶云");
-        pipeLine.setCreateUsername("扶云");
         pipeLine.setCreateTime(DateUtil.date());
         pipeLine.setUpdateTime(DateUtil.date());
         pipeLine.setOrderCount(0);
@@ -114,21 +139,6 @@ public class LineController {
     @ResponseBody
     public Result updateLine(@RequestBody Line pipeLine, HttpServletRequest request){
         UpdateWrapper updateWrapper=new UpdateWrapper();
-
-//        String token=request.getHeader("token");
-//        System.out.println(token);
-//        try {
-//            Claims claims = JwtUtil.parseJWT(token);
-//            String userId = claims.getSubject();
-//            Users users = (Users) authenticationClient.showdetail(userId).getData();
-//            String name = users.getName();
-//            //System.out.println(userId);
-//            pipeLine.setUpdateUsername(name);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("token非法");
-//        }
-
         pipeLine.setUpdateTime(DateUtil.date());
         lineService.updateById(pipeLine);
         //ToDo 调用日志接口
@@ -167,7 +177,7 @@ public class LineController {
     @PostMapping("/batchRmove")
     public Result batchRemoveById(@RequestParam List<String> idList ){
         List<Line> lines = lineService.listByIds(idList);
-        boolean hasStatusOne = lines.stream().anyMatch(line -> line.getLineStatus() != "0");
+        boolean hasStatusOne = lines.stream().anyMatch(line -> line.getLineStatus().equals("0"));
 
         if (hasStatusOne) {
             return Result.error("请先保证流水线状态为关闭");
@@ -200,7 +210,8 @@ public class LineController {
     @RequestMapping("/list")
     @ResponseBody
     public Result list(){
-        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Line::getIsDelete,1);
         List<Line> list = lineService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }

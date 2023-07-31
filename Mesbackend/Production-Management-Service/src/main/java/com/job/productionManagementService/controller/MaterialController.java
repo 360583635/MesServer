@@ -2,10 +2,12 @@ package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Material;
 import com.job.common.result.Result;
-import com.job.productionManagementService.service.MaterialService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.job.productionManagementService.service.*;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +18,22 @@ import java.util.List;
  * @description
  */
 @RestController
-@RequestMapping("/productionManagement")
+@RequestMapping("/material")
+@Component
 public class MaterialController {
 
-    @Autowired
+    @Resource
+    private WarehouseService warehouseService;
+
+    @Resource
+    private InventoryService inventoryService;
+    @Resource
     private MaterialService materialService;
+    @Resource
+    private EquipmentService equipmentService;
+    @Resource
+    private ProduceService produceService;
+
     @GetMapping("/material/queryMaterials")
     List<Material> queryMaterials() {
         return materialService.queryMaterials();
@@ -38,6 +51,23 @@ public class MaterialController {
         return materialService.list(queryWrapper);
     }
 
+    /**
+     * 通过名称查询原材料信息
+     * @param
+     * @return
+     */
+    @PostMapping ("/queryMaterialsByName")
+    List<Material> queryMaterialsByName(@RequestParam String materialName){
+        LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Material::getMaterialId,materialName);
+        return materialService.list(queryWrapper);
+    }
+
+    /**
+     * 逻辑删除
+     * @param materialName
+     * @return
+     */
     @PostMapping("/queryMaterialByName")
     public Result queryMaterialByName(@RequestParam String materialName){
         LambdaQueryWrapper<Material> lambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -69,21 +99,43 @@ public class MaterialController {
             return Result.error("删除失败");
         }
     }
-
+    @PostMapping("materialId")
+    Integer warehouseId(){
+        List<Material>warehouseList=materialService.list();
+        int size=warehouseList.size();
+        return size+1;
+    }
     /**
      * 保存材料
-     * @param material
      * @return
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result saveMaterial(@RequestBody Material material){
-        boolean save = materialService.save(material);
+    public Result saveMaterial(@RequestBody Material     tmaterial){
+
+        boolean save = materialService.save(tmaterial);
         if(save){
             return Result.success(null,"保存成功");
         }
         return Result.error("保存失败");
     }
+
+    /**
+     * 初始化原材料
+     * @return
+     */
+    @PostMapping("/initializationMaterial")
+    public Result initializationMaterial(@RequestParam String materialName,@RequestParam int warehouseId){
+        Inventory inventory=new Inventory();
+        inventory.setMaterialName(materialName);
+        inventory.setWarehouseId(warehouseId);
+        inventory.setWarehouseType(0);
+        inventory.setIsDelete(1);
+        inventory.setNumber(0);
+        inventoryService.save(inventory);
+        return null ;
+    }
+
     @PostMapping("/update")
     @ResponseBody
     public Result updateMaterial(@RequestBody Material material){

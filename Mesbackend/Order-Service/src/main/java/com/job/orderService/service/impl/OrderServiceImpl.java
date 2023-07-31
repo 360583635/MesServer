@@ -52,7 +52,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 创建订单界面初始化
-     *
      * @return
      */
     @Override
@@ -78,6 +77,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 map1.put("text",s);
                 map1.put("value",materialsMap.get(s).toString());
                 list.add(map1);
+                flowVo.setMaterial(list);
             }
             flowVosList.add(flowVo);
         }
@@ -109,7 +109,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setProductionStatus(0);
             //查询产品单价
             LambdaQueryWrapper<Produce> wrapper = new LambdaQueryWrapper<>();
-            wrapper.eq(Produce::getProcessName, order.getProductName());
+            wrapper.eq(Produce::getProduceName, order.getProductName());
             Produce produce = produceMapper.selectOne(wrapper);
             int producePrice = produce.getProducePrice();
             order.setOrderPrice(order.getOrderNumber() * producePrice);

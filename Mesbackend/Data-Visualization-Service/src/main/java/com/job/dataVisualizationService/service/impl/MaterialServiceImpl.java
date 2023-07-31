@@ -64,7 +64,7 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
             for (Material material : list2) {
                 if (s.equals(material.getMaterialName())){
                     //填写id
-                    id[y] = material.getMaterialId();
+                    id[y] = y;
                     //获取数量
                     int number1 = number[y];
                     double cost = material.getMaterialCost().doubleValue();

@@ -10,6 +10,7 @@ import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.ProcessMaterialRelationService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.MaterialVo;
+import com.job.feign.clients.AuthenticationClient;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Material;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,9 @@ public class ProcessMaterialRelationController {
 
     @Autowired
     private FlowProcessRelationService flowProcessRelationService;
+
+    @Autowired
+    private AuthenticationClient authenticationClient;
 
 
     /**

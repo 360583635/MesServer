@@ -9,11 +9,13 @@ import com.job.common.pojo.*;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
+import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
+import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.http.HttpRequest;
@@ -52,7 +54,7 @@ public class FlowController {
      */
     @PostMapping("/page")
     @ResponseBody
-    public Result page(FlowPageReq req){
+    public Result page(@RequestBody FlowPageReq req){
         LambdaQueryWrapper<Flow> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Flow::getIsDelete,IS_DELETE_NO);
         IPage result = flowService.page(req,queryWrapper);
@@ -75,14 +77,32 @@ public class FlowController {
     }
 
 
+    /**
+     * 添加流程
+     * @param flow
+     * @param request
+     * @return
+     */
     @PostMapping("/save")
-    public Result flowSave(@RequestBody Flow flow, HttpServletRequest httpServletRequest){
+    public Result flowSave(@RequestBody Flow flow, HttpServletRequest request){
 
 //        String userId= UserUtil.getUserId(httpServletRequest);
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            flow.setUpdateUsername(name);
+            flow.setCreateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         flow.setCreateTime(DateUtil.date());
         flow.setUpdateTime(DateUtil.date());
-        flow.setUpdateUsername("userId");
-        flow.setCreateUsername("userId");
         boolean save = flowService.save(flow);
         if(save){
             return Result.success(null,"保存成功");
@@ -169,20 +189,28 @@ public class FlowController {
      * @return
      */
     @PostMapping("/likeSearch")
-    public Result likeSearch(@RequestParam String searchName ){
-        if(searchName.isEmpty()){
-            return Result.success(flowService.list(),"成功");
+    public Result likeSearch(@RequestParam String searchName,@RequestParam int size,@RequestParam int current ){
+        FlowPageReq req=new FlowPageReq();
+        req.setCurrent(current);
+        req.setSize(size);
+        if(StringUtil.isNullOrEmpty(searchName)){
+            FlowPageReq page = flowService.page(req);
+            return Result.success(page,"成功");
         }
         boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
         LambdaQueryWrapper<Flow> queryWrapper=new LambdaQueryWrapper<>();
         if(matches){
-            queryWrapper.like(Flow::getId,searchName);
+            queryWrapper
+                    .eq(Flow::getIsDelete, 1)
+                    .eq(Flow::getId,searchName);
         }else {
-            queryWrapper.like(Flow::getFlow, searchName);
+            queryWrapper
+                    .eq(Flow::getIsDelete, 1)
+                    .like(Flow::getFlow, searchName);
         }
 
-        List<Flow> list = flowService.list(queryWrapper);
-        return Result.success(list,"查询成功");
+        FlowPageReq page = flowService.page(req,queryWrapper);
+        return Result.success(page,"查询成功");
 
 
     }
@@ -208,6 +236,34 @@ public class FlowController {
             return Result.error("流水线所属流程类型查询失败");
         }
         return Result.success(functionNames,"查询成功");
+    }
+
+
+    @PostMapping("/flowProcessByFlowId")
+    public Result flowProcessByFlowId(@RequestParam String flowId){
+        LambdaQueryWrapper<FlowProcessRelation> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(FlowProcessRelation::getFlowId,flowId);
+
+
+        List<FlowProcessRelation> list = relationService.list(queryWrapper);
+        return Result.success(list,"查询成功");
+    }
+
+    /**
+     * 修改流程通过id
+     * @param flow
+     * @return
+     */
+    @PostMapping("/updateFlowById")
+    public Result updateFlowById(@RequestBody Flow flow){
+
+        boolean b = flowService.updateById(flow);
+        if (b){
+            return Result.success(null,"修改成功");
+        }else {
+            return Result.error("修改失败");
+        }
+
     }
 
 

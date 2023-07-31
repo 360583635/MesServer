@@ -6,20 +6,22 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.job.common.pojo.Flow;
-import com.job.common.pojo.FlowProcessRelation;
-import com.job.common.pojo.Line;
-import com.job.common.pojo.Process;
+import com.job.common.pojo.*;
 //import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
 //import com.job.dispatchService.LineManager.pojo.TProcess;
+import com.job.common.pojo.Process;
 import com.job.common.result.Result;
+import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
 import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.EquipmentVo;
+import com.job.feign.clients.AuthenticationClient;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Equipment;
+import io.jsonwebtoken.Claims;
+import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,9 @@ public class ProcessController {
     @Autowired
     private ProcessMaterialRelationController processMaterialRelationController;
 
+    @Autowired
+    private AuthenticationClient authenticationClient;
+
     //逻辑删除1未删除0已删除
     private static int IS_DELETE=1;
     /**
@@ -63,7 +68,7 @@ public class ProcessController {
      * @return
      */
     @PostMapping("/page")
-    public Result page(ProcessPageReq req){
+    public Result page(@RequestBody ProcessPageReq req){
         LambdaQueryWrapper<Process> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Process::getIsDelete,IS_DELETE);
         IPage result = processService.page(req,queryWrapper);
@@ -77,14 +82,25 @@ public class ProcessController {
      */
     @PostMapping("/update")
     @ResponseBody
-    public Result updateProcess(@RequestBody Process tProcess, HttpServletRequest httpServletRequest){
+    public Result updateProcess(@RequestBody Process tProcess, HttpServletRequest request){
 
-        String userinf="郭帅比";
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            tProcess.setUpdateUsername(name);
+            tProcess.setCreateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         //获得用户信息
 //        String userId= UserUtil.getUserId(httpServletRequest);
-        tProcess.setUpdateUsername(userinf);
         DateTime nowTime = DateUtil.date();
-        tProcess.setUpdateTime(nowTime);
         processService.updateById(tProcess);
         return Result.success(null,"修改成功");
 
@@ -192,22 +208,26 @@ public class ProcessController {
 
     /**
      * 根据工序名模糊查询
-     * @param processName
+     * @param searchName
      * @return
      */
     @PostMapping("/likeQuery")
-    public Result<ProcessPageReq> query(@RequestParam String processName,@RequestParam int size,@RequestParam int current){
+    public Result<ProcessPageReq> likeQuery(@RequestParam String searchName,@RequestParam int size,@RequestParam int current){
         ProcessPageReq req=new ProcessPageReq();
         req.setCurrent(current);
         req.setSize(size);
-        if(processName.isEmpty()){
-            processService.page(req);
-           return Result.success(req,"查询成功");
+        if(StringUtil.isNullOrEmpty(searchName)){
+            ProcessPageReq page = processService.page(req);
+            return Result.success(page,"查询成功");
        }
-
-        LambdaQueryWrapper<Process> lambdaQueryWrapper=new LambdaQueryWrapper();
-        lambdaQueryWrapper.like(Process::getProcess,processName);
-        ProcessPageReq page = processService.page(req, lambdaQueryWrapper);
+        boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
+        LambdaQueryWrapper<Process> queryWrapper=new LambdaQueryWrapper<>();
+        if(matches){
+            queryWrapper.eq(Process::getId,searchName);
+        }else {
+            queryWrapper.like(Process::getProcess, searchName);
+        };
+        ProcessPageReq page = processService.page(req, queryWrapper);
         return Result.success(page,"查询成功");
     }
     /**
@@ -218,6 +238,7 @@ public class ProcessController {
         LambdaQueryWrapper<Process> queryWrapper = new LambdaQueryWrapper();
         queryWrapper
                 .eq(Process::getIsDelete,IS_DELETE);
+//                .eq(Process::getEquipmentId,0);
         List<Process> list = processService.list(queryWrapper);
         return Result.success(list,"查询成功");
     }
