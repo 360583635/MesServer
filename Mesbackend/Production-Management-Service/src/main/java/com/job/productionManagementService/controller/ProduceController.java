@@ -134,7 +134,7 @@ public class ProduceController {
     /**
      * 查询所有产品名称
      */
-    @PostMapping("/queryProduceName")
+    @GetMapping("/queryProduceName")
     Set<String> queryProduceName(){
         QueryWrapper<Produce> queryWrapper= Wrappers.query();
         queryWrapper.select("produce_name");
