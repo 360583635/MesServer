@@ -1,7 +1,11 @@
 package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.job.common.pojo.Inventory;
+import com.job.common.pojo.Material;
+import com.job.productionManagementService.mapper.MaterialMapper;
 import com.job.productionManagementService.service.EquipmentService;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.MaterialService;
@@ -29,6 +33,9 @@ public class InventoryController {
 
     @Autowired
     private MaterialService materialService;
+
+    @Autowired
+    private MaterialMapper materialMapper;
 
     @Autowired
     private EquipmentService equipmentService;
@@ -139,6 +146,21 @@ public class InventoryController {
        }
         return number;
     }
+    /**
+     * 查询所有原材料名称
+     */
+    @PostMapping("queryMaterialName")
+    List<String> queryMaterialName(){
+        QueryWrapper<Material>queryWrapper= Wrappers.query();
+        queryWrapper.select("material_name");
+        List<Material> materials = materialMapper.selectList(queryWrapper);
+        List<String> nameList = new ArrayList<>();
+        for (Material name : materials) {
+            nameList.add(name.getMaterialName());
+        }
 
+        return nameList ;
+
+    }
 
     }
