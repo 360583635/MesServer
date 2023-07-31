@@ -106,7 +106,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setOrderDate(new Date());
             order.setProductionStatus(0);
             //根据产品名称查询产品ID
-
+            Integer productId = productionManagementClient.queryProduceIdByProduceName(order.getProductName());
+            order.setProductId(productId.toString());
             //根据产品名称查询原材料相关信息,并保存
             String productName = order.getProductName();
             Map<String,String> map=new HashMap<>();

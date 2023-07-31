@@ -22,6 +22,11 @@ import java.util.Map;
 @RequestMapping("/productionManagement/produce")
 @Component
 @RestController
+/**
+ * @author 猫
+ * @create 2023-07-17-18:45
+ * @description
+ */
 public class ProduceController {
 
     @Resource
