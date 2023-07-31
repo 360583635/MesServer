@@ -1,10 +1,13 @@
 package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Produce;
 import com.job.common.pojo.Warehouse;
 import com.job.common.result.Result;
+import com.job.productionManagementService.mapper.ProduceMapper;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.ProduceService;
 import com.job.productionManagementService.service.WarehouseService;
@@ -36,7 +39,10 @@ public class ProduceController {
     private ProduceService produceService ;
     @Resource
     private WarehouseService warehouseService;
+    @Resource
+    private ProduceMapper produceMapper;
     /**
+     *
      * 添加新产品
      */
    @RequestMapping("/addProduce")
@@ -127,5 +133,20 @@ public class ProduceController {
             return  Result.success(null,"更新成功");
         }
         return Result.error("失败");
+    }
+    /**
+     * 查询所有产品名称
+     */
+    @PostMapping("queryProduceName")
+    List<String> queryMaterialName(){
+        QueryWrapper<Produce> queryWrapper= Wrappers.query();
+        queryWrapper.select("produce_name");
+        List<Produce> produces = produceMapper.selectList(queryWrapper);
+        List<String> nameList = new ArrayList<>();
+        for (Produce name : produces) {
+            nameList.add(name.getProduceName());
+        }
+        return nameList ;
+
     }
 }
