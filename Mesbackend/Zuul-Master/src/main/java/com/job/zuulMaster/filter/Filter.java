@@ -6,7 +6,6 @@ package com.job.zuulMaster.filter;
 //import com.job.zuulMaster.redis.RedisCache;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.Menus;
-import com.job.common.utils.GetUserId;
 import com.job.zuulMaster.utils.Query;
 import com.job.zuulMaster.mapper.MenusMapper;
 import com.job.zuulMaster.utils.JwtUtil;
@@ -40,7 +39,7 @@ public class Filter implements GlobalFilter , Ordered {
 //        ThreadLocal threadLocal = new InheritableThreadLocal();
 //        threadLocal.set("userid");
 //        if(exchange.getRequest().getURI().toString().contains("order")) return chain.filter(exchange);
-        String token=exchange.getRequest().getHeaders().getFirst("token");
+        String token=exchange.getRequest().getQueryParams().getFirst("Authorization");
 
         if (path.equals("/authen/login")) {
             System.out.println("111");
@@ -83,6 +82,7 @@ public class Filter implements GlobalFilter , Ordered {
                     return exchange.getResponse().setComplete();
                 }else {
                     List<String > urllist= menusMapper.selectPermsByUserId(userid);
+                    System.out.println("wuwuwuu");
                     for (String s : urllist) {
                         if (path.equals(s)){
                             System.out.println("hjsgfh");
