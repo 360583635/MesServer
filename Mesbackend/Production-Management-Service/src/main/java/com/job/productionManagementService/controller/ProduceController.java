@@ -138,7 +138,7 @@ public class ProduceController {
      * 查询所有产品名称
      */
     @PostMapping("queryProduceName")
-    List<String> queryMaterialName(){
+    List<String> queryProduceName(){
         QueryWrapper<Produce> queryWrapper= Wrappers.query();
         queryWrapper.select("produce_name");
         List<Produce> produces = produceMapper.selectList(queryWrapper);

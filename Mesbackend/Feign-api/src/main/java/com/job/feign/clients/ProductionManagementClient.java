@@ -64,6 +64,6 @@ public interface ProductionManagementClient {
     /**
      * 查询所有产品名称(wen)
      */
-    @PostMapping("queryProduceName")
-    List<String> queryMaterialName();
+    @PostMapping("/productionManagement/produce/queryProduceName")
+    List<String> queryProduceName();
 }
