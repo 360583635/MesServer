@@ -67,7 +67,10 @@ public class LineController {
         req.setCurrent(current);
         req.setSize(size);
         if(StringUtil.isNullOrEmpty(searchName)){
-            LinePageReq page = lineService.page(req);
+            LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper
+                    .eq(Line::getIsDelete,1);
+            LinePageReq page = lineService.page(req,queryWrapper);
             return Result.success(page,"成功");
         }
         boolean matches = searchName.matches("-?\\d+(\\.\\d+)?");
@@ -95,7 +98,7 @@ public class LineController {
     @ResponseBody
     public Result saveLine(@RequestBody Line pipeLine, HttpServletRequest request){
 
-        String token=request.getHeader("token");
+        /*String token=request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
@@ -108,7 +111,10 @@ public class LineController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
-        }
+        }*/
+        String name = "User01";
+        pipeLine.setUpdateUsername(name);
+        pipeLine.setCreateUsername(name);
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)

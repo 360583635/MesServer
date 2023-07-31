@@ -35,6 +35,7 @@ import java.util.Map;
  */
 @RequestMapping("/authen")
 @RestController
+@CrossOrigin
 public class RoleController {
     @Autowired
     private RolesService rolesService;

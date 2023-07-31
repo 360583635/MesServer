@@ -82,33 +82,37 @@ public class ProcessController {
 
     /**
      * 修改工序
-     * @param tProcess
+     * @param processDto
      * @return
      */
     @PostMapping("/update")
     @ResponseBody
-    public Result updateProcess(@RequestBody Process tProcess, HttpServletRequest request){
+    public Result updateProcess(@RequestBody ProcessDto processDto, HttpServletRequest request) throws Exception {
 
-        String token=request.getHeader("token");
-        System.out.println(token);
-        try {
-            Claims claims = JwtUtil.parseJWT(token);
-            String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
-            String name = users.getName();
-            //System.out.println(userId);
-            tProcess.setUpdateUsername(name);
-            tProcess.setCreateUsername(name);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("token非法");
-        }
         //获得用户信息
-//        String userId= UserUtil.getUserId(httpServletRequest);
+        //String userId= UserUtil.getUserId(httpServletRequest);
+        String userinf="郭帅比";
+        processDto.setUpdateUsername(userinf);
+        processDto.setCreateUsername(userinf);
         DateTime nowTime = DateUtil.date();
-        tProcess.setUpdateTime(nowTime);
-        processService.updateById(tProcess);
-        return Result.success(null,"修改成功");
+        processDto.setUpdateTime(nowTime);
+        Process process = new Process();
+        BeanUtils.copyProperties(processDto,process);
+
+        LambdaQueryWrapper<Process> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(Process::getIsDelete,1)
+                .eq(Process::getProcess, processDto.getProcess());
+        boolean b = processService.saveOrUpdate(process);
+        if(b==true) {
+            Process process1 = processService.getOne(queryWrapper);
+            processDto.setId(process1.getId());
+            Result result = processMaterialRelationController.addOrUpdate(processDto);
+            if(result.getCode()==1){
+                return Result.success(null,"修改成功");
+            }
+        }
+        return Result.error("修改失败");
 
     }
 
@@ -148,7 +152,7 @@ public class ProcessController {
                 return Result.success(null,"增加成功");
             }
         }
-        return Result.error("删除失败");
+        return Result.error("增加失败");
     }
 
     /**
