@@ -101,10 +101,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             return Result.error("输入对象不能为空！");
         } else if (order.getOrderNumber() != null && order.getExpectDate() != null
                 && order.getProductName() != null && order.getCustomName() != null && order.getCustomTel() != null
-                && order.getRawName() != null && order.getRawNum() != null && order.getPriority() != null) {
+                && order.getPriority() != null) {
 
             order.setOrderDate(new Date());
             order.setProductionStatus(0);
+            //根据产品名称查询产品ID
+
+            //根据产品名称查询原材料相关信息,并保存
+            String productName = order.getProductName();
+            Map<String,String> map=new HashMap<>();
+            map.put("flowName",productName);
+            Map<String, Integer> rawMaps = dispatchClient.queryMaterialsByFlowName(map);
+            StringBuilder rawNames=new StringBuilder();
+            for (String rawName : rawMaps.keySet()) {
+                rawNames.append(rawName).append(" ");
+            }
+            StringBuilder rawNums=new StringBuilder();
+            for (Integer rawNum : rawMaps.values()) {
+                rawNums.append(rawNum).append(" ");
+            }
+            order.setRawName(rawNames.toString());
+            order.setRawNum(rawNums.toString());
+
             //查询产品单价
             LambdaQueryWrapper<Produce> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(Produce::getProduceName, order.getProductName());
@@ -112,12 +130,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             int producePrice = produce.getProducePrice();
             order.setOrderPrice(order.getOrderNumber() * producePrice);
             order.setIsDelete(0);
+
             //计算订单原材料
             Map<String, Integer> rawMap = dispatchClient.queryMaterialsByFlowName(/*order.getProductName()*/new HashMap<>());
             Set<Map.Entry<String, Integer>> rawSet = rawMap.entrySet();
             for (Map.Entry<String, Integer> rawset : rawSet) {
                 rawMap.put(rawset.getKey(), rawset.getValue() * order.getOrderNumber());
             }
+
             //查询原材料库存
             Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(/*order.getProductName()*/new HashMap<>());
             Set<String> keySet = materials.keySet();
