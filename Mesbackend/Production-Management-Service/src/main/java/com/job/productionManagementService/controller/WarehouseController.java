@@ -14,10 +14,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * @author 猫
+ * @create 2023-07-17-18:45
+ * @description
+ */
 @RestController
 @CrossOrigin
 @RequestMapping("/productionManagement/warehouse")
+
 public class  WarehouseController {
 
     @Resource
