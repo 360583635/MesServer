@@ -13,11 +13,11 @@ public class Produce {
     /**
      * 产品id
      */
-    private String produceId;
+    private int produceId;
     /**
      * 产品名称
      */
-    private String ProduceName ;
+    private String produceName ;
 
     private int producePrice;
     /**

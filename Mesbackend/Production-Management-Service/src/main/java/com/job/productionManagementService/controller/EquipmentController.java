@@ -8,7 +8,6 @@ import com.job.common.pojo.Warehouse;
 import com.job.common.result.Result;
 import com.job.productionManagementService.service.*;
 import jakarta.annotation.Resource;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +18,9 @@ import java.util.*;
  * @create 2023-07-18-15:14
  * @description
  */
+@RestController
 @Controller
 @RequestMapping("/productionManagement/equipment")
-@Component
 public class EquipmentController {
 
     @Resource
@@ -44,7 +43,7 @@ public class EquipmentController {
      * @return
      */
     @PostMapping("/initializationEquipment")
-    public Result initializationEquipment(@RequestParam String equipmentName,int warehouseId){
+    public Result initializationEquipment(@RequestParam String equipmentName,@RequestParam  int warehouseId){
         Inventory inventory=new Inventory();
         inventory.setProduceName(equipmentName);
         inventory.setWarehouseId(warehouseId);
@@ -53,6 +52,12 @@ public class EquipmentController {
         inventory.setNumber(0);
         inventoryService.save(inventory);
         return null ;
+    }
+    @PostMapping("equipmentId")
+    Integer equipmentId(){
+        List<Equipment>EquipmentsList=equipmentService.list();
+        int size = EquipmentsList.size();
+        return  size+1;
     }
     /**
      * 查询所有设备功能类型
@@ -73,6 +78,7 @@ public class EquipmentController {
         }
         return functionNames;
     }
+
     @PostMapping("/queryEquipmentByFunction")
     List<Equipment>queryEquipmentByFunction(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment>lambdaQueryWrapper=new LambdaQueryWrapper<>();
@@ -118,6 +124,7 @@ public class EquipmentController {
     @PostMapping("/save")
     @ResponseBody
     public Result saveEquipment(@RequestBody Equipment equipment){
+
 
         boolean save = equipmentService.save(equipment);
         if(save){

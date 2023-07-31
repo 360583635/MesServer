@@ -172,7 +172,8 @@ public class  WarehouseController {
                      .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
 
             //如果仓库里已经存过这个原材料则查出他的数据然后加上存入的数据
-             if (inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber()!=null) {
+             Inventory inventory =inventoryService.getOne(inventoryLambdaQueryWrapper);
+             if (inventory!=null&&inventory.getNumber()!=null) {
                  int materialNumbers = inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber();
                  materialNumbers = materialNumber + materialNumbers;
                  LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
@@ -181,12 +182,12 @@ public class  WarehouseController {
                          .set(Inventory::getNumber, materialNumbers);
              }
              else {
-                 Inventory inventory= new Inventory();
-                 inventory.setNumber(materialNumber);
-                 inventory.setWarehouseType(0);
-                 inventory.setIsDelete(1);
-                 inventory.setWarehouseId(warehouseList.get(i).getWarehouseId());
-                 inventory.setMaterialName(materialName);
+                 Inventory inventory1= new Inventory();
+                 inventory1.setNumber(materialNumber);
+                 inventory1.setWarehouseType(0);
+                 inventory1.setIsDelete(1);
+                 inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
+                 inventory1.setMaterialName(materialName);
 
              }
              return Result.success("null","入库成功");
@@ -205,7 +206,8 @@ public class  WarehouseController {
                      .eq(Inventory::getMaterialName,materialName)
                      .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
              //如果仓库里面原本有这个原材料
-             if (inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber()!=null) {
+             Inventory inventory =inventoryService.getOne(inventoryLambdaQueryWrapper);
+             if (inventory!=null&& inventory.getNumber()!=0) {
                  int materialNumbers = inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber();
                  materialNumbers = maxNumber + materialNumbers;
                  LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
@@ -215,12 +217,12 @@ public class  WarehouseController {
              }
              //如果仓库原本里面没有这个原材料就在库存表里初始化这个原材料数据
              else {
-                 Inventory inventory= new Inventory();
-                 inventory.setNumber(maxNumber);
-                 inventory.setWarehouseType(0);
-                 inventory.setIsDelete(1);
-                 inventory.setWarehouseId(warehouseList.get(i).getWarehouseId());
-                 inventory.setMaterialName(materialName);
+                 Inventory inventory1= new Inventory();
+                 inventory1.setNumber(maxNumber);
+                 inventory1.setWarehouseType(0);
+                 inventory1.setIsDelete(1);
+                 inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
+                 inventory1.setMaterialName(materialName);
              }
              materialNumber=(materialNumber-maxNumber);
          }
