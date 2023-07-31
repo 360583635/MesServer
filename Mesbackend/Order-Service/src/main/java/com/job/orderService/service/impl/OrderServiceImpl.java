@@ -2,28 +2,25 @@ package com.job.orderService.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.job.common.pojo.*;
+import com.job.common.pojo.Flow;
+import com.job.common.pojo.Line;
+import com.job.common.pojo.Order;
+import com.job.common.pojo.Produce;
 import com.job.common.redis.RedisCache;
 import com.job.feign.clients.DispatchClient;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.FlowMapper;
-//import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.LineMapper;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.mapper.ProduceMapper;
 import com.job.orderService.service.OrderService;
 import com.job.orderService.vo.FlowVo;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
-import java.rmi.MarshalledObject;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -64,7 +61,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for (Flow flow : flowList) {
             FlowVo flowVo = new FlowVo();
             flowVo.setText(flow.getFlow());
-            flowVo.setValue(flow.getId());
+            flowVo.setValue(flow.getFlow());
+            //flowVo.setValue(flow.getId());
             System.out.println(1);
             Map<String,String> map = new HashMap<>();
             String flowName = flow.getFlow();
@@ -101,7 +99,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //数据验证
         if (order == null) {
             return Result.error("输入对象不能为空！");
-        } else if (order.getOrderNumber() != null && order.getExpectDate() != null && order.getProductId() != null
+        } else if (order.getOrderNumber() != null && order.getExpectDate() != null
                 && order.getProductName() != null && order.getCustomName() != null && order.getCustomTel() != null
                 && order.getRawName() != null && order.getRawNum() != null && order.getPriority() != null) {
 
