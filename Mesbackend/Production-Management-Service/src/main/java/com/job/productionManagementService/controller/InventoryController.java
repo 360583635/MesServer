@@ -1,7 +1,11 @@
 package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.job.common.pojo.Inventory;
+import com.job.common.pojo.Material;
+import com.job.productionManagementService.mapper.MaterialMapper;
 import com.job.productionManagementService.service.EquipmentService;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.MaterialService;
@@ -19,7 +23,7 @@ import java.util.List;
  * @description
  */
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/productionManagement/inventory")
 @Component
 public class InventoryController {
 
@@ -29,6 +33,9 @@ public class InventoryController {
 
     @Autowired
     private MaterialService materialService;
+
+    @Autowired
+    private MaterialMapper materialMapper;
 
     @Autowired
     private EquipmentService equipmentService;
@@ -88,38 +95,36 @@ public class InventoryController {
 
     /**
      * 根据库存类型查询原材料库存信息
-     * @param warehouseType
      * @return
      */
-    @GetMapping("/queryMaterialNameByWarehouseType/{warehouseType}")
-    List<Inventory>queryMaterialNameByWarehouseType(@PathVariable("warehouseType") String warehouseType) {
+    @PostMapping ("/queryMaterialNameByWarehouseType")
+    List<Inventory>queryMaterialNameByWarehouseType() {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Inventory::getWarehouseType, warehouseType);
+        queryWrapper.eq(Inventory::getWarehouseType,0);
         List<Inventory> materiallist = inventoryService.list(queryWrapper);
         return materiallist;
     }
     /**
      * 根据库存类型查询设备库存信息
-     * @param warehouseType
      * @return
      */
-    @GetMapping("/queryEquipmentNameByWarehouseType/{warehouseType}")
-    List<Inventory>queryEquipmentByWarehouseType(@PathVariable("warehouseType") String warehouseType) {
+    @PostMapping ("/queryEquipmentNameByWarehouseType")
+    List<Inventory>queryEquipmentByWarehouseType() {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Inventory::getWarehouseType, warehouseType);
+        queryWrapper.eq(Inventory::getWarehouseType,1);
         List<Inventory> equipmentlist = inventoryService.list(queryWrapper);
         return equipmentlist;
     }
 
     /**
      * 根据库存类型查询成品库存信息
-     * @param warehouseType
+
      * @return
      */
-    @GetMapping("/queryProductNameByWarehouseType/{warehouseType}")
-    List<Inventory>queryProductNameByWarehouseType(@PathVariable("warehouseType") String warehouseType) {
+    @PostMapping ("/queryProductNameByWarehouseType/{warehouseType}")
+    List<Inventory>queryProductNameByWarehouseType() {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Inventory::getWarehouseType, warehouseType);
+        queryWrapper.eq(Inventory::getWarehouseType,2);
         List<Inventory> productlist = inventoryService.list(queryWrapper);
         return productlist;
     }
@@ -141,6 +146,21 @@ public class InventoryController {
        }
         return number;
     }
+    /**
+     * 查询所有原材料名称
+     */
+    @PostMapping("queryMaterialName")
+    List<String> queryMaterialName(){
+        QueryWrapper<Material>queryWrapper= Wrappers.query();
+        queryWrapper.select("material_name");
+        List<Material> materials = materialMapper.selectList(queryWrapper);
+        List<String> nameList = new ArrayList<>();
+        for (Material name : materials) {
+            nameList.add(name.getMaterialName());
+        }
 
+        return nameList ;
+
+    }
 
     }

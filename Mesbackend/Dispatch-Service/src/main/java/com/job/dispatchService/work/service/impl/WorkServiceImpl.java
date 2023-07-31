@@ -212,7 +212,8 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         Set typles = new HashSet();
         for (Work work : works) {
             Timestamp timestamp = Timestamp.valueOf(work.getWCreateTime());
-            String score = String.valueOf(timestamp);
+            long time = timestamp.getTime();
+            String score = String.valueOf(time);
             ZSetOperations.TypedTuple<String> objectDefaultTypedTuple = new DefaultTypedTuple(work, Double.valueOf(score));
             typles.add(objectDefaultTypedTuple);
         }

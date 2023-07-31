@@ -3,20 +3,25 @@ package com.job.productionManagementService.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Produce;
+import com.job.common.pojo.Warehouse;
 import com.job.common.result.Result;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.ProduceService;
+import com.job.productionManagementService.service.WarehouseService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
-@RequestMapping("/produce")
+@RequestMapping("/productionManagement/produce")
 @Component
+@RestController
 public class ProduceController {
 
     @Resource
@@ -24,11 +29,12 @@ public class ProduceController {
 
     @Resource
     private ProduceService produceService ;
-
+    @Resource
+    private WarehouseService warehouseService;
     /**
      * 添加新产品
      */
-   @RequestMapping("/saveProduce")
+   @RequestMapping("/addProduce")
     @ResponseBody
     public Result saveProduce(@RequestBody Produce tProdece){
 
@@ -43,7 +49,7 @@ public class ProduceController {
 
    }
     /**
-     * 初始化产品入库
+     * 初始化产品添加
      * @return
      */
     @PostMapping("/initializationProduce")
@@ -57,16 +63,54 @@ public class ProduceController {
         inventoryService.save(inventory);
         return null ;
     }
+
     /**
-     * 通过产品名称查询产品数据
+     * 初始化仓库id
+     * @return
      */
+    @PostMapping("produceId")
+    Integer produceId(){
+        List<Produce>produceList=produceService.list();
+        int size = produceList.size();
+        return  size+1;
+    }
+    /**
+     * 初始化仓库id
+     */
+    @PostMapping("/queryWarehouseByType")
+    @ResponseBody
+    List<Warehouse> queryWarehouseByType(){
+        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Warehouse::getWarehouseId).gt(Warehouse::getWarehouseAvailable,0).eq(Warehouse::getWarehouseType,2);
+        List<Warehouse> list = warehouseService.list(queryWrapper);
+        List warehouses = new ArrayList<>();
+        for (Warehouse warehouse : list) {
+            Map<Object, Object> map = new HashMap<>();
+            map.put("value", warehouse.getWarehouseId());
+            map.put("text", warehouse.getWarehouseId());
+            warehouses.add(map);
+        }
+        return warehouses;
+    }
     @RequestMapping("/queryProduceByProduceName")
-    List<Produce>queryProduceByProduceName(@RequestParam String prodeceName) {
+    List<Produce>queryProduceByProduceName(@RequestParam String produceName) {
         LambdaQueryWrapper<Produce> queryWrapper= new LambdaQueryWrapper<>();
-        queryWrapper.eq(Produce::getProduceName,prodeceName);
+        queryWrapper.eq(Produce::getProduceName,produceName);
         List<Produce> produceList = new ArrayList<>();
         produceList=produceService.list(queryWrapper);
         return produceList;
+    }
+
+    /**
+     * 根据产品名称查询产品id
+     * @param produceName
+     * @return
+     */
+    @RequestMapping("/queryProduceIdByProduceName")
+    Integer queryProduceIdByProduceName(@RequestParam String produceName) {
+        LambdaQueryWrapper<Produce> queryWrapper= new LambdaQueryWrapper<>();
+        queryWrapper.eq(Produce::getProduceName,produceName);
+        return produceService.getOne(queryWrapper).getProduceId();
     }
     /**
      * 修改产品信息

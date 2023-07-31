@@ -18,7 +18,7 @@ import java.util.List;
  * @description
  */
 @RestController
-@RequestMapping("/material")
+@RequestMapping("/productionManagement/material")
 @Component
 public class MaterialController {
 
@@ -99,14 +99,20 @@ public class MaterialController {
             return Result.error("删除失败");
         }
     }
-
+    @PostMapping("materialId")
+    Integer warehouseId(){
+        List<Material>warehouseList=materialService.list();
+        int size=warehouseList.size();
+        return size+1;
+    }
     /**
      * 保存材料
      * @return
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result saveMaterial(@RequestBody Material tmaterial){
+    public Result saveMaterial(@RequestBody Material     tmaterial){
+
         boolean save = materialService.save(tmaterial);
         if(save){
             return Result.success(null,"保存成功");
@@ -119,7 +125,7 @@ public class MaterialController {
      * @return
      */
     @PostMapping("/initializationMaterial")
-    public Result initializationMaterial(@RequestParam String materialName,int warehouseId){
+    public Result initializationMaterial(@RequestParam String materialName,@RequestParam int warehouseId){
         Inventory inventory=new Inventory();
         inventory.setMaterialName(materialName);
         inventory.setWarehouseId(warehouseId);

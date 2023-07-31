@@ -10,6 +10,6 @@
                 LEFT JOIN `t_menus_roles` rm ON ur.`role_id` = rm.`role_id`
                 LEFT JOIN `t_menus` m ON m.`menu_id` = rm.`menu_id`
         WHERE
-            ur.user_id = #{ID}
+            ur.user_id = #{ID} and rm.is_delete=1
     </select>
 </mapper>

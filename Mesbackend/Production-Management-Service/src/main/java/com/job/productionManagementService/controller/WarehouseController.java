@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/warehouse")
+@RequestMapping("/productionManagement/warehouse")
 public class  WarehouseController {
 
     @Resource
@@ -55,18 +55,11 @@ public class  WarehouseController {
         List<Inventory>insventoryList=inventoryService.list(queryWrapper);
         int size =insventoryList.size();
         List list=new ArrayList<>();
-
         for (int i= 0 ;i<size;i++) {
             LambdaQueryWrapper<Produce> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             lambdaQueryWrapper.eq(Produce::getProduceName,insventoryList.get(i).getProduceName());
-            LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper =new LambdaQueryWrapper<>();
-            inventoryLambdaQueryWrapper.eq(Inventory::getProduceName,insventoryList.get(i).getProduceName());
-            list.add(inventoryService.list(inventoryLambdaQueryWrapper));
-
+            System.out.println(produceService.list(lambdaQueryWrapper));
             list.add(produceService.list(lambdaQueryWrapper));
-
-
-
         }
         return list;
     }
@@ -80,6 +73,7 @@ public class  WarehouseController {
     @PostMapping("/saveWarehouse")
     @ResponseBody
     public Result saveWarehouse(@RequestBody Warehouse tWarehouse) {
+        System.out.println(tWarehouse);
 
         long warehouseNumber = warehouseService.count();
         if (warehouseNumber < 30) {
@@ -103,18 +97,26 @@ public class  WarehouseController {
   */@PostMapping("/queryWarehouseByArea")
    List<Warehouse> queryWarehouseByArea(){
        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
-       queryWrapper.select(Warehouse::getWarehouseId).gt(Warehouse::getWarehouseAvailable,0);
+       queryWrapper.select(Warehouse::getWarehouseId).gt(Warehouse::getWarehouseAvailable,0).eq(Warehouse::getWarehouseType,0);
       List<Warehouse> list = warehouseService.list(queryWrapper);
       List warehouses = new ArrayList<>();
       for (Warehouse warehouse : list) {
           Map<Object, Object> map = new HashMap<>();
-          map.put("value", warehouse.toString());
+          map.put("value", warehouse.getWarehouseId());
           map.put("text", warehouse.getWarehouseId());
           warehouses.add(map);
       }
       return warehouses;
    }
-
+    /**
+     *仓库id默认值
+     */
+    @PostMapping("warehouseId")
+    Integer warehouseId(){
+        List<Warehouse>warehouseList=warehouseService.list();
+        int size=warehouseList.size();
+        return size+1;
+    }
     /**
      * 根据仓库名称查询仓库（模糊查询）
      */
@@ -170,7 +172,8 @@ public class  WarehouseController {
                      .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
 
             //如果仓库里已经存过这个原材料则查出他的数据然后加上存入的数据
-             if (inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber()!=null) {
+             Inventory inventory =inventoryService.getOne(inventoryLambdaQueryWrapper);
+             if (inventory!=null&&inventory.getNumber()!=null) {
                  int materialNumbers = inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber();
                  materialNumbers = materialNumber + materialNumbers;
                  LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
@@ -179,12 +182,12 @@ public class  WarehouseController {
                          .set(Inventory::getNumber, materialNumbers);
              }
              else {
-                 Inventory inventory= new Inventory();
-                 inventory.setNumber(materialNumber);
-                 inventory.setWarehouseType(0);
-                 inventory.setIsDelete(1);
-                 inventory.setWarehouseId(warehouseList.get(i).getWarehouseId());
-                 inventory.setMaterialName(materialName);
+                 Inventory inventory1= new Inventory();
+                 inventory1.setNumber(materialNumber);
+                 inventory1.setWarehouseType(0);
+                 inventory1.setIsDelete(1);
+                 inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
+                 inventory1.setMaterialName(materialName);
 
              }
              return Result.success("null","入库成功");
@@ -203,7 +206,8 @@ public class  WarehouseController {
                      .eq(Inventory::getMaterialName,materialName)
                      .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
              //如果仓库里面原本有这个原材料
-             if (inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber()!=null) {
+             Inventory inventory =inventoryService.getOne(inventoryLambdaQueryWrapper);
+             if (inventory!=null&& inventory.getNumber()!=0) {
                  int materialNumbers = inventoryService.getOne(inventoryLambdaQueryWrapper).getNumber();
                  materialNumbers = maxNumber + materialNumbers;
                  LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
@@ -213,12 +217,12 @@ public class  WarehouseController {
              }
              //如果仓库原本里面没有这个原材料就在库存表里初始化这个原材料数据
              else {
-                 Inventory inventory= new Inventory();
-                 inventory.setNumber(maxNumber);
-                 inventory.setWarehouseType(0);
-                 inventory.setIsDelete(1);
-                 inventory.setWarehouseId(warehouseList.get(i).getWarehouseId());
-                 inventory.setMaterialName(materialName);
+                 Inventory inventory1= new Inventory();
+                 inventory1.setNumber(maxNumber);
+                 inventory1.setWarehouseType(0);
+                 inventory1.setIsDelete(1);
+                 inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
+                 inventory1.setMaterialName(materialName);
              }
              materialNumber=(materialNumber-maxNumber);
          }
