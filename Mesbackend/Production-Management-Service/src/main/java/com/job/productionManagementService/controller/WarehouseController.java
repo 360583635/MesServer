@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/warehouse")
+@RequestMapping("/productionManagement/warehouse")
 public class  WarehouseController {
 
     @Resource

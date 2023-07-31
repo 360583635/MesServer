@@ -18,7 +18,7 @@ import java.util.List;
  * @description
  */
 @RestController
-@RequestMapping("/material")
+@RequestMapping("/productionManagement/material")
 @Component
 public class MaterialController {
 

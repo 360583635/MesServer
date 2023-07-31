@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/produce")
+@RequestMapping("/productionManagement/produce")
 @Component
 @RestController
 public class ProduceController {
@@ -49,7 +49,7 @@ public class ProduceController {
 
    }
     /**
-     * 初始化产品入库
+     * 初始化产品添加
      * @return
      */
     @PostMapping("/initializationProduce")
@@ -63,6 +63,11 @@ public class ProduceController {
         inventoryService.save(inventory);
         return null ;
     }
+
+    /**
+     * 初始化仓库id
+     * @return
+     */
     @PostMapping("produceId")
     Integer produceId(){
         List<Produce>produceList=produceService.list();

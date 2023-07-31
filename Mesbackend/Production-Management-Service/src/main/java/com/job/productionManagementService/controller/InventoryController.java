@@ -23,7 +23,7 @@ import java.util.List;
  * @description
  */
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/productionManagement/inventory")
 @Component
 public class InventoryController {
 
