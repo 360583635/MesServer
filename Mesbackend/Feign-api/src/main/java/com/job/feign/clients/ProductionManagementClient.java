@@ -50,6 +50,12 @@ public interface ProductionManagementClient {
      */
     @PostMapping("/productionManagement/produce/queryMaterialNumberByMaterialName")
     Integer queryMaterialNumberByMaterialName(String materialName);
-
+    /**
+     * 根据产品名称查询产品id
+     * @param produceName
+     * @return
+     */
+    @RequestMapping("/productionManagement/produce/queryProduceIdByProduceName")
+    Integer queryProduceIdByProduceName(@RequestParam String produceName);
 
 }
