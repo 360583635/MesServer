@@ -35,18 +35,20 @@ public interface ProductionManagementClient {
     @GetMapping("/productionManagement/equipment/queryEquipments")
     List<Equipment> queryEquipments();
 
-    @PostMapping("/productionManagement/equipment/queryEquipmentById")
-    public Equipment queryEquipmentById(@RequestParam String id);
-
     /**
      * 根据原材料名称查询原材料实体
      * @param materialName
      * @return
      */
-    @PostMapping("/productionManagement/queryMaterialByName")
+    @PostMapping("/productionManagement/material/queryMaterialByName")
     public Result queryMaterialByName(@RequestParam String materialName);
 
-    @PostMapping("/productionManagement/queryMaterialNumberByMaterialName")
+    /**
+     * 根据原材料名称查询总数量
+     * @param materialName
+     * @return
+     */
+    @PostMapping("/productionManagement/produce/queryMaterialNumberByMaterialName")
     Integer queryMaterialNumberByMaterialName(String materialName);
 
 
