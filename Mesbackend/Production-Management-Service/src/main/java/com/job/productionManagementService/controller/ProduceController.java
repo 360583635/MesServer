@@ -95,11 +95,16 @@ public class ProduceController {
         produceList=produceService.list(queryWrapper);
         return produceList;
     }
+
+    /**
+     * 根据产品名称查询产品id
+     * @param produceName
+     * @return
+     */
     @RequestMapping("/queryProduceIdByProduceName")
     Integer queryProduceIdByProduceName(@RequestParam String produceName) {
         LambdaQueryWrapper<Produce> queryWrapper= new LambdaQueryWrapper<>();
         queryWrapper.eq(Produce::getProduceName,produceName);
-
         return produceService.getOne(queryWrapper).getProduceId();
     }
     /**
