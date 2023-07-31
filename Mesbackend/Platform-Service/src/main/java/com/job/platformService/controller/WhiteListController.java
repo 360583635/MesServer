@@ -35,6 +35,7 @@ public class WhiteListController {
     public Result show(@RequestParam(value = "option") String option){
 
         List<Users> usersList=query(option);
+        System.out.println("wuwuuwuwu");
         System.out.println(usersList);
         //前端读取list,去除list对象中的name(展示)
         return Result.success(usersList,"展示成功");
@@ -74,7 +75,7 @@ public class WhiteListController {
 
     @RequestMapping("/add")
     //传入id值
-    public Result add (@RequestParam(value = "IDS") List<Integer>IDS, HttpServletRequest request)
+    public Result add (@RequestParam(value = "IDS") List<String >IDS, HttpServletRequest request)
     {
         System.out.println(IDS);
         //获取token
@@ -92,7 +93,7 @@ public class WhiteListController {
         Date date=new Date();
 
         UpdateWrapper<Users> updateWrapper = new UpdateWrapper<>();
-        for (int ID : IDS) {
+        for (String ID : IDS) {
             Users users=usersService.getById(ID);
             if (users.getIsBlack().equals(WHITESTATE)){
                 users.setIsBlack(BLACKSTATE);

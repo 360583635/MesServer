@@ -15,6 +15,7 @@ import com.job.common.pojo.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -271,6 +272,7 @@ public class UsersController {
      * @param
      * @return
      */
+  //  @PreAuthorize("hasAuthority('showdetail')")
     @RequestMapping("/showdetail")
     public Result showdetail(HttpServletRequest request){
         String token=request.getParameter("Authorization");
