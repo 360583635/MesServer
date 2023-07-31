@@ -34,7 +34,7 @@ public class MaterialController {
     @Resource
     private ProduceService produceService;
 
-    @GetMapping("/material/queryMaterials")
+    @GetMapping("/queryMaterials")
     List<Material> queryMaterials() {
         return materialService.queryMaterials();
     }

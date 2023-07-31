@@ -64,6 +64,7 @@ public class Process {
     private Integer isDelete;
 
     private String equipmentId;
+
     @TableField(exist = false)
     private Equipment equipment;
 }

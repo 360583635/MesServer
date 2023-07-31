@@ -144,8 +144,15 @@ public class EquipmentController {
         return Result.error("保存失败");
     }
 
-
-
+    @PostMapping("/queryEquipmentById")
+    @ResponseBody
+    public Equipment queryEquipmentById(@RequestParam String id){
+        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(Equipment::getEquipmentId,id);
+        Equipment byId = equipmentService.getOne(queryWrapper);
+        return byId;
+    }
 
 
 

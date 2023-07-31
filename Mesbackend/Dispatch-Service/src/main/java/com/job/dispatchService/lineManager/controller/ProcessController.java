@@ -13,16 +13,20 @@ import com.job.common.pojo.Process;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
+import com.job.dispatchService.lineManager.dto.ProcessUpdateDto;
 import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
+import com.job.dispatchService.lineManager.service.ProcessMaterialRelationService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.EquipmentVo;
+import com.job.dispatchService.lineManager.vo.MaterialVo;
 import com.job.feign.clients.AuthenticationClient;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Equipment;
 import io.jsonwebtoken.Claims;
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,10 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 庸俗可耐
@@ -43,6 +44,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/dispatch/process")
 @CrossOrigin
+@Slf4j
 public class ProcessController {
 
     @Autowired
@@ -56,6 +58,9 @@ public class ProcessController {
 
     @Autowired
     private ProcessMaterialRelationController processMaterialRelationController;
+
+    @Autowired
+    private ProcessMaterialRelationService processMaterialRelationService;
 
     @Autowired
     private AuthenticationClient authenticationClient;
@@ -101,6 +106,7 @@ public class ProcessController {
         //获得用户信息
 //        String userId= UserUtil.getUserId(httpServletRequest);
         DateTime nowTime = DateUtil.date();
+        tProcess.setUpdateTime(nowTime);
         processService.updateById(tProcess);
         return Result.success(null,"修改成功");
 
@@ -303,9 +309,46 @@ public class ProcessController {
      */
     @PostMapping("/queryById")
     public Result queryById(@RequestParam String id){
-        Process byId = processService.getById(id);
+        LambdaQueryWrapper<Process> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper
+                .eq(Process::getIsDelete,1)
+                .eq(Process::getId,id);
+        Process process = processService.getOne(lambdaQueryWrapper);
+        return Result.success(process,"查询成功");
+    }
 
+    /**
+     *
+     */
+    @PostMapping("/queryProcessUpdateDtoById")
+    public Result queryProcessUpdateDtoById(@RequestParam String id){
+        if(id==null){
+            return Result.error("传入参数为空");
+        }
+        log.info("设备id："+id);
+        Process process = (Process) queryById(id).getData();
+        ProcessUpdateDto processUpdateDto = new ProcessUpdateDto();
+        BeanUtil.copyProperties(process,processUpdateDto);
+        String equipmentId = process.getEquipmentId();
 
-        return Result.success(byId,"查询成功");
+        Equipment equipment = productionManagementClient.queryEquipmentById(equipmentId);
+        processUpdateDto.setFunction(equipment.getFunctionName());
+        processUpdateDto.setEquipmentName(equipment.getEquipmentName());
+
+        LambdaQueryWrapper<ProcessMaterialRelation> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .eq(ProcessMaterialRelation::getIsDelete,1)
+                .eq(ProcessMaterialRelation::getProcessId,id);
+        List<ProcessMaterialRelation> processMaterialRelations = processMaterialRelationService.list(queryWrapper);
+        List<MaterialVo> materialVoList = new Vector<>();
+        for(ProcessMaterialRelation processMaterialRelation : processMaterialRelations){
+            MaterialVo materialVo = new MaterialVo();
+            materialVo.setTitle(processMaterialRelation.getMaterialName());
+            materialVo.setValue(processMaterialRelation.getMaterialId());
+            materialVo.setNumber(processMaterialRelation.getNumber());
+            materialVoList.add(materialVo);
+        }
+        processUpdateDto.setMaterialVoList(materialVoList);
+        return Result.success(processUpdateDto,"查询成功");
     }
 }

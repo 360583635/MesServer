@@ -22,7 +22,7 @@ public interface ProductionManagementClient {
      * Dispatch-Service 调用 Production-Management-Service的queryMaterials方法
      * @return
      */
-    @GetMapping("/productionManagement/material/queryMaterials")
+    @GetMapping("/material/queryMaterials")
     List<Material>  queryMaterials();
 
     @GetMapping("/productionManagement/equipment/queryEquipmentTypes")
@@ -34,6 +34,9 @@ public interface ProductionManagementClient {
 
     @GetMapping("/productionManagement/equipment/queryEquipments")
     List<Equipment> queryEquipments();
+
+    @PostMapping("/productionManagement/equipment/queryEquipmentById")
+    public Equipment queryEquipmentById(@RequestParam String id);
 
     /**
      * 根据原材料名称查询原材料实体
