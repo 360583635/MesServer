@@ -133,17 +133,15 @@ public class InventoryController {
      * 根据原材料名称查询总个数
      */
     @GetMapping("/queryNumbersByMaterialName")
-       Integer queryMaterialNumberByMaterialName(@RequestParam String materialName) {
-        LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-        System.out.println(materialName);
-        queryWrapper.eq(Inventory::getMaterialName, materialName);
-       List<Inventory> materialNumberList= inventoryService.list(queryWrapper);
-        int number=0;
-       for (int i = 0 ;i< materialNumberList.size();i++){
-
-          int materialNumbers = materialNumberList.get(i).getNumber();
-           number=number+materialNumbers;
-       }
+       Integer queryMaterialNumberByMaterialName(String materialName) {
+        LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Inventory::getMaterialName,materialName);
+       List<Inventory>inventoryList = inventoryService.list(queryWrapper);
+       int number =0 ;
+       int size =inventoryList.size();
+        for (int i=0 ;i<size;i++){
+            number=number+inventoryList.get(i).getNumber();
+        }
         return number;
     }
     /**
@@ -154,14 +152,37 @@ public class InventoryController {
         QueryWrapper<Material>queryWrapper= Wrappers.query();
         queryWrapper.select("material_name");
         List<Material> materials = materialMapper.selectList(queryWrapper);
-        System.out.println(materials);
+
         List<String> nameList = new ArrayList<>();
         for (Material name : materials) {
             nameList.add(name.getMaterialName());
         }
-        System.out.println(nameList);
         return nameList ;
 
+    }
+
+    /**
+     * 根据原材料名称查询原材料名称无参数版
+     * @return
+     */
+    @PostMapping("/queryMaterialNumbersByMaterialName")
+    List<Integer> queryMaterialNumbersByMaterialName() {
+        QueryWrapper<Material> materialQueryWrapper = Wrappers.query();
+        materialQueryWrapper.select("material_name");
+        List<Material> materials = materialMapper.selectList(materialQueryWrapper);
+        List<Integer> numbers = new ArrayList<>();
+        for (Material name : materials) {
+            int number =0 ;
+            LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(Inventory::getMaterialName, name.getMaterialName());
+            List<Inventory>materialList=inventoryService.list(queryWrapper);
+            for (int i= 0 ;i<materialList.size();i++){
+                int materialName=materialList.get(i).getNumber();
+                number=number+materialName;
+            }
+            numbers.add(number);
+        }
+        return numbers;
     }
 
     }
