@@ -49,7 +49,7 @@ public interface ProductionManagementClient {
      * @param materialName
      * @return
      */
-    @PostMapping("/productionManagement/produce/queryMaterialNumberByMaterialName")
+    @GetMapping("/productionManagement/inventory/queryNumbersByMaterialName")
     Integer queryMaterialNumberByMaterialName(String materialName);
     /**
      * 根据产品名称查询产品id

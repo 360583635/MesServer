@@ -147,12 +147,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             StringBuilder rawSb=new StringBuilder();
             for (String material : keySet) {
                 Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(material);
+                System.out.println("库存数量"+materialNum);
                 Integer rawNum = rawMap.get(material);
+                System.out.println("所需数量"+rawNum);
                 if (materialNum < rawNum) {
                     rawSb.append(material).append(",");
                     rawSb.append(rawNum).append(",");
                 }
             }
+            System.out.println(rawSb);
             if (rawSb.length()>0){
                 return Result.error(rawSb,"error:原材料数量不足，创建失败！");
             }

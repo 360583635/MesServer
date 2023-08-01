@@ -132,7 +132,7 @@ public class InventoryController {
     /**
      * 根据原材料名称查询总个数
      */
-    @PostMapping("/queryNumbersByMaterialName")
+    @GetMapping("/queryNumbersByMaterialName")
        Integer queryMaterialNumberByMaterialName(@RequestParam String materialName) {
         LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
         System.out.println(materialName);
@@ -154,11 +154,12 @@ public class InventoryController {
         QueryWrapper<Material>queryWrapper= Wrappers.query();
         queryWrapper.select("material_name");
         List<Material> materials = materialMapper.selectList(queryWrapper);
+        System.out.println(materials);
         List<String> nameList = new ArrayList<>();
         for (Material name : materials) {
             nameList.add(name.getMaterialName());
         }
-
+        System.out.println(nameList);
         return nameList ;
 
     }
