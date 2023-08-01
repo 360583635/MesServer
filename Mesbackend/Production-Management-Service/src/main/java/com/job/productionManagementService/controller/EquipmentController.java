@@ -1,11 +1,14 @@
 package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.job.common.pojo.Equipment;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Warehouse;
 import com.job.common.result.Result;
+import com.job.productionManagementService.mapper.EquipmentMapper;
 import com.job.productionManagementService.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Controller;
@@ -34,6 +37,8 @@ public class EquipmentController {
     private EquipmentService equipmentService;
     @Resource
     private ProduceService produceService;
+    @Resource
+    private EquipmentMapper equipmentMapper;
 
 
     /**
@@ -171,6 +176,24 @@ public class EquipmentController {
                 .eq(Equipment::getEquipmentId,id);
         Equipment byId = equipmentService.getOne(queryWrapper);
         return byId;
+    }
+
+    /**
+     * 查询所有原材料名称
+     * @return
+     */
+    @PostMapping("queryEquipmentName")
+    List<String> queryEquipment(){
+        QueryWrapper<Equipment> queryWrapper= Wrappers.query();
+        queryWrapper.select("equipment_name");
+        List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper);
+        List<String> nameList = new ArrayList<>();
+        for (Equipment name : equipmentList ) {
+            nameList.add(name.getEquipmentName());
+        }
+
+        return nameList ;
+
     }
 
 
