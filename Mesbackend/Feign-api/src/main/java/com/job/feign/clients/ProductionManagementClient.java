@@ -61,10 +61,19 @@ public interface ProductionManagementClient {
 
     @PostMapping("/productionManagement/equipment/queryEquipmentById")
     @ResponseBody
-    public Equipment queryEquipmentById(@RequestParam String id);
+     Equipment queryEquipmentById(@RequestParam String id);
     /**
      * 查询所有产品名称(wen)
      */
     @GetMapping("/productionManagement/produce/queryProduceName")
     Set<String> queryProduceName();
+
+    /**
+     * 原材料出库
+     * @param materials
+     * @return
+     */
+    @PostMapping("/productionManagement/warehouse/MaterialStockOut")
+    @ResponseBody
+     Result MaterialStockOut( @RequestParam String materials);
 }
