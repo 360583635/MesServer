@@ -48,6 +48,18 @@ public class UsersController {
      */
     @RequestMapping("/showrole")
     public  Result showrole(){
+//        String token=request.getParameter("Authorization");
+//        String userid;
+//        try {
+//            Claims claims = JwtUtil.parseJWT(token);
+//            userid = claims.getSubject();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("token非法");
+//        }
+//        //获取修改人信息
+//        Users users=usersService.getById(userid);
+
         LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Roles::getIsDelete,1);
         List<Roles> roleslist=rolesService.list(wrapper);
@@ -84,11 +96,13 @@ public class UsersController {
      */
     @RequestMapping("/showById")
     public Result joinQueryExample(@RequestParam(value = "id") String id) {
+        System.out.println(88+id);
         List list = new ArrayList<>();
         Result<Object> result = new Result<>();
         LambdaQueryWrapper<Users> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Users::getState, Users::getName, Users::getId) // 指定需要查询的字段
-                .eq(Users::getId, id); // 添加其他查询条件
+                .eq(Users::getId, id); // 添加其
+        // 他查询条件
         List<Map<String, Object>> resultList = usersMapper.selectMaps(queryWrapper);
         list.add(resultList);
         System.out.println(resultList);
@@ -131,6 +145,23 @@ public class UsersController {
                                  @RequestParam(value = "password") String password,
                                  @RequestParam(value = "state") Integer state,
                                  @RequestParam(value = "option",required = false) List<String> options){
+//        System.out.println(options);
+//        System.out.println(options.subList(0,-1));
+
+//        String token=request.getParameter("Authorization");
+//        String userid;
+//        try {
+//            Claims claims = JwtUtil.parseJWT(token);
+//            userid = claims.getSubject();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("token非法");
+//        }
+//        //获取修改人信息
+//        Users users1=usersService.getById(userid);
+        options.remove(options.size()-1);
+
+
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
         Date date=new Date();
         Users users=new Users();
@@ -151,7 +182,7 @@ public class UsersController {
         if (options!=null) {
             System.out.println(options);
             for (String s : options) {
-                System.out.println(s);
+                System.out.println("1"+s);
                 UsersRoles usersRoles = new UsersRoles();
                 usersRoles.setUserId(id);
                 usersRoles.setCreateTime(date);
@@ -167,6 +198,7 @@ public class UsersController {
         result.setCode(200);
         result.setMsg("添加成功");
         return result;
+
     }
 
     /**
@@ -178,21 +210,38 @@ public class UsersController {
      */
 
     @RequestMapping("/updateUser")
-    public Result<Users> addUser(@RequestParam(value = "id") String id,
+    public Result addUser(@RequestParam(value = "id") String id,
                                  @RequestParam(value = "state") Integer state,
                                  @RequestParam(value = "option",required = false) List<String> options) {
+        options.remove(options.size()-1);
+        System.out.println(id);
+        System.out.println(state);
+        System.out.println(options);
+
+//        String token=request.getParameter("Authorization");
+//        String userid;
+//        try {
+//            Claims claims = JwtUtil.parseJWT(token);
+//            userid = claims.getSubject();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("token非法");
+//        }
+//        //获取修改人信息
+//        Users users=usersService.getById(userid);
 
 
-//                修改角色名
+//                修改状态
         Date date = new Date();
         Users user = usersService.getById(id);
+        System.out.println(user);
         user.setState(state);
         user.setUpdateTime(date);
         user.setUpdateUser("zyx");
         usersService.updateById(user);
 
 
-        //        修改角色权限表
+        //        修改角色表
         System.out.println(id);
         System.out.println(options);
         usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id", id));
@@ -213,6 +262,7 @@ public class UsersController {
         result.setCode(200);
         result.setMsg("添加成功");
         return result;
+
 
     }
 
@@ -311,7 +361,7 @@ public class UsersController {
     @RequestMapping("/update/detail")
     public  Result updateDetail(@RequestParam(value = "id") String id,
                                 @RequestParam(value = "name") String name,
-                                @RequestParam(value = "password") String password,
+                                //  @RequestParam(value = "password") String password,
                                 @RequestParam(value = "phone") String phone,
                                 @RequestParam(value = "email") String email,
                                 @RequestParam(value = "sex") String sex,
@@ -319,9 +369,9 @@ public class UsersController {
                                 @RequestParam(value = "birth") String birth){
         Users users=usersService.getById(id);
         users.setName(name);
-        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-        String encode=passwordEncoder.encode(password);
-        users.setPassword(encode);
+//        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+//        String encode=passwordEncoder.encode(password);
+//        users.setPassword(encode);
         users.setPhone(phone);
         users.setEmail(email);
         users.setAddress(address);
@@ -338,6 +388,33 @@ public class UsersController {
         return Result.success(null,"修改成功");
 
     }
-
-
+    @RequestMapping("/updatepassword")
+    public  Result UpdatePassword(@RequestParam("password") String password,
+                                  @RequestParam("password1") String password1,
+                                  HttpServletRequest request){
+        String token=request.getParameter("Authorization");
+        System.out.println("进入showdetail"+token);
+        //解析token
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        Users users=usersService.getById(userid);
+        if(password.equals(password1)){
+            BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+            String encode=passwordEncoder.encode(password);
+            users.setPassword(encode);
+            int i= usersMapper.updateById(users);
+            if(i>0){
+                return Result.success(null,"修改成功");
+            }else {
+                return Result.error("修改失败");
+            }
+        }
+        return  Result.error("修改错误");
+    }
 }
