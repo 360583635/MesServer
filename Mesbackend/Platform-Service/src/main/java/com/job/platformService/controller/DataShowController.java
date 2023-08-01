@@ -11,9 +11,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
+@CrossOrigin
 public class DataShowController {
     @Autowired
     private RedisCache redisCache;
+
+    //创建分类
+    @RequestMapping("list")
+    public void addList(){
+//        redisCache.setCacheMapValue("list","user","用户数据");
+        redisCache.addList("order:","订单管理");
+        redisCache.addList("user:","用户管理");
+        redisCache.addList("login:","登录管理");
+    }
 
     /*
     查找数据
@@ -25,61 +35,76 @@ public class DataShowController {
         System.out.println(list);
         Result result=new Result();
         result.setData(list);
+        result.setMap(list);
         result.setCode(200);
         result.setMsg("查询成功");
         return result;
     }
 
-    @RequestMapping("select")
+    @RequestMapping("/select")
     public Result select(@RequestParam(value = "id", required = false) String id,
                          @RequestParam(value = "option") String option) {
-        String Id=option+id;//order:1
         System.out.println(id);
-        Collection<String> keys = redisCache.keys( option + "*");
+        if (id.isEmpty()) {
+            System.out.println(111);
+        }
+        System.out.println(option);
+        String Id = option + id;//order:1
+        System.out.println(Id);
+        Collection<String> keys = redisCache.keys(option + "*");
         System.out.println(keys);
-//        List<Map<String, Object>> resultList = new ArrayList<>();
+        List<Map<String, Object>> resultList = new ArrayList<>();
         Result result = new Result();
-        if (id == null) {
-//            for (String key : keys) {
-//                System.out.println(key);
-//                Map<String, Object> cacheMap = redisCache.getCacheMap(key);
-//                System.out.println(cacheMap);
-//                resultList.add(cacheMap);
-//                result.setCode(200);
-//                result.setMsg("获取成功");
-//                result.setData(resultList);
-//                return result;
+        if (id.isEmpty()) {
+            for (String key : keys) {
+                System.out.println(222);
+                System.out.println(key);
+                Map<String, Object> cacheMap = redisCache.getCacheMap(key);
+                cacheMap.put("rediskey", key);
+                System.out.println(cacheMap);
+                resultList.add(cacheMap);
                 result.setCode(200);
                 result.setMsg("获取成功");
-                result.setData(keys);
-                return result;
-
-        } else {
-//            for (String key : keys) {
-//                while (Id.equals(key)) {
-//                    Map<String, Object> cacheMap = redisCache.getCacheMap(key);
-//                    System.out.println(cacheMap);
-//                    resultList.add(cacheMap);
-//                    result.setCode(200);
-//                    result.setMsg("获取成功");
-//                    result.setData(resultList);
-//                    return result;
-//                }
-                for (String key : keys) {
-                    while (Id.equals(key)) {
-                        result.setCode(200);
-                        result.setMsg("获取成功");
-                        result.setData(key);
-                        return result;
-                    }
+                result.setData(resultList);
+                System.out.println(resultList);
+//                result.setCode(200);
+//                result.setMsg("获取成功");
+//                result.setData(keys);
+//                System.out.println(keys);
+//                return result;
             }
+        } else {
+            for (String key : keys) {
+                if(Id.equals(key)) {
+                    System.out.println(333);
+                    Map<String, Object> cacheMap = redisCache.getCacheMap(key);
+                    cacheMap.put("rediskey", key);
+                    System.out.println(cacheMap);
+                    resultList.add(cacheMap);
+                    result.setCode(200);
+                    result.setMsg("获取成功");
+                    result.setData(resultList);
+                    System.out.println(resultList);
+
+                }
+
+//                for (String key : keys) {
+//                    while (Id.equals(key)) {
+//                        result.setCode(200);
+//                        result.setMsg("获取成功");
+//                        result.setData(key);
+//                        System.out.println(Id);
+//                        return result;
+//                    }
+            }
+            return result;
         }
         return result;
     }
 
     //    查找单个数据
-    @RequestMapping("/select/{key}")
-    public Result findById(@PathVariable(value = "key") String key){
+    @RequestMapping("/select/key")
+    public Result findById(@RequestParam(value = "id") String key){
         System.out.println(key);
         Map<String, Object> cacheMap = redisCache.getCacheMap(key);
         System.out.println(cacheMap);
@@ -92,8 +117,9 @@ public class DataShowController {
 
 
     //    删除单个缓存数据
-    @RequestMapping("delete/{key}")
-    public Result deteById(@PathVariable("key") String key){
+    @RequestMapping("delete/key")
+    public Result deteById(@RequestParam(value = "id") String key){
+        System.out.println(888);
         System.out.println(key);
         boolean b = redisCache.deleteObject(key);
         Result result=new Result();
@@ -109,8 +135,8 @@ public class DataShowController {
 
 
     //    设置单个缓存数据过期时间
-    @RequestMapping("expire/{key}")
-    public Result expireById(@PathVariable("key") String key){
+    @RequestMapping("expire/key")
+    public Result expireById(@RequestParam(value = "id") String key){
         boolean b = redisCache.expire(key, 0);
         Result result=new Result();
         if (b) {

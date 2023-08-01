@@ -119,8 +119,8 @@ public class OrderController {
      * @param order
      * @return
      */
-    @GetMapping("/saveUpdateOrder")
-    public Result<Order> saveUpdateOrder(Order order){
+    @PostMapping("/saveUpdateOrder")
+    public Result<Order> saveUpdateOrder(@RequestBody Order order){
         Result<Order> result = orderService.saveUpdateOrder(order);
         return result;
 //        Order oldOrder = orderService.getById(order.getOrderId());
