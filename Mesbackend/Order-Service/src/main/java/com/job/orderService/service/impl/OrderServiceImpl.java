@@ -181,7 +181,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 } finally {
                     lock.unlock();
                 }
-                if(!orderPQ.isEmpty()){
+                if(orderPQ!=null && !orderPQ.isEmpty()){
                     for (Object o : orderPQ) qq.offer((Order) o);
                 }
                 lock.lock();
@@ -223,7 +223,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public Result<Order> saveUpdateOrder(Order order) {
         Order oldOrder = this.getById(order.getOrderId());
         Integer status = oldOrder.getProductionStatus();
-        if ("0".equals(status.toString())) {
+        if ("0".equals(status.toString())||"1".equals(status.toString())) {
             System.out.println(order);
             boolean b = this.updateById(order);
             if (b) {
@@ -283,7 +283,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Order order = orderMapper.selectOne(wrapper);
         System.out.println(order);
         Integer status = order.getProductionStatus();
-        if (status == 0) {
+        if (status == 0 || status == 1) {
             order.setIsDelete(1);
             LambdaQueryWrapper<Order> wrapper1 = new LambdaQueryWrapper<>();
             wrapper1.eq(Order::getOrderId, orderId);
