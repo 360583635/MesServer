@@ -26,7 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/authen/menus")
-@CrossOrigin
+//@CrossOrigin
 public class MenuController {
 
     @Autowired
@@ -42,8 +42,8 @@ public class MenuController {
      * 添加权限
      * @param menuname
      * @param url
-     * @param type
-     * @param parentid
+//     * @param type
+//     * @param parentid
      * @param permission
      * @param remark
      * @param request
@@ -52,8 +52,8 @@ public class MenuController {
     @RequestMapping("/add")
     public Result addMenus(@RequestParam(value = "menuname") String menuname,
                            @RequestParam(value = "url") String url,
-                           @RequestParam(value = "type") int type,
-                           @RequestParam(value = "parentid") String parentid,
+                          // @RequestParam(value = "type") int type,
+                        //   @RequestParam(value = "parentid") String parentid,
                            @RequestParam(value = "permission") String permission,
                            @RequestParam(value = "remark") String remark, HttpServletRequest request) {
         //  String token = request.getHeader("token");
@@ -73,8 +73,8 @@ public class MenuController {
         Menus menus = new Menus();
         menus.setName(menuname);
         menus.setUrl(url);
-        menus.setType(type);
-        menus.setParentId(parentid);
+//        menus.setType(type);
+//        menus.setParentId(parentid);
         menus.setPermission(permission);
         menus.setRemark(remark);
         Date date = new Date();
@@ -131,8 +131,8 @@ public class MenuController {
      * @param menusid
      * @param menuname
      * @param url
-     * @param type
-     * @param parentid
+//     * @param type
+//     * @param parentid
      * @param permission
      * @param remark
      * @param request
@@ -142,8 +142,8 @@ public class MenuController {
     public Result updateMenus(@RequestParam(value = "menusid") String menusid,
                               @RequestParam(value = "menuname") String menuname,
                               @RequestParam(value = "url") String url,
-                              @RequestParam(value = "type") int type,
-                              @RequestParam(value = "parentid") String parentid,
+                           //   @RequestParam(value = "type") int type,
+                            //  @RequestParam(value = "parentid") String parentid,
                               @RequestParam(value = "permission") String permission,
                               @RequestParam(value = "remark") String remark, HttpServletRequest request) {
 
@@ -167,8 +167,8 @@ public class MenuController {
         Menus menus=menusService.getById(menusid);
         menus.setName(menuname);
         menus.setUrl(url);
-        menus.setType(type);
-        menus.setParentId(parentid);
+//        menus.setType(type);
+//        menus.setParentId(parentid);
         menus.setPermission(permission);
         menus.setRemark(remark);
         Date date = new Date();

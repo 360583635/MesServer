@@ -11,19 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
+@CrossOrigin
 public class DataShowController {
     @Autowired
     private RedisCache redisCache;
 
-//创建分类
+    //创建分类
     @RequestMapping("list")
     public void addList(){
 //        redisCache.setCacheMapValue("list","user","用户数据");
-
         redisCache.addList("order:","订单管理");
         redisCache.addList("user:","用户管理");
         redisCache.addList("login:","登录管理");
-
     }
 
     /*
@@ -42,7 +41,7 @@ public class DataShowController {
         return result;
     }
 
-    @RequestMapping("select")
+    @RequestMapping("/select")
     public Result select(@RequestParam(value = "id", required = false) String id,
                          @RequestParam(value = "option") String option) {
         System.out.println(id);
@@ -76,7 +75,7 @@ public class DataShowController {
             }
         } else {
             for (String key : keys) {
-                while (Id.equals(key)) {
+                if(Id.equals(key)) {
                     System.out.println(333);
                     Map<String, Object> cacheMap = redisCache.getCacheMap(key);
                     cacheMap.put("rediskey", key);
@@ -86,8 +85,9 @@ public class DataShowController {
                     result.setMsg("获取成功");
                     result.setData(resultList);
                     System.out.println(resultList);
+
                 }
-                return result;
+
 //                for (String key : keys) {
 //                    while (Id.equals(key)) {
 //                        result.setCode(200);
@@ -97,7 +97,7 @@ public class DataShowController {
 //                        return result;
 //                    }
             }
-
+            return result;
         }
         return result;
     }

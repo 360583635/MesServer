@@ -45,6 +45,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private RestTemplate restTemplate;
     private final Lock lock = new ReentrantLock();
+
     private final String urlFlow = "http://127.0.0.1:6031/dispatch/process/material/queryMaterialsByFlowName";
 
     /**
@@ -95,7 +96,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @return
      */
     @Override
-    public Result<Order> addOrder(Order order) {
+    public Result<Object> addOrder(Order order) {
         //数据验证
         if (order == null) {
             return Result.error("输入对象不能为空！");
@@ -119,6 +120,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             }
             StringBuilder rawNums=new StringBuilder();
             for (Integer rawNum : rawMaps.values()) {
+                rawNum *= order.getOrderNumber();
                 rawNums.append(rawNum).append(" ");
             }
             order.setRawName(rawNames.toString());
@@ -133,21 +135,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setIsDelete(0);
 
             //计算订单原材料
-            Map<String, Integer> rawMap = dispatchClient.queryMaterialsByFlowName(/*order.getProductName()*/new HashMap<>());
+            Map<String, Integer> rawMap = dispatchClient.queryMaterialsByFlowName(map);
             Set<Map.Entry<String, Integer>> rawSet = rawMap.entrySet();
             for (Map.Entry<String, Integer> rawset : rawSet) {
                 rawMap.put(rawset.getKey(), rawset.getValue() * order.getOrderNumber());
             }
 
             //查询原材料库存
-            Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(/*order.getProductName()*/new HashMap<>());
+            Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(map);
             Set<String> keySet = materials.keySet();
+            StringBuilder rawSb=new StringBuilder();
             for (String material : keySet) {
                 Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(material);
+                System.out.println("库存数量"+materialNum);
                 Integer rawNum = rawMap.get(material);
+                System.out.println("所需数量"+rawNum);
                 if (materialNum < rawNum) {
-                    return Result.error("error:原材料数量不足，创建失败！");
+                    rawSb.append(material).append(",");
+                    rawSb.append(rawNum).append(",");
                 }
+            }
+            System.out.println(rawSb);
+            if (rawSb.length()>0){
+                return Result.error(rawSb,"error:原材料数量不足，创建失败！");
             }
             //创建完成
             int i = orderMapper.insert(order);
@@ -181,7 +191,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 } finally {
                     lock.unlock();
                 }
-                if(!orderPQ.isEmpty()){
+                if(orderPQ!=null && !orderPQ.isEmpty()){
                     for (Object o : orderPQ) qq.offer((Order) o);
                 }
                 lock.lock();
@@ -190,6 +200,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 } finally {
                     lock.unlock();
                 }
+                //出库操作
+                Map<String, Integer> materials1 = dispatchClient.queryMaterialsByFlowName(/*order.getProductName()*/new HashMap<>());
+                Set<String> keySet1 = materials1.keySet();
+                StringBuilder rawSb1=new StringBuilder();
+                for (String material : keySet1) {
+                    Integer rawNum = rawMap.get(material);
+                    rawSb1.append(material).append(",");
+                    rawSb1.append(rawNum).append(",");
+                }
+                productionManagementClient.MaterialStockOut(rawSb1.toString());
                 return Result.success("success，订单创建且派发成功");
             } else {
                 return Result.error("error,订单创建成功但派发失败!");
@@ -223,7 +243,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public Result<Order> saveUpdateOrder(Order order) {
         Order oldOrder = this.getById(order.getOrderId());
         Integer status = oldOrder.getProductionStatus();
-        if ("0".equals(status.toString())) {
+        if ("0".equals(status.toString())||"1".equals(status.toString())) {
             System.out.println(order);
             boolean b = this.updateById(order);
             if (b) {
@@ -283,7 +303,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         Order order = orderMapper.selectOne(wrapper);
         System.out.println(order);
         Integer status = order.getProductionStatus();
-        if (status == 0) {
+        if (status == 0 || status == 1) {
             order.setIsDelete(1);
             LambdaQueryWrapper<Order> wrapper1 = new LambdaQueryWrapper<>();
             wrapper1.eq(Order::getOrderId, orderId);

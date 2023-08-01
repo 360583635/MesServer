@@ -14,6 +14,7 @@ import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
 import com.job.feign.clients.AuthenticationClient;
+import com.job.feign.clients.ProductionManagementClient;
 import io.jsonwebtoken.Claims;
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author 庸俗可耐
@@ -43,6 +45,10 @@ public class FlowController {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private ProductionManagementClient productionManagementClient;
+
     //逻辑删除1未删除0已删除
     private static int IS_DELETE_NO=1;
     private static int IS_DELETE_YES=0;
@@ -263,7 +269,28 @@ public class FlowController {
         }else {
             return Result.error("修改失败");
         }
+    }
 
+    @GetMapping("/queryProduceName")
+    public Result queryProduceName(){
+
+        Set<String> queryProduceName = productionManagementClient.queryProduceName();
+        if(queryProduceName.size()==0||queryProduceName.isEmpty()) {
+            return Result.error("材料查询失败");
+        }
+
+        LambdaQueryWrapper<Flow> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Flow::getIsDelete,1);
+
+        List<Flow> flowList = flowService.list(queryWrapper);
+        Set<String> stringSet = flowList.stream().map(flow -> {
+            return flow.getFlow();
+        }).collect(Collectors.toSet());
+
+        Set<String> produceNames = new HashSet<>(queryProduceName);
+        produceNames.removeAll(stringSet);
+
+        return Result.success(produceNames,"查询成功");
     }
 
 
