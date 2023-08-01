@@ -16,10 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/productionManagement/produce")
@@ -137,16 +134,15 @@ public class ProduceController {
     /**
      * 查询所有产品名称
      */
-    @PostMapping("queryProduceName")
-    List<String> queryProduceName(){
+    @GetMapping("/queryProduceName")
+    Set<String> queryProduceName(){
         QueryWrapper<Produce> queryWrapper= Wrappers.query();
         queryWrapper.select("produce_name");
         List<Produce> produces = produceMapper.selectList(queryWrapper);
-        List<String> nameList = new ArrayList<>();
+        Set<String> nameList = new HashSet<>();
         for (Produce name : produces) {
             nameList.add(name.getProduceName());
         }
-        return nameList ;
-
+        return nameList;
     }
 }
