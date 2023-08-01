@@ -19,6 +19,7 @@ import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,8 @@ import static com.job.dispatchService.lineManager.controller.LineTaskController.
 
 @RestController
 @RequestMapping("/dispatch/line")
+@CrossOrigin
+@Slf4j
 public class LineController {
 
     @Autowired
@@ -279,6 +282,34 @@ public class LineController {
             threadByName.interrupt();
         }
         return Result.success(null,"该流水线已关闭");
+    }
+
+    @PostMapping("/updateStatus")
+    public Result updateStatus(@RequestParam String id){
+
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper
+                .eq(Line::getIsDelete,1)
+                .eq(Line::getId,id);
+        Line line = lineService.getOne(queryWrapper);
+        if(line==null){
+            return Result.error("该流水线不存在");
+        }
+        String flag = line.getLineStatus();
+        log.info(flag);
+        if("0".equals(flag)){
+            line.setLineStatus("1");
+            lineService.updateById(line);
+        }else if("1".equals(flag)){
+            line.setLineStatus("0");
+            lineService.updateById(line);
+        }else{
+            return Result.error("流水线状态不处于空闲，不能关闭");
+        }
+        if(flag.equals(line.getLineStatus())){
+            return Result.error("流水线状态修改失败");
+        }
+        return Result.success(null,"流水线状态修改成功");
     }
 
 

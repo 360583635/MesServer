@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 庸俗可耐
@@ -61,5 +62,9 @@ public interface ProductionManagementClient {
     @PostMapping("/productionManagement/equipment/queryEquipmentById")
     @ResponseBody
     public Equipment queryEquipmentById(@RequestParam String id);
-
+    /**
+     * 查询所有产品名称(wen)
+     */
+    @GetMapping("/productionManagement/produce/queryProduceName")
+    Set<String> queryProduceName();
 }
