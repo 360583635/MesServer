@@ -299,7 +299,7 @@ public class UsersController {
      * 修改个人信息
      * @param id
      * @param name
-     * @param password
+  //   * @param password
      * @param phone
      * @param email
      * @param sex
@@ -311,7 +311,7 @@ public class UsersController {
     @RequestMapping("/update/detail")
     public  Result updateDetail(@RequestParam(value = "id") String id,
                                 @RequestParam(value = "name") String name,
-                                @RequestParam(value = "password") String password,
+                              //  @RequestParam(value = "password") String password,
                                 @RequestParam(value = "phone") String phone,
                                 @RequestParam(value = "email") String email,
                                 @RequestParam(value = "sex") String sex,
@@ -319,9 +319,9 @@ public class UsersController {
                                 @RequestParam(value = "birth") String birth){
         Users users=usersService.getById(id);
         users.setName(name);
-        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-        String encode=passwordEncoder.encode(password);
-        users.setPassword(encode);
+//        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+//        String encode=passwordEncoder.encode(password);
+//        users.setPassword(encode);
         users.setPhone(phone);
         users.setEmail(email);
         users.setAddress(address);
@@ -338,6 +338,36 @@ public class UsersController {
         return Result.success(null,"修改成功");
 
     }
+    @RequestMapping("/updatepassword")
+    public  Result UpdatePassword(@RequestParam("password") String password,
+                                  @RequestParam("password1") String password1,
+                                  HttpServletRequest request){
+        String token=request.getParameter("Authorization");
+        System.out.println("进入showdetail"+token);
+        //解析token
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        Users users=usersService.getById(userid);
+        if(password.equals(password1)){
+            BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+            String encode=passwordEncoder.encode(password);
+            users.setPassword(encode);
+            int i= usersMapper.updateById(users);
+            if(i>0){
+                return Result.success(null,"修改成功");
+            }else {
+                return Result.error("修改失败");
+            }
+        }
+        return  Result.error("修改错误");
+    }
+
 
 
 }
