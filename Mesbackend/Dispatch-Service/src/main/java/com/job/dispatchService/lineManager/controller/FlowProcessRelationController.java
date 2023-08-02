@@ -114,12 +114,14 @@ public class FlowProcessRelationController {
             String name = users.getName();
             //System.out.println(userId);
             flowDto.setUpdateUsername(name);
-            flowDto.setCreateUsername(name);
+            if(StringUtils.isNotEmpty(flowDto.getCreateUsername())&&flowDto.getCreateUsername()!=""){
+                flowDto.setCreateUsername(name);
+                flowDto.setCreateTime(DateUtil.date());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
         }
-        flowDto.setCreateTime(DateUtil.date());
         flowDto.setUpdateTime(DateUtil.date());
         return flowProcessRelationService.addOrUpdate(flowDto);
     }

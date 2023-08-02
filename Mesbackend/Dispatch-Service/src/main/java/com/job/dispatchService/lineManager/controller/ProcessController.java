@@ -91,11 +91,21 @@ public class ProcessController {
 
         //获得用户信息
         //String userId= UserUtil.getUserId(httpServletRequest);
-        String userinf="郭帅比";
-        processDto.setUpdateUsername(userinf);
-        processDto.setCreateUsername(userinf);
-        DateTime nowTime = DateUtil.date();
-        processDto.setUpdateTime(nowTime);
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            processDto.setUpdateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+
+        processDto.setUpdateTime(DateUtil.date());
         Process process = new Process();
         BeanUtils.copyProperties(processDto,process);
 
@@ -123,14 +133,26 @@ public class ProcessController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public Result saveProcess(@RequestBody ProcessDto processDto, HttpServletRequest httpServletRequest) throws Exception {
+    public Result saveProcess(@RequestBody ProcessDto processDto, HttpServletRequest request) throws Exception {
         //获得用户信息
         //String userId= UserUtil.getUserId(httpServletRequest);
-        String userinf="郭帅比";
-        processDto.setUpdateUsername(userinf);
-        processDto.setCreateUsername(userinf);
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            processDto.setUpdateUsername(name);
+            processDto.setCreateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         DateTime nowTime = DateUtil.date();
         processDto.setUpdateTime(nowTime);
+        processDto.setCreateTime(nowTime);
         Process process = new Process();
         BeanUtils.copyProperties(processDto,process);
 

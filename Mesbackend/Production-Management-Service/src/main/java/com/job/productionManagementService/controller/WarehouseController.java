@@ -81,7 +81,7 @@ public class  WarehouseController {
         System.out.println(tWarehouse);
 
         long warehouseNumber = warehouseService.count();
-        if (warehouseNumber < 30) {
+        if (warehouseNumber < 35) {
             LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(Warehouse::getWarehouseId, tWarehouse.getWarehouseId());
             LambdaUpdateWrapper<Warehouse> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
@@ -102,7 +102,10 @@ public class  WarehouseController {
   */@PostMapping("/queryWarehouseByArea")
    List<Warehouse> queryWarehouseByArea(){
        LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
-       queryWrapper.select(Warehouse::getWarehouseId).gt(Warehouse::getWarehouseAvailable,0).eq(Warehouse::getWarehouseType,0);
+       queryWrapper.select(Warehouse::getWarehouseId)
+               .gt(Warehouse::getWarehouseAvailable,0)
+               .eq(Warehouse::getWarehouseType,0)
+               .eq(Warehouse::getWarehouseSave,0);
       List<Warehouse> list = warehouseService.list(queryWrapper);
       List warehouses = new ArrayList<>();
       for (Warehouse warehouse : list) {
@@ -126,9 +129,9 @@ public class  WarehouseController {
      * 根据仓库名称查询仓库（模糊查询）
      */
     @PostMapping("/warehousesByWarehouseName")
-    List<Warehouse> warehousesByWarehouseName(@RequestParam String warehouseName,@RequestParam int warehouseType) {
+    List<Warehouse> warehousesByWarehouseName(@RequestParam String warehouseName) {
         LambdaQueryWrapper<Warehouse> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(Warehouse::getWarehouseName,warehouseName).eq(Warehouse::getWarehouseType,warehouseType);
+        queryWrapper.like(Warehouse::getWarehouseName,warehouseName).eq(Warehouse::getWarehouseType,0).eq(Warehouse::getWarehouseSave,0);
         return  warehouseService.list(queryWrapper);
     }
 
@@ -142,7 +145,8 @@ public class  WarehouseController {
       LambdaQueryWrapper<Warehouse> queryWrapper=new LambdaQueryWrapper<>();
       queryWrapper
               .gt(Warehouse::getWarehouseAvailable,0)
-              .eq(Warehouse::getWarehouseType,0);
+              .eq(Warehouse::getWarehouseType,0)
+              .eq(Warehouse::getWarehouseSave,0);
      List<Warehouse>warehouseList=warehouseService.list(queryWrapper);
      //用List存入可用面积大于0以及仓库类型是原材料仓库的仓库列表
         LambdaQueryWrapper<Material>materialLambdaQueryWrapper=new LambdaQueryWrapper<>();
@@ -235,6 +239,7 @@ public class  WarehouseController {
                  inventory1.setIsDelete(1);
                  inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
                  inventory1.setMaterialName(materialName);
+                 inventory1.setSaveWarehouse(0);
                  inventoryService.save(inventory1);
              }
              materialNumber=(materialNumber-maxNumber);
@@ -261,7 +266,8 @@ public class  WarehouseController {
             for (int i = 0; i < (material.length) / 2; i++) {
                 LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper.eq(Inventory::getMaterialName, material[i])
-                        .eq(Inventory::getWarehouseType,0);
+                        .eq(Inventory::getWarehouseType,0)
+                        .eq(Inventory::getSaveWarehouse,0);
                 //在库存表里查询存有这个原材料名称的集合
                 List<Inventory> warehouseList= inventoryService.list(queryWrapper);
                 LambdaQueryWrapper<Material>materialLambdaQueryWrapper=new LambdaQueryWrapper<>();
@@ -376,13 +382,16 @@ public Result updateWarehouseAbArea(@RequestParam int warehouseId,HttpServletReq
 }
 
     /**
-     * 查询原材料仓库
+     * 查询原材料普通仓库
      * @return
      */
     @PostMapping("/queryMaterialWarehouseByWarehouseType")
      List<Warehouse>queryWarehouseByWarehouseType(){
     LambdaQueryWrapper<Warehouse> lambdaQueryWrapper =new LambdaQueryWrapper<>();
-    lambdaQueryWrapper.eq(Warehouse::getWarehouseType,0);
+    lambdaQueryWrapper
+            .eq(Warehouse::getWarehouseType,0)
+            .eq(Warehouse::getWarehouseSave,0)
+    ;
     return warehouseService.list(lambdaQueryWrapper);
 }
     /**
@@ -433,6 +442,7 @@ public Result updateWarehouseAbArea(@RequestParam int warehouseId,HttpServletReq
         warehouseService.updateById(twarehouse);
         return Result.success("null","恭喜你修改成功");
     }
+
 }
 
 
