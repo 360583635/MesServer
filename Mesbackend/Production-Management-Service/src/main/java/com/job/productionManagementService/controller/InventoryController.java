@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Material;
+import com.job.common.result.Result;
 import com.job.productionManagementService.mapper.MaterialMapper;
 import com.job.productionManagementService.service.EquipmentService;
 import com.job.productionManagementService.service.InventoryService;
@@ -118,7 +119,6 @@ public class InventoryController {
 
     /**
      * 根据库存类型查询成品库存信息
-
      * @return
      */
     @PostMapping ("/queryProductNameByWarehouseType/{warehouseType}")
@@ -135,7 +135,8 @@ public class InventoryController {
     @GetMapping("/queryNumbersByMaterialName")
        Integer queryMaterialNumberByMaterialName(String materialName) {
         LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(Inventory::getMaterialName,materialName);
+        queryWrapper.eq(Inventory::getMaterialName,materialName)
+                .eq(Inventory::getSaveWarehouse,0);
        List<Inventory>inventoryList = inventoryService.list(queryWrapper);
        int number =0 ;
        int size =inventoryList.size();
@@ -162,27 +163,48 @@ public class InventoryController {
     }
 
     /**
-     * 根据原材料名称查询原材料名称无参数版
+     * 根据原材料名称查询原材料名称以及数量无参数版
      * @return
      */
     @PostMapping("/queryMaterialNumbersByMaterialName")
-    List<Integer> queryMaterialNumbersByMaterialName() {
+    List queryMaterialNumbersByMaterialName() {
         QueryWrapper<Material> materialQueryWrapper = Wrappers.query();
         materialQueryWrapper.select("material_name");
         List<Material> materials = materialMapper.selectList(materialQueryWrapper);
-        List<Integer> numbers = new ArrayList<>();
+        List<String> nameList = new ArrayList<>();
         for (Material name : materials) {
+            nameList.add(name.getMaterialName());
             int number =0 ;
             LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(Inventory::getMaterialName, name.getMaterialName());
+            queryWrapper.eq(Inventory::getMaterialName, name.getMaterialName())
+                        .eq(Inventory::getSaveWarehouse,0);
             List<Inventory>materialList=inventoryService.list(queryWrapper);
-            for (int i= 0 ;i<materialList.size();i++){
-                int materialName=materialList.get(i).getNumber();
-                number=number+materialName;
+            for (Inventory inventory : materialList) {
+                int materialName = inventory.getNumber();
+                number = number + materialName;
             }
-            numbers.add(number);
+            nameList.add(String.valueOf(number));
+
         }
-        return numbers;
+        return nameList;
     }
+    /**
+     * 通过原材料名称查询安全仓库所存储的原材料总个数
+     */
+   @PostMapping("/querySaveWarehouseMaterialNumber")
+    public Result<Integer> querySaveWarehouseMaterialNumber(@RequestParam String materialName){
+       LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
+       inventoryLambdaQueryWrapper
+               .eq(Inventory::getMaterialName,materialName)
+               .eq(Inventory::getSaveWarehouse,1)
+               .eq(Inventory::getWarehouseType,0);
+       List<Inventory>inventoryList=inventoryService.list(inventoryLambdaQueryWrapper);
+       int number =0 ;
+       int size =inventoryList.size();
+       for (int i =0 ;i<size;i++){
+           number=number+inventoryList.get(i).getNumber();
+       }
+       return Result.success(number,"安全仓库数量");
+   }
 
     }

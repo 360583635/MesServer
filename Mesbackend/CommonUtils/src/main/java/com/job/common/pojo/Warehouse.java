@@ -72,7 +72,10 @@ public class Warehouse {
      * 逻辑删除
      */
     private  int isDelete;
-
+    /**
+     *仓库级别
+     */
+    private int warehouseSave;
 
 
 }
