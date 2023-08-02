@@ -166,23 +166,26 @@ public class InventoryController {
      * @return
      */
     @PostMapping("/queryMaterialNumbersByMaterialName")
-    List<Integer> queryMaterialNumbersByMaterialName() {
+    List queryMaterialNumbersByMaterialName() {
         QueryWrapper<Material> materialQueryWrapper = Wrappers.query();
         materialQueryWrapper.select("material_name");
         List<Material> materials = materialMapper.selectList(materialQueryWrapper);
-        List<Integer> numbers = new ArrayList<>();
+        List<String> nameList = new ArrayList<>();
         for (Material name : materials) {
+            nameList.add(name.getMaterialName());
             int number =0 ;
             LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(Inventory::getMaterialName, name.getMaterialName());
+
             List<Inventory>materialList=inventoryService.list(queryWrapper);
             for (int i= 0 ;i<materialList.size();i++){
                 int materialName=materialList.get(i).getNumber();
                 number=number+materialName;
             }
-            numbers.add(number);
+            nameList.add(String.valueOf(number));
+
         }
-        return numbers;
+        return nameList;
     }
 
     }

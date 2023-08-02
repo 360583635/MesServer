@@ -140,7 +140,9 @@ public class  WarehouseController {
     @ResponseBody
     public Result MaterialStockIn(HttpServletRequest httpServletRequest ,@RequestParam int materialNumber,@RequestParam String materialName) {
       LambdaQueryWrapper<Warehouse> queryWrapper=new LambdaQueryWrapper<>();
-      queryWrapper.gt(Warehouse::getWarehouseAvailable,0).eq(Warehouse::getWarehouseType,0);
+      queryWrapper
+              .gt(Warehouse::getWarehouseAvailable,0)
+              .eq(Warehouse::getWarehouseType,0);
      List<Warehouse>warehouseList=warehouseService.list(queryWrapper);
      //用List存入可用面积大于0以及仓库类型是原材料仓库的仓库列表
         LambdaQueryWrapper<Material>materialLambdaQueryWrapper=new LambdaQueryWrapper<>();
@@ -170,6 +172,7 @@ public class  WarehouseController {
          warehouseLambdaUpdateWrapper
                  .eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId())
                  .set(Warehouse::getWarehouseAvailable,warehouseAbArea);
+         warehouseService.update(warehouseLambdaUpdateWrapper);
          //更改库存表的数据
              LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
              inventoryLambdaQueryWrapper
@@ -185,6 +188,7 @@ public class  WarehouseController {
                  inventoryLambdaUpdateWrapper
                          .eq(Inventory::getMaterialName, materialName)
                          .set(Inventory::getNumber, materialNumbers);
+                 inventoryService.update(inventoryLambdaUpdateWrapper);
              }
              else {
                  Inventory inventory1= new Inventory();
@@ -193,7 +197,7 @@ public class  WarehouseController {
                  inventory1.setIsDelete(1);
                  inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
                  inventory1.setMaterialName(materialName);
-
+              inventoryService.save(inventory1);
              }
              return Result.success("null","入库成功");
          }
@@ -205,6 +209,7 @@ public class  WarehouseController {
              warehouseLambdaUpdateWrapper
                      .eq(Warehouse::getWarehouseId,warehouseList.get(i).getWarehouseId())
                      .set(Warehouse::getWarehouseAvailable,warehouseAbArea);
+             warehouseService.update(warehouseLambdaUpdateWrapper);
              //数量也加进去
              LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
              inventoryLambdaQueryWrapper
@@ -218,7 +223,9 @@ public class  WarehouseController {
                  LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                  inventoryLambdaUpdateWrapper
                          .eq(Inventory::getMaterialName, materialName)
+                         .eq(Inventory::getWarehouseType,0)
                          .set(Inventory::getNumber, materialNumbers);
+                 inventoryService.update(inventoryLambdaUpdateWrapper);
              }
              //如果仓库原本里面没有这个原材料就在库存表里初始化这个原材料数据
              else {
@@ -228,8 +235,13 @@ public class  WarehouseController {
                  inventory1.setIsDelete(1);
                  inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
                  inventory1.setMaterialName(materialName);
+                 inventoryService.save(inventory1);
              }
              materialNumber=(materialNumber-maxNumber);
+
+         }
+         if(i==warehouseList.size()-1){
+             return Result.error("仓库已满还剩"+materialNumber+"没存");
          }
 
      }

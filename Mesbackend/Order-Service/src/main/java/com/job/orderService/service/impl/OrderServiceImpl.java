@@ -157,7 +157,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             }
             System.out.println(rawSb);
             if (rawSb.length()>0){
-                return Result.error(rawSb,"error:原材料数量不足，创建失败！");
+                return Result.error(rawSb,"原材料数量不足，创建失败！");
             }
             //创建完成
             int i = orderMapper.insert(order);

@@ -73,6 +73,7 @@ public class Warehouse {
      */
     private  int isDelete;
 
+    private int warehouseSave;
 
 
 }
