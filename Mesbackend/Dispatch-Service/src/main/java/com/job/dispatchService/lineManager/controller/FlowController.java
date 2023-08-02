@@ -1,5 +1,6 @@
 package com.job.dispatchService.lineManager.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -115,7 +116,6 @@ public class FlowController {
             return Result.success(null,"保存成功");
         }
         return Result.error("保存失败");
-
     }
 
     /**
@@ -253,6 +253,9 @@ public class FlowController {
 
 
         List<FlowProcessRelation> list = relationService.list(queryWrapper);
+        if(BeanUtil.isEmpty(list)&&list.size()==0){
+            return Result.error("查询失败");
+        }
         return Result.success(list,"查询成功");
     }
 
