@@ -145,14 +145,23 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(map);
             Set<String> keySet = materials.keySet();
             StringBuilder rawSb=new StringBuilder();
-            for (String material : keySet) {
-                Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(material);
-                System.out.println("库存数量"+materialNum);
-                Integer rawNum = rawMap.get(material);
-                System.out.println("所需数量"+rawNum);
-                if (materialNum < rawNum) {
-                    rawSb.append(material).append(",");
-                    rawSb.append(rawNum).append(",");
+            if (order.getPriority()==2){
+                for (String material : keySet) {
+                    Integer materialNum = productionManagementClient.queryMaterialNumberBySaveWarehouse(material);
+                    Integer rawNum = rawMap.get(material);
+                    if (materialNum < rawNum) {
+                        rawSb.append(material).append(",");
+                        rawSb.append(rawNum).append(",");
+                    }
+                }
+            }else {
+                for (String material : keySet) {
+                    Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(material);
+                    Integer rawNum = rawMap.get(material);
+                    if (materialNum < rawNum) {
+                        rawSb.append(material).append(",");
+                        rawSb.append(rawNum).append(",");
+                    }
                 }
             }
             System.out.println(rawSb);

@@ -76,4 +76,7 @@ public interface ProductionManagementClient {
     @PostMapping("/productionManagement/warehouse/MaterialStockOut")
     @ResponseBody
      Result MaterialStockOut( @RequestParam String materials);
+
+    @GetMapping("/productionManagement/queryNumbersBySaveWarehouse")
+    Integer queryMaterialNumberBySaveWarehouse(@RequestParam String materialName);
 }

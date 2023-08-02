@@ -15,7 +15,7 @@ public class Warehouse {
      * 仓库id
      */
     @TableId("warehouse_id")
-    private int warehouseId;
+    private Integer warehouseId;
     /**
      *仓库地址
      */
@@ -27,7 +27,7 @@ public class Warehouse {
     /**
      * 仓库类型
      */
-    private int warehouseType;
+    private Integer warehouseType;
     /**
      * 仓库负责人
      */
@@ -35,15 +35,15 @@ public class Warehouse {
     /**
      * 是否配备温度监控设施（0为未装配，1为已装配）
      */
-    private int temperatureControl;
+    private Integer temperatureControl;
     /**
      * 是否配备湿度监控设施（0为未装配，1为已装配）
      */
-    private int humidityControl;
+    private Integer humidityControl;
     /**
      * 是否配备防火措施
      */
-     private int fireproofControl;
+     private Integer fireproofControl;
     /**
      * 装配了哪些安全设施
      */
@@ -51,31 +51,31 @@ public class Warehouse {
     /**
      * 是否装配自动化设备
      */
-    private  int automationEquipment;
+    private  Integer automationEquipment;
     /**
      * 仓库总面积
      */
-    private float warehouseArea;
+    private Float warehouseArea;
     /**
      * 可用面积
      */
-    private float warehouseAvailable;
+    private Float warehouseAvailable;
     /**
      *仓库层数
      */
-    private int warehouseLayers;
+    private Integer warehouseLayers;
     /**
      * 仓库总容量
      */
-    private  int warehouseCapacity;
+    private  Integer warehouseCapacity;
     /**
      * 逻辑删除
      */
-    private  int isDelete;
+    private  Integer isDelete;
     /**
      *仓库级别
      */
-    private int warehouseSave;
+    private Integer warehouseSave;
 
 
 }

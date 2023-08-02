@@ -145,6 +145,18 @@ public class InventoryController {
         }
         return number;
     }
+    @GetMapping("/queryNumbersBySaveWarehouse")
+    Integer queryMaterialNumberBySaveWarehouse(@RequestParam String materialName) {
+        LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Inventory::getMaterialName,materialName);
+        List<Inventory>inventoryList = inventoryService.list(queryWrapper);
+        int number =0 ;
+        int size =inventoryList.size();
+        for (int i=0 ;i<size;i++){
+            number=number+inventoryList.get(i).getNumber();
+        }
+        return number;
+    }
     /**
      * 查询所有原材料名称
      */
