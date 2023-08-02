@@ -1,5 +1,6 @@
 package com.job.dispatchService.lineManager.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -23,6 +24,7 @@ import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -114,7 +116,6 @@ public class FlowController {
             return Result.success(null,"保存成功");
         }
         return Result.error("保存失败");
-
     }
 
     /**
@@ -252,6 +253,9 @@ public class FlowController {
 
 
         List<FlowProcessRelation> list = relationService.list(queryWrapper);
+        if(BeanUtil.isEmpty(list)&&list.size()==0){
+            return Result.error("查询失败");
+        }
         return Result.success(list,"查询成功");
     }
 
@@ -261,8 +265,22 @@ public class FlowController {
      * @return
      */
     @PostMapping("/updateFlowById")
-    public Result updateFlowById(@RequestBody Flow flow){
+    public Result updateFlowById(@RequestBody Flow flow,HttpServletRequest request){
 
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            flow.setUpdateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        flow.setUpdateTime(DateUtil.date());
         boolean b = flowService.updateById(flow);
         if (b){
             return Result.success(null,"修改成功");
