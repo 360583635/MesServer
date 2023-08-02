@@ -1,5 +1,6 @@
 package com.job.dispatchService.lineManager.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -24,6 +25,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.job.common.result.Result;
+import org.springframework.util.unit.DataUnit;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -31,6 +33,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -66,6 +69,8 @@ public class LineTaskController {
     @Async
     public void lineInstance(Line line) throws InterruptedException{
 
+        boolean existsKey;
+
         // TODO: 2023/7/10 流水线实列执行流程
         FlowProcessRelation firstRelation;
         String firstProcessId;
@@ -76,12 +81,15 @@ public class LineTaskController {
         /*List<Order> orderQueue */
         Vector<Order> orderQueue = new Vector<>();
         if(lineName!=null){
-            boolean existsKey = redisCache.hasKey(lineName);
-            if(existsKey==true){
-                //订单队列
-                orderQueue = new Vector<Order>(redisCache.getCacheList(lineName));
-            }
                 while (true) {
+
+                    existsKey = redisCache.hasKey(lineName);
+                    if(existsKey==true){
+                        //订单队列
+                        orderQueue = redisCache.getCacheList(lineName).stream().map( item ->{
+                            return (Order)item;
+                        }).collect(Collectors.toCollection(Vector::new));
+                    }
 
                     try {
                         lock.lock();
@@ -192,6 +200,7 @@ public class LineTaskController {
                 for (Order order : orderPQ) {
                     String lineName = order.getProductLine();
                     if(!StringUtil.isNullOrEmpty(lineName)) {
+                        log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"开始存入到对应流水线的订单列表中"+ DateUtil.date());
                         if (redisCache.getCacheList(lineName) == null && StringUtil.isNullOrEmpty(lineName) == false) {
                             Vector<Order> orderQueue = new Vector<>();
                             orderQueue.add(order);
@@ -199,12 +208,13 @@ public class LineTaskController {
                         } else {
                             redisCache.getCacheList(lineName).add(order);
                         }
+                        log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"存入成功"+ DateUtil.date());
                     }else{
-                        log.error("LineTaskController--订单列表中订单未匹配流水线");
+                        log.error("LineTaskController--订单列表中订单未匹配流水线"+ DateUtil.date());
                     }
                 }
             }else{
-                log.error("LineTaskController--订单列表为空");
+                log.error("LineTaskController--订单列表为空"+ DateUtil.date());
             }
         }
     }
@@ -223,9 +233,14 @@ public class LineTaskController {
                 String lineId = line.getId();
                 Thread threadByName = findThreadByName(lineName+lineId);
                 if(threadByName==null){
+                    log.info(threadByName+"线程不存在，开始创建,"+ DateUtil.date());
                     lineInstance(line);
+                }else{
+                    log.info(threadByName+"线程存在,"+ DateUtil.date());
                 }
             }
+        }else{
+            log.info("暂时没有流水线实体可供使用"+ DateUtil.date());
         }
     }
 
