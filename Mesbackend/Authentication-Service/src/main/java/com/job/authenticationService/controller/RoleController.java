@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.job.authenticationService.mapper.MenusMapper;
+import com.job.authenticationService.mapper.MenusRolesMapper;
 import com.job.authenticationService.mapper.RolesMapper;
 import com.job.authenticationService.service.MenusRolesService;
 import com.job.authenticationService.service.RolesService;
@@ -35,7 +36,7 @@ import java.util.Map;
  */
 @RequestMapping("/authen")
 @RestController
-@CrossOrigin
+//@CrossOrigin
 public class RoleController {
     @Autowired
     private RolesService rolesService;
@@ -45,6 +46,8 @@ public class RoleController {
     private RolesMapper rolesMapper;
     @Autowired
     private MenusMapper menusMapper;
+    @Autowired
+    private MenusRolesMapper menusRolesMapper;
     @Autowired
     private UsersService usersService;
 
@@ -132,11 +135,28 @@ public class RoleController {
 
         Roles roles=rolesService.getById(RoleId);
         roles.setIsDelete(0);
-        roles.setUpdateUser("zyx");
+        roles.setUpdateUser(users.getName());
         Date date=new Date();
         roles.setUpdateTime(date);
         rolesService.updateById(roles);
         Roles role=rolesService.getById(RoleId);
+
+
+//        删除权限表
+        LambdaQueryWrapper<MenusRoles> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(MenusRoles::getRoleId,RoleId);
+        List<MenusRoles> list= menusRolesService.list(wrapper);
+        System.out.println(list);
+
+        if (!list.isEmpty()){
+            for (MenusRoles menusRoles : list) {
+                String menuId = menusRoles.getMenuId();
+                String roleId = menusRoles.getRoleId();
+                menusRolesService.remove(new QueryWrapper<MenusRoles>().eq("menu_id",menuId)
+                        .eq("role_id",roleId));
+            }}
+
+
         System.out.println(role);
         Result result = new Result<>();
         if (role.getIsDelete().equals(0)){
@@ -161,9 +181,9 @@ public class RoleController {
     @RequestMapping("/addRole")
     public Result<Roles> addRole(@RequestParam(value = "name") String role_name,
                                  @RequestParam(value = "option",required = false) List<String> options,HttpServletRequest request){
-        options.remove(options.size()-1);
+
         System.out.println(role_name);
-        System.out.println(options);
+        System.out.println(options.size());
         String token=request.getParameter("Authorization");
         String userid;
         try {
@@ -181,22 +201,24 @@ public class RoleController {
         roles.setRoleName(role_name);
         roles.setCreateTime(date);
         roles.setUpdateTime(date);
-        roles.setCreateUser("zyx");
-        roles.setUpdateUser("zyx");
+        roles.setCreateUser(users.getName());
+        roles.setIsDelete(1);
+        roles.setUpdateUser(users.getName());
         rolesService.save(roles);
         String roleId = roles.getRoleId();
         System.out.println(roleId);
         System.out.println(role_name);
         System.out.println(options);
-        if (options!=null) {
+        if (options.size()!=0) {
+            options.remove(options.size()-1);
             for (String s : options) {
                 System.out.println(s);
                 MenusRoles menusRoles = new MenusRoles();
                 menusRoles.setRoleId(roleId);
                 menusRoles.setCreateTime(date);
-                menusRoles.setCreateTime(date);
-                menusRoles.setUpdateUser("zyx");
-                menusRoles.setCreateUser("zyx");
+                menusRoles.setUpdateTime(date);
+                menusRoles.setUpdateUser(users.getName());
+                menusRoles.setCreateUser(users.getName());
                 menusRoles.setMenuId(s);
                 menusRolesService.save(menusRoles);
             }
@@ -223,7 +245,7 @@ public class RoleController {
     public Result<Roles> updateRole(@RequestParam(value = "name") String role_name,
                                     @RequestParam(value = "role_id") String role_id,
                                     @RequestParam(value = "option",required = false) List<String> options,HttpServletRequest request){
-        options.remove(options.size()-1);
+
         System.out.println(role_name);
         System.out.println(role_id);
         System.out.println(options);
@@ -246,22 +268,23 @@ public class RoleController {
         Roles roles=rolesService.getById(role_id);
         roles.setRoleName(role_name);
         roles.setUpdateTime(date);
-        roles.setUpdateUser("zyx");
+        roles.setUpdateUser(users.getName());
         rolesService.updateById(roles);
 
 //        修改角色权限表
         System.out.println(role_id);
         System.out.println(options);
         menusRolesService.remove(new QueryWrapper<MenusRoles>().eq("role_id",role_id));
-        if (options!=null) {
+        if (options.size()!=0) {
+            options.remove(options.size()-1);
             for (String s : options) {
                 System.out.println(s);
                 MenusRoles menusRoles = new MenusRoles();
                 menusRoles.setRoleId(role_id);
                 menusRoles.setCreateTime(date);
-                menusRoles.setCreateTime(date);
-                menusRoles.setUpdateUser("zyx");
-                menusRoles.setCreateUser("zyx");
+                menusRoles.setUpdateTime(date);
+                menusRoles.setUpdateUser(users.getName());
+                menusRoles.setCreateUser(users.getName());
                 menusRoles.setMenuId(s);
                 menusRolesService.save(menusRoles);
             }

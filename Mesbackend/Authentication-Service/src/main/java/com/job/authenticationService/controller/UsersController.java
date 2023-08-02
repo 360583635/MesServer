@@ -20,7 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/authen")
 @RestController
 public class UsersController {
@@ -42,10 +42,6 @@ public class UsersController {
     @Autowired
     private RolesMapper rolesMapper;
 
-    /**
-     * 查询角色
-     * @return
-     */
     /**
      * 查询角色
      * @return
@@ -166,7 +162,7 @@ public class UsersController {
         }
         //获取修改人信息
         Users users1=usersService.getById(userid);
-        options.remove(options.size()-1);
+
 
 
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
@@ -186,10 +182,9 @@ public class UsersController {
         String id=users.getId();
         System.out.println(id);
 
-        if (options!=null) {
-            System.out.println(options);
+        if (options.size()!=0) {
+            options.remove(options.size()-1);
             for (String s : options) {
-                System.out.println("1"+s);
                 UsersRoles usersRoles = new UsersRoles();
                 usersRoles.setUserId(id);
                 usersRoles.setCreateTime(date);
@@ -221,7 +216,7 @@ public class UsersController {
                           @RequestParam(value = "state") Integer state,
                           @RequestParam(value = "option",required = false) List<String> options,
                           HttpServletRequest request) {
-        options.remove(options.size()-1);
+
         System.out.println(id);
         System.out.println(state);
         System.out.println(options);
@@ -247,7 +242,7 @@ public class UsersController {
         System.out.println(user);
         user.setState(state);
         user.setUpdateTime(date);
-        user.setUpdateUser("zyx");
+        user.setUpdateUser(users.getName());
         usersService.updateById(user);
 
 
@@ -255,13 +250,14 @@ public class UsersController {
         System.out.println(id);
         System.out.println(options);
         usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id", id));
-        if (options!=null) {
+        if (options.size()!=0) {
+            options.remove(options.size()-1);
             for (String s : options) {
                 System.out.println(s);
                 UsersRoles usersRoles = new UsersRoles();
                 usersRoles.setUserId(id);
                 usersRoles.setCreateTime(date);
-                usersRoles.setCreateTime(date);
+                usersRoles.setUpdateTime(date);
                 usersRoles.setUpdateUser(users.getName());
                 usersRoles.setCreateUser(users.getName());
                 usersRoles.setRoleId(s);
@@ -314,6 +310,23 @@ public class UsersController {
         user.setUpdateTime(date);
         user.setIsDelete(0);
         usersMapper.updateById(user);
+
+
+
+
+//        删除角色表
+        LambdaQueryWrapper<UsersRoles> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(UsersRoles::getUserId,UserId);
+        List<UsersRoles> list= usersRolesService.list(wrapper);
+        System.out.println(list);
+        if (!list.isEmpty()){
+            for (UsersRoles usersRoles : list) {
+                String userId = usersRoles.getUserId();
+                String roleId = usersRoles.getRoleId();
+                usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id",userId)
+                        .eq("role_id",roleId));
+            }}
+
         // Users users=usersService.getById(UserId);
         //System.out.println(users);
         Result result = new Result<>();
