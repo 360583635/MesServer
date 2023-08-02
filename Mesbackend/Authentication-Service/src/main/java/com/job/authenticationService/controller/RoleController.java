@@ -57,6 +57,18 @@ public class RoleController {
      */
     @RequestMapping("/getRoles")
     public Result getAllRoles(){
+//        String token=request.getParameter("Authorization");
+//        String userid;
+//        try {
+//            Claims claims = JwtUtil.parseJWT(token);
+//            userid = claims.getSubject();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("token非法");
+//        }
+//        //获取修改人信息
+//        Users users=usersService.getById(userid);
+
         LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Roles::getIsDelete,"1");
         List<Roles> list= rolesService.list(wrapper);
@@ -76,8 +88,8 @@ public class RoleController {
      * @param
      * @return
      */
-    @RequestMapping("/showRoleById/{RoleId}")
-    public Result joinQueryExample(@PathVariable("RoleId") String id) {
+    @RequestMapping("/showRoleById")
+    public Result joinQueryExample(@RequestParam(value = "RoleId") String id) {
         System.out.println(id);
         List list = new ArrayList<>();
         Result<Object> result = new Result<>();
@@ -104,7 +116,8 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/delRole")
-    public Result<Roles> deleteRole(@RequestParam("RoleId") String RoleId, HttpServletRequest request){
+    public Result<Roles> deleteRole(@RequestParam("RoleId") String RoleId,HttpServletRequest request){
+        System.out.println(RoleId);
         String token=request.getParameter("Authorization");
         String userid;
         try {
@@ -119,7 +132,7 @@ public class RoleController {
 
         Roles roles=rolesService.getById(RoleId);
         roles.setIsDelete(0);
-        roles.setUpdateUser(users.getName());
+        roles.setUpdateUser("zyx");
         Date date=new Date();
         roles.setUpdateTime(date);
         rolesService.updateById(roles);
@@ -146,8 +159,11 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/addRole")
-    public Result<Roles> addRole(@RequestParam(value = "role_name") String role_name,
+    public Result<Roles> addRole(@RequestParam(value = "name") String role_name,
                                  @RequestParam(value = "option",required = false) List<String> options,HttpServletRequest request){
+        options.remove(options.size()-1);
+        System.out.println(role_name);
+        System.out.println(options);
         String token=request.getParameter("Authorization");
         String userid;
         try {
@@ -159,13 +175,14 @@ public class RoleController {
         }
         //获取添加人信息
         Users users=usersService.getById(userid);
+
         Date date=new Date();
         Roles roles=new Roles();
         roles.setRoleName(role_name);
         roles.setCreateTime(date);
         roles.setUpdateTime(date);
-        roles.setCreateUser(users.getName());
-        roles.setUpdateUser(users.getName());
+        roles.setCreateUser("zyx");
+        roles.setUpdateUser("zyx");
         rolesService.save(roles);
         String roleId = roles.getRoleId();
         System.out.println(roleId);
@@ -178,8 +195,8 @@ public class RoleController {
                 menusRoles.setRoleId(roleId);
                 menusRoles.setCreateTime(date);
                 menusRoles.setCreateTime(date);
-                menusRoles.setUpdateUser(users.getName());
-                menusRoles.setCreateUser(users.getName());
+                menusRoles.setUpdateUser("zyx");
+                menusRoles.setCreateUser("zyx");
                 menusRoles.setMenuId(s);
                 menusRolesService.save(menusRoles);
             }
@@ -188,6 +205,7 @@ public class RoleController {
         result.setCode(200);
         result.setMsg("添加成功");
         return result;
+
     }
 
 
@@ -202,10 +220,15 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/updateRole")
-    public Result<Roles> updateRole(@RequestParam(value = "role_name") String role_name,
+    public Result<Roles> updateRole(@RequestParam(value = "name") String role_name,
                                     @RequestParam(value = "role_id") String role_id,
                                     @RequestParam(value = "option",required = false) List<String> options,HttpServletRequest request){
-        String token=request.getParameter("Authorizaion");
+        options.remove(options.size()-1);
+        System.out.println(role_name);
+        System.out.println(role_id);
+        System.out.println(options);
+        String token=request.getParameter("Authorization");
+        System.out.println(token);
         String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);
@@ -216,12 +239,14 @@ public class RoleController {
         }
         //获取修改人信息
         Users users=usersService.getById(userid);
+
+
 //        修改角色名
         Date date=new Date();
         Roles roles=rolesService.getById(role_id);
         roles.setRoleName(role_name);
         roles.setUpdateTime(date);
-        roles.setUpdateUser(users.getName());
+        roles.setUpdateUser("zyx");
         rolesService.updateById(roles);
 
 //        修改角色权限表
@@ -235,8 +260,8 @@ public class RoleController {
                 menusRoles.setRoleId(role_id);
                 menusRoles.setCreateTime(date);
                 menusRoles.setCreateTime(date);
-                menusRoles.setUpdateUser(users.getName());
-                menusRoles.setCreateUser(users.getName());
+                menusRoles.setUpdateUser("zyx");
+                menusRoles.setCreateUser("zyx");
                 menusRoles.setMenuId(s);
                 menusRolesService.save(menusRoles);
             }
@@ -245,6 +270,7 @@ public class RoleController {
         result.setCode(200);
         result.setMsg("添加成功");
         return result;
+
     }
 
 

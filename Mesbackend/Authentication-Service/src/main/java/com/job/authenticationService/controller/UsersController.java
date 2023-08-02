@@ -46,8 +46,24 @@ public class UsersController {
      * 查询角色
      * @return
      */
+    /**
+     * 查询角色
+     * @return
+     */
     @RequestMapping("/showrole")
     public  Result showrole(){
+//        String token=request.getParameter("Authorization");
+//        String userid;
+//        try {
+//            Claims claims = JwtUtil.parseJWT(token);
+//            userid = claims.getSubject();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("token非法");
+//        }
+//        //获取修改人信息
+//        Users users=usersService.getById(userid);
+
         LambdaQueryWrapper<Roles> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Roles::getIsDelete,1);
         List<Roles> roleslist=rolesService.list(wrapper);
@@ -84,11 +100,13 @@ public class UsersController {
      */
     @RequestMapping("/showById")
     public Result joinQueryExample(@RequestParam(value = "id") String id) {
+        System.out.println(88+id);
         List list = new ArrayList<>();
         Result<Object> result = new Result<>();
         LambdaQueryWrapper<Users> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Users::getState, Users::getName, Users::getId) // 指定需要查询的字段
-                .eq(Users::getId, id); // 添加其他查询条件
+                .eq(Users::getId, id); // 添加其
+        // 他查询条件
         List<Map<String, Object>> resultList = usersMapper.selectMaps(queryWrapper);
         list.add(resultList);
         System.out.println(resultList);
@@ -130,12 +148,32 @@ public class UsersController {
     public Result<Users> addUser(@RequestParam(value = "name") String name,
                                  @RequestParam(value = "password") String password,
                                  @RequestParam(value = "state") Integer state,
-                                 @RequestParam(value = "option",required = false) List<String> options){
+                                 @RequestParam(value = "option",required = false) List<String> options,
+                                 HttpServletRequest request){
+//        System.out.println(options);
+//        System.out.println(options.subList(0,-1));
+
+        String token=request.getParameter("Authorization");
+        System.out.println(111);
+        System.out.println(token);
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取修改人信息
+        Users users1=usersService.getById(userid);
+        options.remove(options.size()-1);
+
+
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
         Date date=new Date();
         Users users=new Users();
-        users.setCreateUser("zyx");
-        users.setUpdateUser("zyx");
+        users.setCreateUser(users1.getName());
+        users.setUpdateUser(users1.getName());
         users.setIsDelete(1);
         users.setState(state);
         String encode=passwordEncoder.encode(password);
@@ -151,14 +189,14 @@ public class UsersController {
         if (options!=null) {
             System.out.println(options);
             for (String s : options) {
-                System.out.println(s);
+                System.out.println("1"+s);
                 UsersRoles usersRoles = new UsersRoles();
                 usersRoles.setUserId(id);
                 usersRoles.setCreateTime(date);
                 usersRoles.setUpdateTime(date);
                 usersRoles.setCreateTime(date);
-                usersRoles.setUpdateUser("zyx");
-                usersRoles.setCreateUser("zyx");
+                usersRoles.setUpdateUser(users1.getName());
+                usersRoles.setCreateUser(users1.getName());
                 usersRoles.setRoleId(s);
                 usersRolesService.save(usersRoles);
             }
@@ -167,6 +205,7 @@ public class UsersController {
         result.setCode(200);
         result.setMsg("添加成功");
         return result;
+
     }
 
     /**
@@ -178,21 +217,41 @@ public class UsersController {
      */
 
     @RequestMapping("/updateUser")
-    public Result<Users> addUser(@RequestParam(value = "id") String id,
-                                 @RequestParam(value = "state") Integer state,
-                                 @RequestParam(value = "option",required = false) List<String> options) {
+    public Result addUser(@RequestParam(value = "id") String id,
+                          @RequestParam(value = "state") Integer state,
+                          @RequestParam(value = "option",required = false) List<String> options,
+                          HttpServletRequest request) {
+        options.remove(options.size()-1);
+        System.out.println(id);
+        System.out.println(state);
+        System.out.println(options);
+
+        String token=request.getParameter("Authorization");
+        System.out.println(111);
+        System.out.println(token);
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取修改人信息
+        Users users=usersService.getById(userid);
 
 
-//                修改角色名
+//                修改状态
         Date date = new Date();
         Users user = usersService.getById(id);
+        System.out.println(user);
         user.setState(state);
         user.setUpdateTime(date);
         user.setUpdateUser("zyx");
         usersService.updateById(user);
 
 
-        //        修改角色权限表
+        //        修改角色表
         System.out.println(id);
         System.out.println(options);
         usersRolesService.remove(new QueryWrapper<UsersRoles>().eq("user_id", id));
@@ -203,8 +262,8 @@ public class UsersController {
                 usersRoles.setUserId(id);
                 usersRoles.setCreateTime(date);
                 usersRoles.setCreateTime(date);
-                usersRoles.setUpdateUser("zyx");
-                usersRoles.setCreateUser("zyx");
+                usersRoles.setUpdateUser(users.getName());
+                usersRoles.setCreateUser(users.getName());
                 usersRoles.setRoleId(s);
                 usersRolesService.save(usersRoles);
             }
@@ -213,6 +272,7 @@ public class UsersController {
         result.setCode(200);
         result.setMsg("添加成功");
         return result;
+
 
     }
 
@@ -229,6 +289,7 @@ public class UsersController {
         String token=request.getHeader("token");
         String cont=request.getHeader( "content-length");
         String token1 = request.getParameter("Authorization");
+        System.out.println(token1);
         System.out.println(cont);
         //   System.out.println("token"+token);
         //  System.out.println(UserId);
