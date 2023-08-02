@@ -195,6 +195,7 @@ public class LineTaskController {
     @Async
     @Scheduled(initialDelay = 0,fixedRate = 3000*60)
     public void queryOrders() throws InterruptedException {
+        log.info("开始查询redis订单列表");
         // TODO: 2023/7/10 每隔3分钟执行一次查询订单
         boolean b = redisCache.hasKey("orderPQ");
         if(b==true){
@@ -221,12 +222,14 @@ public class LineTaskController {
                         }
                         log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"存入成功，"+ DateUtil.date());
                     }else{
-                        log.error("LineTaskController--订单列表中订单未匹配流水线，"+ DateUtil.date());
+                        log.error("LineTaskController--redis订单列表中订单未匹配流水线，"+ DateUtil.date());
                     }
                 }
             }else{
-                log.error("LineTaskController--订单列表为空，"+ DateUtil.date());
+                log.error("LineTaskController--redis订单列表为空，"+ DateUtil.date());
             }
+        }else{
+            log.warn("查询redis订单列表为空");
         }
     }
     
