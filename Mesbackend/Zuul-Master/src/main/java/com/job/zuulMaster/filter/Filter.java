@@ -87,18 +87,8 @@ public class Filter implements GlobalFilter , Ordered {
                         if (path.equals(s)){
                             System.out.println("hjsgfh");
                             return chain.filter(exchange);
-
                         }
                     }
-//                    LambdaQueryWrapper<Menus> q = new LambdaQueryWrapper<>();
-//                    List<Menus> menus = menusMapper.selectList(q);
-//                    for (Menus menu : menus) {
-//                        if(!path.equals(menu.getUrl()))continue;
-//                        GetUserId.setUserId(userid);
-//                        System.out.println("用户id为："+userid);
-//                        System.out.println(GetUserId.getUserId());
-//                        return chain.filter(exchange);
-//                    }
                     return exchange.getResponse().setComplete();
                 }
 
