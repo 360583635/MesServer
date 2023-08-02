@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -52,7 +51,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/addOrder")
-    public Result<Order> addOrder(@RequestBody Order order,HttpServletRequest request){
+    public Result<Object> addOrder(@RequestBody Order order,HttpServletRequest request){
         System.out.println(order);
         String token=request.getHeader("token");
         System.out.println(token);
@@ -66,7 +65,7 @@ public class OrderController {
             e.printStackTrace();
             throw new RuntimeException("token非法");
         }
-        Result<Order> result = orderService.addOrder(order);
+        Result<Object> result = orderService.addOrder(order);
         return result;
 //        //数据验证
 //        if (order == null){

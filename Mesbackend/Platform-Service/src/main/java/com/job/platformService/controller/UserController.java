@@ -45,6 +45,10 @@ public class UserController {
         map.put("key","order2");
         map.put("user","zyx");
         map.put("password","123456");
+        User user=new User();
+        user.setUsername("zyx");
+        user.setPassword("1234");
+        map.put("user", String.valueOf(user));
         redisCache.setCacheMap("order:2",map);
 
         Collection<String> order = redisCache.keys("order"+"*");

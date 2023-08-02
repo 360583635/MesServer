@@ -1,7 +1,10 @@
 package com.job.dispatchService.lineManager.controller;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
+import com.alibaba.nacos.shaded.io.grpc.internal.JsonUtil;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.FlowProcessRelation;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -15,6 +18,7 @@ import com.job.dispatchService.work.controller.WorkController;
 import com.job.dispatchService.work.service.WorkService;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -176,10 +180,10 @@ public class LineTaskController {
         boolean b = redisCache.hasKey("orderPQ");
         if(b==true){
             Vector<Order> orderPQ = new Vector<>();
-            JSONArray array = redisCache.getCacheObject("orderPQ");
+            JSONArray array = new JSONArray(redisCache.getCacheObject("orderPQ"));
             array.forEach(element ->{
                 try{
-                    orderPQ.add((Order)element);
+                    orderPQ.add(JSON.parseObject(JSON.toJSONString(element),Order.class));
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
@@ -233,6 +237,7 @@ public class LineTaskController {
     public static Thread findThreadByName(String name) {
         for (Thread thread : Thread.getAllStackTraces().keySet()) {
             if (thread.getName().equals(name)) {
+                log.info("查询到的线程名:"+name);
                 return thread;
             }
         }
