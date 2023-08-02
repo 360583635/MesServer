@@ -116,19 +116,19 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/delRole")
-    public Result<Roles> deleteRole(@RequestParam("RoleId") String RoleId){
+    public Result<Roles> deleteRole(@RequestParam("RoleId") String RoleId,HttpServletRequest request){
         System.out.println(RoleId);
-//        String token=request.getParameter("Authorization");
-//        String userid;
-//        try {
-//            Claims claims = JwtUtil.parseJWT(token);
-//            userid = claims.getSubject();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("token非法");
-//        }
-//        //获取修改人信息
-//        Users users=usersService.getById(userid);
+        String token=request.getParameter("Authorization");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取修改人信息
+        Users users=usersService.getById(userid);
 
         Roles roles=rolesService.getById(RoleId);
         roles.setIsDelete(0);
@@ -160,21 +160,21 @@ public class RoleController {
      */
     @RequestMapping("/addRole")
     public Result<Roles> addRole(@RequestParam(value = "name") String role_name,
-                                 @RequestParam(value = "option",required = false) List<String> options){
+                                 @RequestParam(value = "option",required = false) List<String> options,HttpServletRequest request){
         options.remove(options.size()-1);
         System.out.println(role_name);
         System.out.println(options);
-//        String token=request.getParameter("Authorization");
-//        String userid;
-//        try {
-//            Claims claims = JwtUtil.parseJWT(token);
-//            userid = claims.getSubject();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("token非法");
-//        }
-//        //获取添加人信息
-//        Users users=usersService.getById(userid);
+        String token=request.getParameter("Authorization");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取添加人信息
+        Users users=usersService.getById(userid);
 
         Date date=new Date();
         Roles roles=new Roles();
@@ -222,22 +222,23 @@ public class RoleController {
     @RequestMapping("/updateRole")
     public Result<Roles> updateRole(@RequestParam(value = "name") String role_name,
                                     @RequestParam(value = "role_id") String role_id,
-                                    @RequestParam(value = "option",required = false) List<String> options){
+                                    @RequestParam(value = "option",required = false) List<String> options,HttpServletRequest request){
         options.remove(options.size()-1);
         System.out.println(role_name);
         System.out.println(role_id);
         System.out.println(options);
-//        String token=request.getParameter("Authorizaion");
-//        String userid;
-//        try {
-//            Claims claims = JwtUtil.parseJWT(token);
-//            userid = claims.getSubject();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("token非法");
-//        }
-//        //获取修改人信息
-//        Users users=usersService.getById(userid);
+        String token=request.getParameter("Authorization");
+        System.out.println(token);
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        //获取修改人信息
+        Users users=usersService.getById(userid);
 
 
 //        修改角色名
