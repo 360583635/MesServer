@@ -38,6 +38,9 @@ public class  Inventory {
      * 逻辑删除
      */
     private int isDelete;
-
+    /**
+     * 是否是安全仓库
+     */
+    private int SaveWarehouse ;
 }
 
