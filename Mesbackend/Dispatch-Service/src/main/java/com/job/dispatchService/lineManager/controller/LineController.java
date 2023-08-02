@@ -101,7 +101,7 @@ public class LineController {
     @ResponseBody
     public Result saveLine(@RequestBody Line pipeLine, HttpServletRequest request){
 
-        /*String token=request.getHeader("token");
+        String token=request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
@@ -114,10 +114,7 @@ public class LineController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法");
-        }*/
-        String name = "User01";
-        pipeLine.setUpdateUsername(name);
-        pipeLine.setCreateUsername(name);
+        }
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
@@ -147,11 +144,26 @@ public class LineController {
     @RequestMapping("/updateLine")
     @ResponseBody
     public Result updateLine(@RequestBody Line pipeLine, HttpServletRequest request){
-        UpdateWrapper updateWrapper=new UpdateWrapper();
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            String name = users.getName();
+            //System.out.println(userId);
+            pipeLine.setUpdateUsername(name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
         pipeLine.setUpdateTime(DateUtil.date());
-        lineService.updateById(pipeLine);
-        //ToDo 调用日志接口
-        return Result.success(null,"修改成功");
+        boolean b = lineService.updateById(pipeLine);
+        if(b){
+            //ToDo 调用日志接口
+            return Result.success(null,"修改成功");
+        }
+        return Result.error("修改失败");
     }
     /**
      * 删除流水线（逻辑删除）
