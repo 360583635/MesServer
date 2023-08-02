@@ -78,14 +78,14 @@ public class LineTaskController {
         String lineName = line.getLine();
         String lineId = line.getId();
         Thread.currentThread().setName(lineName+lineId);
-        log.info(lineName+"线程创建成功"+DateUtil.date());
+        log.info(lineName+"线程创建成功，"+DateUtil.date());
         /*List<Order> orderQueue */
         Vector<Order> orderQueue = new Vector<Order>();
         if(lineName!=null){
                 while (true) {
                     existsKey = redisCache.hasKey(lineName);
                     if (existsKey == true) {
-                        log.info("redis中订单列表存在,"+lineName+"流水线实体待机中"+DateUtil.date());
+                        log.info("redis中订单列表存在,"+lineName+"流水线实体待机中，"+DateUtil.date());
                         //订单队列
                         orderQueue = redisCache.getCacheList(lineName).stream().map(item -> {
                             return (Order) item;
@@ -185,7 +185,8 @@ public class LineTaskController {
                             lock.unlock();
                         }
                     }else{
-                        log.error("redis中订单列表不存在");
+                        log.error("redis中订单列表不存在，"+lineName+"流水线实体待机中，"+DateUtil.date());
+                        Thread.sleep(6000);
                     }
                 }
         }
@@ -218,13 +219,13 @@ public class LineTaskController {
                         } else {
                             redisCache.getCacheList(lineName).add(order);
                         }
-                        log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"存入成功"+ DateUtil.date());
+                        log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"存入成功，"+ DateUtil.date());
                     }else{
-                        log.error("LineTaskController--订单列表中订单未匹配流水线"+ DateUtil.date());
+                        log.error("LineTaskController--订单列表中订单未匹配流水线，"+ DateUtil.date());
                     }
                 }
             }else{
-                log.error("LineTaskController--订单列表为空"+ DateUtil.date());
+                log.error("LineTaskController--订单列表为空，"+ DateUtil.date());
             }
         }
     }
@@ -243,14 +244,14 @@ public class LineTaskController {
                 String lineId = line.getId();
                 Thread threadByName = findThreadByName(lineName+lineId);
                 if(threadByName==null){
-                    log.info(threadByName+"线程不存在，开始创建,"+ DateUtil.date());
+                    log.info(lineName+"线程不存在，开始创建，"+ DateUtil.date());
                     lineInstance(line);
                 }else{
-                    log.info(threadByName+"线程存在,"+ DateUtil.date());
+                    log.info(threadByName+"线程存在，"+ DateUtil.date());
                 }
             }
         }else{
-            log.error("暂时没有流水线实体可供使用"+ DateUtil.date());
+            log.error("暂时没有流水线实体可供使用，"+ DateUtil.date());
         }
     }
 
@@ -262,7 +263,6 @@ public class LineTaskController {
     public static Thread findThreadByName(String name) {
         for (Thread thread : Thread.getAllStackTraces().keySet()) {
             if (thread.getName().equals(name)) {
-                log.info("查询到的线程名:"+name);
                 return thread;
             }
         }
