@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.ProcessMaterialRelation;
+import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
@@ -13,6 +14,7 @@ import com.job.dispatchService.lineManager.vo.MaterialVo;
 import com.job.feign.clients.AuthenticationClient;
 import com.job.feign.clients.ProductionManagementClient;
 import com.job.feign.pojo.Material;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,9 @@ public class ProcessMaterialRelationController {
     @Autowired
     private AuthenticationClient authenticationClient;
 
+    @Autowired
+    private RedisCache redisCache;
+
 
     /**
      * 工序与原材料关系管理编辑界面
@@ -58,8 +63,9 @@ public class ProcessMaterialRelationController {
      * @return 更改界面
      */
     @GetMapping("/add-or-update-ui")
-    public String addOrUpdateUI(Model model, Process record) throws Exception {
-        List<MaterialVo> allMaterialVos = processMaterialRelationService.allMaterialViewServer();
+    public String addOrUpdateUI(Model model, Process record, HttpServletRequest request) throws Exception {
+        String token = request.getHeader("token");
+        List<MaterialVo> allMaterialVos = processMaterialRelationService.allMaterialViewServer(token);
         //全部工序
         model.addAttribute("allMaterial",allMaterialVos);
         if(StringUtils.isNotEmpty(record.getId())){
@@ -155,8 +161,9 @@ public class ProcessMaterialRelationController {
      * @return
      */
     @GetMapping("/queryMaterials")
-    public List<MaterialVo> queryMaterials(){
-        List<Material> materialList = productionManagementClient.queryMaterials();
+    public List<MaterialVo> queryMaterials(HttpServletRequest request){
+        String token = request.getHeader("token");
+        List<Material> materialList = productionManagementClient.queryMaterials(token);
         List<MaterialVo> materialVoList = new ArrayList<>();
         for(Material material : materialList){
             MaterialVo materialVo = new MaterialVo();

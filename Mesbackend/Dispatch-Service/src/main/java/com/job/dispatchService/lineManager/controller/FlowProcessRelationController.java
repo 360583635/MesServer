@@ -1,9 +1,11 @@
 package com.job.dispatchService.lineManager.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.Users;
+import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.FlowDto;
@@ -51,6 +53,9 @@ public class FlowProcessRelationController {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private RedisCache redisCache;
 
 
     /**
@@ -110,7 +115,7 @@ public class FlowProcessRelationController {
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             flowDto.setUpdateUsername(name);

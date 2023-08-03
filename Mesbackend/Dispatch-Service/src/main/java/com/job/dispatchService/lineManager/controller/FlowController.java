@@ -10,6 +10,7 @@ import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Users;
+import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
@@ -48,6 +49,9 @@ public class FlowController {
 
     @Autowired
     private ProductionManagementClient productionManagementClient;
+
+    @Autowired
+    private RedisCache redisCache;
 
     //逻辑删除1未删除0已删除
     private static int IS_DELETE_NO=1;
@@ -93,12 +97,12 @@ public class FlowController {
     public Result flowSave(@RequestBody Flow flow, HttpServletRequest request){
 
 //        String userId= UserUtil.getUserId(httpServletRequest);
-        String token=request.getHeader("token");
+        String token= request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             flow.setUpdateUsername(name);

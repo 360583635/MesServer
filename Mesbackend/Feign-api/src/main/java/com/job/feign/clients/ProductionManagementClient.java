@@ -24,10 +24,10 @@ public interface ProductionManagementClient {
      * @return
      */
     @GetMapping("/productionManagement/material/queryMaterials")
-    List<Material>  queryMaterials();
+    List<Material>  queryMaterials(@RequestHeader("token") String token);
 
     @GetMapping("/productionManagement/equipment/queryEquipmentTypes")
-    List<String> queryEquipmentTypes();
+    List<String> queryEquipmentTypes(@RequestHeader("token") String token);
 
     @GetMapping("/productionManagement/equipment/queryEquipmentsByType/{functionName}")
     List<Equipment> queryEquipmentsByType(@PathVariable("functionName") String functionName);

@@ -58,8 +58,9 @@ public class ProcessMaterialRelationServiceImpl extends ServiceImpl<ProcessMater
     }
 
     @Override
-    public List<MaterialVo> allMaterialViewServer() throws Exception {
-        List<Material> materials = productionManagementClient.queryMaterials();
+    public List<MaterialVo> allMaterialViewServer(String token) throws Exception {
+
+        List<Material> materials = productionManagementClient.queryMaterials(token);
         List<MaterialVo> materialVos = new ArrayList<>();
         for(Material material : materials){
             MaterialVo materialVo = new MaterialVo();

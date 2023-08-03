@@ -28,7 +28,7 @@ public interface ProcessMaterialRelationService extends IService<ProcessMaterial
      * @return 原材料VO集合
      * @throws Exception 异常
      */
-    List<MaterialVo> allMaterialViewServer() throws Exception;
+    List<MaterialVo> allMaterialViewServer(String token) throws Exception;
 
     /**
      * 绘制当前工序下的原材料

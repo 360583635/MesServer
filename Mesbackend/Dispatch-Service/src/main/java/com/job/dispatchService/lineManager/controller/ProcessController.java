@@ -96,7 +96,7 @@ public class ProcessController {
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             processDto.setUpdateUsername(name);
@@ -113,7 +113,7 @@ public class ProcessController {
         queryWrapper
                 .eq(Process::getIsDelete,1)
                 .eq(Process::getProcess, processDto.getProcess());
-        boolean b = processService.saveOrUpdate(process);
+        boolean b = processService.updateById(process);
         if(b==true) {
             Process process1 = processService.getOne(queryWrapper);
             processDto.setId(process1.getId());
@@ -122,7 +122,7 @@ public class ProcessController {
                 return Result.success(null,"修改成功");
             }
         }
-        return Result.error("修改失败");
+        return Result.error("工序修改失败");
 
     }
 
@@ -160,7 +160,6 @@ public class ProcessController {
         queryWrapper
                 .eq(Process::getIsDelete,1)
                 .eq(Process::getProcess, processDto.getProcess());
-
         long count = processService.count(queryWrapper);
         if(count>0){
             return Result.error("工序名称不可重复，请重新添加");
@@ -288,8 +287,9 @@ public class ProcessController {
      * 查询全部设备类型
      */
     @GetMapping("/queryEquipmentTypes")
-    public Result<List<String>> queryEquipmentTypes(){
-        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes();
+    public Result<List<String>> queryEquipmentTypes(HttpServletRequest request){
+        String token = request.getHeader("token");
+        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes(token);
         return Result.success(equipmentTypes,"查询成功");
     }
 
@@ -308,8 +308,9 @@ public class ProcessController {
     }
 
     @GetMapping("/queryEquipmentMap")
-    public Result queryEquipmentMap(){
-        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes();
+    public Result queryEquipmentMap(HttpServletRequest request){
+        String token = request.getHeader("token");
+        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes(token);
         List<EquipmentVo> equipmentVoList = new ArrayList<>();
         for(String equipmentType : equipmentTypes){
             EquipmentVo equipmentVo = new EquipmentVo();
