@@ -1,13 +1,9 @@
 package com.job.dispatchService.lineManager.controller;
 
 
-
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-
-import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Users;
 import com.job.common.result.Result;
@@ -21,7 +17,6 @@ import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,7 +32,6 @@ import static com.job.dispatchService.lineManager.controller.LineTaskController.
 
 @RestController
 @RequestMapping("/dispatch/line")
-@CrossOrigin
 @Slf4j
 public class LineController {
 

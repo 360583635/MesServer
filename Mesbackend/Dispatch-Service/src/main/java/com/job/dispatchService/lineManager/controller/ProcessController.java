@@ -6,10 +6,11 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.job.common.pojo.*;
-//import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
-//import com.job.dispatchService.LineManager.pojo.TProcess;
+import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Process;
+import com.job.common.pojo.ProcessMaterialRelation;
+import com.job.common.pojo.Users;
+import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
@@ -29,11 +30,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -43,7 +41,6 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/dispatch/process")
-@CrossOrigin
 @Slf4j
 public class ProcessController {
 
@@ -64,6 +61,9 @@ public class ProcessController {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private RedisCache redisCache;
 
     //逻辑删除1未删除0已删除
     private static int IS_DELETE=1;
@@ -141,7 +141,7 @@ public class ProcessController {
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             processDto.setUpdateUsername(name);
@@ -288,7 +288,7 @@ public class ProcessController {
      * 查询全部设备类型
      */
     @GetMapping("/queryEquipmentTypes")
-    public Result queryEquipmentTypes(){
+    public Result<List<String>> queryEquipmentTypes(){
         List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes();
         return Result.success(equipmentTypes,"查询成功");
     }

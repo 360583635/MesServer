@@ -66,7 +66,7 @@ public interface ProductionManagementClient {
      * 查询所有产品名称(wen)
      */
     @GetMapping("/productionManagement/produce/queryProduceName")
-    Set<String> queryProduceName();
+    Set<String> queryProduceName(@RequestHeader("token") String token);
 
     /**
      * 普通原材料出库

@@ -19,9 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 庸俗可耐
@@ -30,7 +31,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/dispatch/process/material")
-@CrossOrigin
 @Slf4j
 public class ProcessMaterialRelationController {
 

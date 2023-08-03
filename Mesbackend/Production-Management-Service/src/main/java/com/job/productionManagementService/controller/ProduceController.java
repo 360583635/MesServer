@@ -78,6 +78,7 @@ public class ProduceController {
      */
     @PostMapping("produceId")
     Integer produceId(){
+        System.out.println(1);
         List<Produce>produceList=produceService.list();
         int size = produceList.size();
         return  size+1;

@@ -6,18 +6,13 @@ import com.job.authenticationService.service.LoginService;
 import com.job.authenticationService.utils.JwtUtil;
 import com.job.authenticationService.utils.RedisCache;
 import com.job.common.pojo.Users;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.net.http.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -60,6 +55,7 @@ public class  LoginServiceImpl implements LoginService {
         //把完整的用户信息存入redis userid作为key
         redisCache.setCacheObject("login" + userid, loignUser);
         //把token响应给前端
+        System.out.println("success");
         return new ResponseResult(200, "登录成功",map);
     }
 

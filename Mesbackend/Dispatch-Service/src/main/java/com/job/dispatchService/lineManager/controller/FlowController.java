@@ -6,11 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.job.common.pojo.*;
+import com.job.common.pojo.Flow;
+import com.job.common.pojo.FlowProcessRelation;
+import com.job.common.pojo.Line;
+import com.job.common.pojo.Users;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
-import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
@@ -19,12 +21,9 @@ import com.job.feign.clients.ProductionManagementClient;
 import io.jsonwebtoken.Claims;
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,6 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/dispatch/flow")
-@CrossOrigin
 public class FlowController {
     @Autowired
     public FlowService flowService;
@@ -290,10 +288,10 @@ public class FlowController {
     }
 
     @GetMapping("/queryProduceName")
-    public Result queryProduceName(){
-
-        Set<String> queryProduceName = productionManagementClient.queryProduceName();
-        if(queryProduceName.size()==0||queryProduceName.isEmpty()) {
+    public Result queryProduceName(HttpServletRequest request){
+        String token = request.getHeader("token");
+        Set<String> queryProduceName = productionManagementClient.queryProduceName(token);
+        if(queryProduceName.size() == 0) {
             return Result.error("材料查询失败");
         }
 
@@ -301,9 +299,7 @@ public class FlowController {
         queryWrapper.eq(Flow::getIsDelete,1);
 
         List<Flow> flowList = flowService.list(queryWrapper);
-        Set<String> stringSet = flowList.stream().map(flow -> {
-            return flow.getFlow();
-        }).collect(Collectors.toSet());
+        Set<String> stringSet = flowList.stream().map(Flow::getFlow).collect(Collectors.toSet());
 
         Set<String> produceNames = new HashSet<>(queryProduceName);
         produceNames.removeAll(stringSet);
