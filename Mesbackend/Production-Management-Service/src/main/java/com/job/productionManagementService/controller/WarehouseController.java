@@ -337,7 +337,7 @@ public class  WarehouseController {
         return null;
 }
     /**
-     * 普通订单原材料出库
+     * 加急订单原材料出库
      */
     @PostMapping("/MaterialStockOutPlus")
     @ResponseBody

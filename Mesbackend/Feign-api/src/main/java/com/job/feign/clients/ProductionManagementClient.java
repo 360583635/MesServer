@@ -69,7 +69,7 @@ public interface ProductionManagementClient {
     Set<String> queryProduceName();
 
     /**
-     * 原材料出库
+     * 普通原材料出库
      * @param materials
      * @return
      */
@@ -79,4 +79,13 @@ public interface ProductionManagementClient {
 
     @GetMapping("/productionManagement/queryNumbersBySaveWarehouse")
     Integer queryMaterialNumberBySaveWarehouse(@RequestParam String materialName);
+
+    /**
+     * 加急订单出库方式
+     * @param materials
+     * @return
+     */
+    @PostMapping("/MaterialStockOutPlus")
+    @ResponseBody
+     Result MaterialStockOutPlus( @RequestParam String materials);
 }

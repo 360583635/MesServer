@@ -218,7 +218,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     rawSb1.append(material).append(",");
                     rawSb1.append(rawNum).append(",");
                 }
-                productionManagementClient.MaterialStockOut(rawSb1.toString());
+                if (order.getPriority()==2){
+                    productionManagementClient.MaterialStockOutPlus(rawSb1.toString());
+                }else {
+                    productionManagementClient.MaterialStockOut(rawSb1.toString());
+                }
                 return Result.success("success，订单创建且派发成功");
             } else {
                 return Result.error("error,订单创建成功但派发失败!");
