@@ -109,6 +109,7 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
             relation.setProcessId(processVoList.get(i).getValue());
             relation.setProcess(processVoList.get(i).getTitle());
             relation.setSortNum(i + 1);//顺序
+            relation.setIsDelete(1);
             if (i == 0) {
                 processBuilder.append(process.getProcessDesc());
             } else {
@@ -120,8 +121,11 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
         flow.setProcess(processBuilder.toString());
         //更细流程头表信息
         flowService.saveOrUpdate(flow);
-        saveOrUpdateBatch(flowProcessRelationList);
-        return Result.success(null,"更新成功");
+        boolean b = saveOrUpdateBatch(flowProcessRelationList);
+        if(b==true){
+            return Result.success(null,"更新成功");
+        }
+        return Result.error("更新失败");
     }
 
     /**

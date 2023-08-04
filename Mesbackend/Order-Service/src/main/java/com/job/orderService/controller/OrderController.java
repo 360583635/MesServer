@@ -40,8 +40,11 @@ public class OrderController {
 //        System.out.println(userId);
 //    }
     @GetMapping("/toAddOrder")
-   public Result<List<FlowVo>> toAddOrder(){
-       Result<List<FlowVo>> result = orderService.toAddOrder();
+   public Result<List<FlowVo>> toAddOrder(HttpServletRequest request){
+        String token = request.getHeader("token");
+        System.out.println("开始初始化~~");
+       Result<List<FlowVo>> result = orderService.toAddOrder(token);
+        System.out.println(result);
        return result;
    }
 
@@ -64,7 +67,7 @@ public class OrderController {
             e.printStackTrace();
             throw new RuntimeException("token非法");
         }
-        Result<Object> result = orderService.addOrder(order);
+        Result<Object> result = orderService.addOrder(order,token);
         return result;
 //        //数据验证
 //        if (order == null){

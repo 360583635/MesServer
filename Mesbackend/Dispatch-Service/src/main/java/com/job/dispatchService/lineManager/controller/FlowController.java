@@ -137,7 +137,10 @@ public class FlowController {
             updateWrapper.set(Flow::getIsDelete,IS_DELETE_YES);
             updateWrapper.eq(Flow::getId,flowId);
             boolean update = flowService.update(updateWrapper);
-            if (update){
+            LambdaUpdateWrapper<FlowProcessRelation> lambdaUpdateWrapper =new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.eq(FlowProcessRelation::getFlowId,flowId).set(FlowProcessRelation::getIsDelete,0);
+            boolean update1 = relationService.update(lambdaUpdateWrapper);
+            if (update&&update1){
                 return Result.success(null,"删除成功");
             }
             return Result.error("删除失败");
