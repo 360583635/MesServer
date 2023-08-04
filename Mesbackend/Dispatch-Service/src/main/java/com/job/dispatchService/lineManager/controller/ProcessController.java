@@ -6,10 +6,11 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.job.common.pojo.*;
-//import com.job.dispatchService.LineManager.pojo.TFlowProcessRelation;
-//import com.job.dispatchService.LineManager.pojo.TProcess;
+import com.job.common.pojo.FlowProcessRelation;
 import com.job.common.pojo.Process;
+import com.job.common.pojo.ProcessMaterialRelation;
+import com.job.common.pojo.Users;
+import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
@@ -29,11 +30,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -43,7 +41,6 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/dispatch/process")
-@CrossOrigin
 @Slf4j
 public class ProcessController {
 
@@ -64,6 +61,9 @@ public class ProcessController {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private RedisCache redisCache;
 
     //逻辑删除1未删除0已删除
     private static int IS_DELETE=1;
@@ -96,7 +96,7 @@ public class ProcessController {
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             processDto.setUpdateUsername(name);
@@ -113,7 +113,7 @@ public class ProcessController {
         queryWrapper
                 .eq(Process::getIsDelete,1)
                 .eq(Process::getProcess, processDto.getProcess());
-        boolean b = processService.saveOrUpdate(process);
+        boolean b = processService.updateById(process);
         if(b==true) {
             Process process1 = processService.getOne(queryWrapper);
             processDto.setId(process1.getId());
@@ -122,7 +122,7 @@ public class ProcessController {
                 return Result.success(null,"修改成功");
             }
         }
-        return Result.error("修改失败");
+        return Result.error("工序修改失败");
 
     }
 
@@ -141,7 +141,7 @@ public class ProcessController {
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             processDto.setUpdateUsername(name);
@@ -160,7 +160,6 @@ public class ProcessController {
         queryWrapper
                 .eq(Process::getIsDelete,1)
                 .eq(Process::getProcess, processDto.getProcess());
-
         long count = processService.count(queryWrapper);
         if(count>0){
             return Result.error("工序名称不可重复，请重新添加");
@@ -195,7 +194,13 @@ public class ProcessController {
         LambdaUpdateWrapper<Process> updateWrapper=new LambdaUpdateWrapper<>();
         updateWrapper.set(Process::getIsDelete,0).eq(Process::getId,processId);
         boolean b = processService.update(updateWrapper);
-        if(b){
+        LambdaUpdateWrapper<ProcessMaterialRelation> queryWrapper1 = new LambdaUpdateWrapper<>();
+        queryWrapper1
+                .eq(ProcessMaterialRelation::getProcessId,processId)
+                .set(ProcessMaterialRelation::getIsDelete,0);
+        boolean update = processMaterialRelationService.update(queryWrapper1);
+
+        if(b&&update){
             return Result.success(null,"删除成功");
         }
         return Result.error("操作失败，请刷新页面重试");
@@ -218,17 +223,24 @@ public class ProcessController {
             return Result.error("请保证删除的工序没有流程与之绑定");
         }
         // 获取需要逻辑删除的记录的ID列表
-        List<Process> recordList = new ArrayList<>();
+        Vector<Process> recordList = new Vector<>();
+        Vector<ProcessMaterialRelation> processMaterialRelationList = new Vector<>();
         for (String id : idList) {
             Process process=new Process();
             process.setId(id);
             process.setIsDelete(0);  // 设置要更新的字段和值
             recordList.add(process);
+
+            ProcessMaterialRelation processMaterialRelation = new ProcessMaterialRelation();
+            processMaterialRelation.setProcessId(id);
+            processMaterialRelation.setIsDelete(0);
+            processMaterialRelationList.add(processMaterialRelation);
         }
 
         boolean b = processService.updateBatchById(recordList);
 
-        if(b){
+        boolean b1 = processMaterialRelationService.updateBatchById(processMaterialRelationList);
+        if(b&&b1){
             return Result.success(null,"查询成功");
         }
         return Result.error("删除失败");
@@ -288,8 +300,9 @@ public class ProcessController {
      * 查询全部设备类型
      */
     @GetMapping("/queryEquipmentTypes")
-    public Result queryEquipmentTypes(){
-        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes();
+    public Result<List<String>> queryEquipmentTypes(HttpServletRequest request){
+        String token = request.getHeader("token");
+        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes(token);
         return Result.success(equipmentTypes,"查询成功");
     }
 
@@ -308,8 +321,9 @@ public class ProcessController {
     }
 
     @GetMapping("/queryEquipmentMap")
-    public Result queryEquipmentMap(){
-        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes();
+    public Result queryEquipmentMap(HttpServletRequest request){
+        String token = request.getHeader("token");
+        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes(token);
         List<EquipmentVo> equipmentVoList = new ArrayList<>();
         for(String equipmentType : equipmentTypes){
             EquipmentVo equipmentVo = new EquipmentVo();

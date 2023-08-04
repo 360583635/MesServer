@@ -20,7 +20,6 @@ import java.util.Map;
  * @description
  */
 @RestController
-@CrossOrigin
 @RequestMapping("/productionManagement/warehouse")
 
 public class  WarehouseController {
@@ -140,8 +139,11 @@ public class  WarehouseController {
      * @return
      */
     @PostMapping("/MaterialStockIn")
-    @ResponseBody
-    public Result MaterialStockIn(HttpServletRequest httpServletRequest ,@RequestParam int materialNumber,@RequestParam String materialName) {
+    public Result MaterialStockIn(@RequestBody Map<String,String> map) {
+        String materialName = map.get("materialName");
+        Integer materialNumber = Integer.parseInt(map.get("materialNumber"));
+        System.out.println(materialName);
+        System.out.println(materialNumber);
       LambdaQueryWrapper<Warehouse> queryWrapper=new LambdaQueryWrapper<>();
       queryWrapper
               .gt(Warehouse::getWarehouseAvailable,0)

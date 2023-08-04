@@ -3,15 +3,13 @@ package com.job.platformService.controller;
 
 import com.job.platformService.config.RedisCache;
 import com.job.platformService.pojo.MyDTO;
+import com.job.platformService.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import  com.job.platformService.result.Result;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
-@CrossOrigin
 public class DataShowController {
     @Autowired
     private RedisCache redisCache;

@@ -53,7 +53,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @return
      */
     @Override
-    public Result<List<FlowVo>> toAddOrder() {
+    public Result<List<FlowVo>> toAddOrder(String token) {
         //获取产品类型名称
         LambdaQueryWrapper wrapper = new LambdaQueryWrapper();
         List<Flow> flowList = flowMapper.selectList(wrapper);
@@ -68,7 +68,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             Map<String,String> map = new HashMap<>();
             String flowName = flow.getFlow();
             map.put("flowName",flowName);
-            Map<String, Integer> materialsMap = dispatchClient.queryMaterialsByFlowName(map);
+            Map<String, Integer> materialsMap = dispatchClient.queryMaterialsByFlowName(token,map);
             List<Map<String,String>> list = new ArrayList<>();
             //Map<String, Integer> materialsMap = restTemplate.postForObject(urlFlow, map, Map.class);
             for (String s : materialsMap.keySet()) {
@@ -89,6 +89,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 
+
     /**
      * 创建订单
      *
@@ -96,7 +97,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @return
      */
     @Override
-    public Result<Object> addOrder(Order order) {
+    public Result<Object> addOrder(Order order,String token) {
         //数据验证
         if (order == null) {
             return Result.error("输入对象不能为空！");
@@ -113,7 +114,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             String productName = order.getProductName();
             Map<String,String> map=new HashMap<>();
             map.put("flowName",productName);
-            Map<String, Integer> rawMaps = dispatchClient.queryMaterialsByFlowName(map);
+            Map<String, Integer> rawMaps = dispatchClient.queryMaterialsByFlowName(token,map);
             StringBuilder rawNames=new StringBuilder();
             for (String rawName : rawMaps.keySet()) {
                 rawNames.append(rawName).append(" ");
@@ -135,19 +136,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setIsDelete(0);
 
             //计算订单原材料
-            Map<String, Integer> rawMap = dispatchClient.queryMaterialsByFlowName(map);
+            Map<String, Integer> rawMap = dispatchClient.queryMaterialsByFlowName(token,map);
             Set<Map.Entry<String, Integer>> rawSet = rawMap.entrySet();
             for (Map.Entry<String, Integer> rawset : rawSet) {
                 rawMap.put(rawset.getKey(), rawset.getValue() * order.getOrderNumber());
             }
 
             //查询原材料库存
-            Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(map);
+            Map<String, Integer> materials = dispatchClient.queryMaterialsByFlowName(token,map);
             Set<String> keySet = materials.keySet();
             StringBuilder rawSb=new StringBuilder();
             if (order.getPriority()==2){
                 for (String material : keySet) {
-                    Integer materialNum = productionManagementClient.queryMaterialNumberBySaveWarehouse(material);
+                    Integer materialNum = productionManagementClient.queryMaterialNumberBySaveWarehouse(token,material);
                     Integer rawNum = rawMap.get(material);
                     if (materialNum < rawNum) {
                         rawSb.append(material).append(",");
@@ -156,7 +157,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 }
             }else {
                 for (String material : keySet) {
-                    Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(material);
+                    Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(token,material);
                     Integer rawNum = rawMap.get(material);
                     if (materialNum < rawNum) {
                         rawSb.append(material).append(",");
@@ -181,9 +182,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 LambdaQueryWrapper<Line> wrapper2 = new LambdaQueryWrapper<>();
                 wrapper2.eq(Line::getLineFlowId, flowId).orderByAsc(Line::getOrderCount);
                 List<Line> lineList = lineMapper.selectList(wrapper2);
+                System.out.println(lineList);
                 Line line = lineList.get(0);
-                String lineId = line.getId();
-                order.setProductLine(lineId);
+                String lineName = line.getLine();
+                order.setProductLine(lineName);
                 order.setProductionStatus(1);
                 int j = orderMapper.updateById(order);
                 PriorityQueue<Order> qq = new PriorityQueue<>(
@@ -203,14 +205,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 if(orderPQ!=null && !orderPQ.isEmpty()){
                     for (Object o : orderPQ) qq.offer((Order) o);
                 }
+               qq.offer(order);
                 lock.lock();
                 try {
                     redisCache.setCacheObject("orderPQ", qq);
+                    System.out.println("订单已加入redis里面");
                 } finally {
                     lock.unlock();
                 }
                 //出库操作
-                Map<String, Integer> materials1 = dispatchClient.queryMaterialsByFlowName(/*order.getProductName()*/new HashMap<>());
+                Map<String, Integer> materials1 = dispatchClient.queryMaterialsByFlowName(token,map);
                 Set<String> keySet1 = materials1.keySet();
                 StringBuilder rawSb1=new StringBuilder();
                 for (String material : keySet1) {

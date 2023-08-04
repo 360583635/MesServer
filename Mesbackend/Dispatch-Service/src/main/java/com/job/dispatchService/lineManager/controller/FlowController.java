@@ -6,11 +6,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.job.common.pojo.*;
+import com.job.common.pojo.Flow;
+import com.job.common.pojo.FlowProcessRelation;
+import com.job.common.pojo.Line;
+import com.job.common.pojo.Users;
+import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
-import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
@@ -19,12 +22,9 @@ import com.job.feign.clients.ProductionManagementClient;
 import io.jsonwebtoken.Claims;
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/dispatch/flow")
-@CrossOrigin
 public class FlowController {
     @Autowired
     public FlowService flowService;
@@ -50,6 +49,12 @@ public class FlowController {
 
     @Autowired
     private ProductionManagementClient productionManagementClient;
+
+    @Autowired
+    private FlowProcessRelationService flowProcessRelationService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     //逻辑删除1未删除0已删除
     private static int IS_DELETE_NO=1;
@@ -95,12 +100,12 @@ public class FlowController {
     public Result flowSave(@RequestBody Flow flow, HttpServletRequest request){
 
 //        String userId= UserUtil.getUserId(httpServletRequest);
-        String token=request.getHeader("token");
+        String token= request.getHeader("token");
         System.out.println(token);
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             flow.setUpdateUsername(name);
@@ -135,7 +140,10 @@ public class FlowController {
             updateWrapper.set(Flow::getIsDelete,IS_DELETE_YES);
             updateWrapper.eq(Flow::getId,flowId);
             boolean update = flowService.update(updateWrapper);
-            if (update){
+            LambdaUpdateWrapper<FlowProcessRelation> lambdaUpdateWrapper =new LambdaUpdateWrapper<>();
+            lambdaUpdateWrapper.eq(FlowProcessRelation::getFlowId,flowId).set(FlowProcessRelation::getIsDelete,0);
+            boolean update1 = relationService.update(lambdaUpdateWrapper);
+            if (update&&update1){
                 return Result.success(null,"删除成功");
             }
             return Result.error("删除失败");
@@ -153,17 +161,25 @@ public class FlowController {
 
         // 获取需要逻辑删除的记录的ID列表
 
-        List<Flow> recordList = new ArrayList<>();
+        Vector<Flow> recordList = new Vector<>();
+        Vector<FlowProcessRelation> flowProcessRelationList = new Vector<>();
+
         for (String id : idList) {
             Flow flow=new Flow();
             flow.setId(id);
             flow.setIsDelete(0);  // 设置要更新的字段和值
             recordList.add(flow);
+
+            FlowProcessRelation flowProcessRelation = new FlowProcessRelation();
+            flowProcessRelation.setFlowId(id);
+            flowProcessRelation.setIsDelete(0);
+            flowProcessRelationList.add(flowProcessRelation);
         }
 
         boolean b = flowService.updateBatchById(recordList);
+        boolean b1 = flowProcessRelationService.updateBatchById(flowProcessRelationList);
 
-        if(b){
+        if(b&&b1){
             return Result.success(null,"查询成功");
         }
         return Result.error("删除失败");
@@ -290,10 +306,10 @@ public class FlowController {
     }
 
     @GetMapping("/queryProduceName")
-    public Result queryProduceName(){
-
-        Set<String> queryProduceName = productionManagementClient.queryProduceName();
-        if(queryProduceName.size()==0||queryProduceName.isEmpty()) {
+    public Result queryProduceName(HttpServletRequest request){
+        String token = request.getHeader("token");
+        Set<String> queryProduceName = productionManagementClient.queryProduceName(token);
+        if(queryProduceName.size() == 0) {
             return Result.error("材料查询失败");
         }
 
@@ -301,9 +317,7 @@ public class FlowController {
         queryWrapper.eq(Flow::getIsDelete,1);
 
         List<Flow> flowList = flowService.list(queryWrapper);
-        Set<String> stringSet = flowList.stream().map(flow -> {
-            return flow.getFlow();
-        }).collect(Collectors.toSet());
+        Set<String> stringSet = flowList.stream().map(Flow::getFlow).collect(Collectors.toSet());
 
         Set<String> produceNames = new HashSet<>(queryProduceName);
         produceNames.removeAll(stringSet);
