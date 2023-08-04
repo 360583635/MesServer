@@ -51,6 +51,9 @@ public class FlowController {
     private ProductionManagementClient productionManagementClient;
 
     @Autowired
+    private FlowProcessRelationService flowProcessRelationService;
+
+    @Autowired
     private RedisCache redisCache;
 
     //逻辑删除1未删除0已删除
@@ -158,17 +161,25 @@ public class FlowController {
 
         // 获取需要逻辑删除的记录的ID列表
 
-        List<Flow> recordList = new ArrayList<>();
+        Vector<Flow> recordList = new Vector<>();
+        Vector<FlowProcessRelation> flowProcessRelationList = new Vector<>();
+
         for (String id : idList) {
             Flow flow=new Flow();
             flow.setId(id);
             flow.setIsDelete(0);  // 设置要更新的字段和值
             recordList.add(flow);
+
+            FlowProcessRelation flowProcessRelation = new FlowProcessRelation();
+            flowProcessRelation.setFlowId(id);
+            flowProcessRelation.setIsDelete(0);
+            flowProcessRelationList.add(flowProcessRelation);
         }
 
         boolean b = flowService.updateBatchById(recordList);
+        boolean b1 = flowProcessRelationService.updateBatchById(flowProcessRelationList);
 
-        if(b){
+        if(b&&b1){
             return Result.success(null,"查询成功");
         }
         return Result.error("删除失败");

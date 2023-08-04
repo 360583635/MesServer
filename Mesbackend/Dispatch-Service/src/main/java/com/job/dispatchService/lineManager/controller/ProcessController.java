@@ -194,7 +194,13 @@ public class ProcessController {
         LambdaUpdateWrapper<Process> updateWrapper=new LambdaUpdateWrapper<>();
         updateWrapper.set(Process::getIsDelete,0).eq(Process::getId,processId);
         boolean b = processService.update(updateWrapper);
-        if(b){
+        LambdaUpdateWrapper<ProcessMaterialRelation> queryWrapper1 = new LambdaUpdateWrapper<>();
+        queryWrapper1
+                .eq(ProcessMaterialRelation::getProcessId,processId)
+                .set(ProcessMaterialRelation::getIsDelete,0);
+        boolean update = processMaterialRelationService.update(queryWrapper1);
+
+        if(b&&update){
             return Result.success(null,"删除成功");
         }
         return Result.error("操作失败，请刷新页面重试");
@@ -217,17 +223,24 @@ public class ProcessController {
             return Result.error("请保证删除的工序没有流程与之绑定");
         }
         // 获取需要逻辑删除的记录的ID列表
-        List<Process> recordList = new ArrayList<>();
+        Vector<Process> recordList = new Vector<>();
+        Vector<ProcessMaterialRelation> processMaterialRelationList = new Vector<>();
         for (String id : idList) {
             Process process=new Process();
             process.setId(id);
             process.setIsDelete(0);  // 设置要更新的字段和值
             recordList.add(process);
+
+            ProcessMaterialRelation processMaterialRelation = new ProcessMaterialRelation();
+            processMaterialRelation.setProcessId(id);
+            processMaterialRelation.setIsDelete(0);
+            processMaterialRelationList.add(processMaterialRelation);
         }
 
         boolean b = processService.updateBatchById(recordList);
 
-        if(b){
+        boolean b1 = processMaterialRelationService.updateBatchById(processMaterialRelationList);
+        if(b&&b1){
             return Result.success(null,"查询成功");
         }
         return Result.error("删除失败");
