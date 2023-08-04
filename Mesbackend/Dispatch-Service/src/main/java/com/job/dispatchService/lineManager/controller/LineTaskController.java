@@ -13,6 +13,7 @@ import com.job.common.redis.RedisCache;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.LineService;
+import com.job.dispatchService.work.config.StateConfig;
 import com.job.dispatchService.work.controller.WorkController;
 import com.job.dispatchService.work.service.WorkService;
 import io.netty.util.internal.StringUtil;
@@ -75,39 +76,42 @@ public class LineTaskController {
         if(lineName!=null){
                 while (true) {
                     existsKey = redisCache.hasKey(lineName);
-                    if (existsKey == true) {
+                    if (existsKey &&redisCache.getCacheObject(lineName)!=null) {
                         log.info("redis中订单列表存在,"+lineName+"流水线实体待机中，"+DateUtil.date());
                         //订单队列
                         orderQueue = redisCache.getCacheList(lineName).stream().map(item -> {
                             return (Order) item;
                         }).collect(Collectors.toCollection(Vector::new));
+
+                        redisCache.setCacheObject(lineName,null);
                         try {
                             lock.lock();
                             //判断订单列表是否有数据，流水线状态是否为 空闲或完成
-                            if ((orderQueue.isEmpty() == false && line.getLineStatus().equals("0")) || (orderQueue.isEmpty() == false && line.getLineStatus().equals("4"))) {
+                            if ((!orderQueue.isEmpty() && line.getLineStatus().equals("0")) || (!orderQueue.isEmpty() && line.getLineStatus().equals("4"))) {
                                 //从订单列表里获取订单
                                 Order order = orderQueue.get(0);
                                 orderQueue.remove(order);
                                 log.info(lineName+"流水线实体获取到"+order.getOrderId()+"订单，"+DateUtil.date());
+                                line.setOrderCount(line.getOrderCount()+1);
                                 //查询该订单是否有工单关联
                                 LambdaQueryWrapper<Work> queryWrapper = new LambdaQueryWrapper<>();
                                 queryWrapper
-                                        .eq(Work::getWState, 4)
+                                        .eq(Work::getWState, StateConfig.EXCEPTION_STATE)
                                         .eq(Work::getWOrderId, order.getOrderId());
-                                Work work = workService.getOne(queryWrapper);
+                                List<Work> workList = workService.list(queryWrapper);
 
                                 flowId = line.getLineFlowId();
-                                if (work != null) {
+                                if (workList.size()>0) {
                                     //该订单曾经被执行过
                                     //接取该订单异常的那个工序
-                                    firstProcessId = work.getWProcessId();
+                                    firstProcessId = workList.get(0).getWProcessId();
                                 } else {
                                     //该订单未被执行
                                     LambdaQueryWrapper<FlowProcessRelation> queryWrapper1 = new LambdaQueryWrapper<>();
                                     queryWrapper1
                                             .eq(FlowProcessRelation::getIsDelete, 1)
                                             .eq(FlowProcessRelation::getFlowId, flowId)
-                                            .eq(FlowProcessRelation::getSortNum, "0");
+                                            .eq(FlowProcessRelation::getSortNum, "1");
                                     FlowProcessRelation flowProcessRelation = flowProcessRelationService.getOne(queryWrapper1);
                                     firstProcessId = flowProcessRelation.getProcessId();
                                 }
@@ -184,11 +188,11 @@ public class LineTaskController {
     }
 
     @Async
-    @Scheduled(initialDelay = 0,fixedRate = 3000*60)
+    @Scheduled(initialDelay = 0,fixedRate = 1000*60)
     public void queryOrders() throws InterruptedException {
         // TODO: 2023/7/10 每隔3分钟执行一次查询订单
         boolean b = redisCache.hasKey("orderPQ");
-        if(b==true){
+        if(b==true&&redisCache.getCacheObject("orderPQ")!=null){
             Vector<Order> orderPQ = new Vector<>();
             JSONArray array = new JSONArray(redisCache.getCacheObject("orderPQ"));
             array.forEach(element ->{
@@ -203,7 +207,8 @@ public class LineTaskController {
                     String lineName = order.getProductLine();
                     if(!StringUtil.isNullOrEmpty(lineName)) {
                         log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"开始存入到对应流水线的订单列表中"+ DateUtil.date());
-                        if (redisCache.getCacheList(lineName) == null && StringUtil.isNullOrEmpty(lineName) == false) {
+                        System.out.println(!redisCache.hasKey(lineName) && !StringUtil.isNullOrEmpty(lineName));
+                        if (!redisCache.hasKey(lineName) && !StringUtil.isNullOrEmpty(lineName)) {
                             Vector<Order> orderQueue = new Vector<>();
                             orderQueue.add(order);
                             redisCache.setCacheList(lineName, orderQueue);
@@ -218,7 +223,9 @@ public class LineTaskController {
             }else{
                 log.error("LineTaskController--订单列表为空，"+ DateUtil.date());
             }
+            redisCache.setCacheObject("orderPQ",null);
         }
+
     }
     
     @Scheduled(initialDelay = 0,fixedDelay = 5000)

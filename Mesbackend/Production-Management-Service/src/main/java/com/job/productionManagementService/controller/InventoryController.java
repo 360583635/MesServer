@@ -145,7 +145,8 @@ public class InventoryController {
         }
         return number;
     }
-    @GetMapping("/queryNumbersBySaveWarehouse")
+
+    @PostMapping("/queryNumbersBySaveWarehouse")
     Integer queryMaterialNumberBySaveWarehouse(@RequestParam String materialName) {
         LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(Inventory::getMaterialName,materialName);

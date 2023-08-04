@@ -147,7 +147,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             StringBuilder rawSb=new StringBuilder();
             if (order.getPriority()==2){
                 for (String material : keySet) {
-                    Integer materialNum = productionManagementClient.queryMaterialNumberBySaveWarehouse(material);
+                    Integer materialNum = productionManagementClient.queryMaterialNumberBySaveWarehouse(token,material);
                     Integer rawNum = rawMap.get(material);
                     if (materialNum < rawNum) {
                         rawSb.append(material).append(",");
@@ -156,7 +156,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 }
             }else {
                 for (String material : keySet) {
-                    Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(material);
+                    Integer materialNum = productionManagementClient.queryMaterialNumberByMaterialName(token,material);
                     Integer rawNum = rawMap.get(material);
                     if (materialNum < rawNum) {
                         rawSb.append(material).append(",");
@@ -181,9 +181,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 LambdaQueryWrapper<Line> wrapper2 = new LambdaQueryWrapper<>();
                 wrapper2.eq(Line::getLineFlowId, flowId).orderByAsc(Line::getOrderCount);
                 List<Line> lineList = lineMapper.selectList(wrapper2);
+                System.out.println(lineList);
                 Line line = lineList.get(0);
-                String lineId = line.getId();
-                order.setProductLine(lineId);
+                String lineName = line.getLine();
+                order.setProductLine(lineName);
                 order.setProductionStatus(1);
                 int j = orderMapper.updateById(order);
                 PriorityQueue<Order> qq = new PriorityQueue<>(
@@ -203,9 +204,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 if(orderPQ!=null && !orderPQ.isEmpty()){
                     for (Object o : orderPQ) qq.offer((Order) o);
                 }
+               qq.offer(order);
                 lock.lock();
                 try {
                     redisCache.setCacheObject("orderPQ", qq);
+                    System.out.println("订单已加入redis里面");
                 } finally {
                     lock.unlock();
                 }
