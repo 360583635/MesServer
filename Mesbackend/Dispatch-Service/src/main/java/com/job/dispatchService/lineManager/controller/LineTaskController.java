@@ -16,6 +16,7 @@ import com.job.dispatchService.lineManager.service.LineService;
 import com.job.dispatchService.work.config.StateConfig;
 import com.job.dispatchService.work.controller.WorkController;
 import com.job.dispatchService.work.service.WorkService;
+import com.job.feign.clients.OrderClient;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,9 @@ public class LineTaskController {
     @Autowired
     private WorkService workService;
 
+    @Autowired
+    private OrderClient orderClient;
+
     //1.实例化ReentrantLock
     private ReentrantLock lock = new ReentrantLock();
 
@@ -85,7 +89,7 @@ public class LineTaskController {
                                 return (Order) item;
                             }).collect(Collectors.toCollection(Vector::new));
 
-                            redisCache.setCacheList(lineName, new Vector<>());
+                            redisCache.deleteObject(lineName);
                             try {
                                 lock.lock();
                                 //判断订单列表是否有数据，流水线状态是否为 空闲或完成
@@ -129,6 +133,8 @@ public class LineTaskController {
                                         //将流水线状态修改为繁忙
                                         order.setProductionStatus(2);
                                         line.setLineStatus("2");
+                                        orderClient.updateByOne(order);
+                                        lineService.updateById(line);
                                         FlowProcessRelation relation = firstRelation;
                                         //遍历工序开始生产
                                         while (!StringUtil.isNullOrEmpty(relation.getNextProcessId())) {
@@ -141,6 +147,8 @@ public class LineTaskController {
                                                 /*line.setLineStatus("3");*/
                                                 line.setLineStatus("0");
                                                 line.setExceptionCount(line.getExceptionCount() + 1);
+                                                orderClient.updateByOne(order);
+                                                lineService.updateById(line);
                                                 log.error(lineName + "流水线异常，" + order.getOrderId() + "订单执行失败");
                                                 // TODO: 2023/7/15 流水线状态为异常后，实时监控工单异常处理信息
 
@@ -165,13 +173,16 @@ public class LineTaskController {
                                                 /*line.setLineStatus("3");*/
                                                 line.setLineStatus("0");
                                                 line.setExceptionCount(line.getExceptionCount() + 1);
-
+                                                orderClient.updateByOne(order);
+                                                lineService.updateById(line);
                                                 log.error(lineName + "流水线异常，" + order.getOrderId() + "订单执行失败");
                                             } else if ("ok".equals(workingStatus)) {
                                                 //如果工单运行成功，将订单和流水线状态设置为 完成
                                                 order.setProductionStatus(4);
                                                 line.setLineStatus("4");
                                                 line.setSuccessCount(line.getSuccessCount() + 1);
+                                                orderClient.updateByOne(order);
+                                                lineService.updateById(line);
                                                 log.error(lineName + "流水线，" + order.getOrderId() + "订单执行成功");
                                             }
                                         }
@@ -210,14 +221,9 @@ public class LineTaskController {
                     String lineName = order.getProductLine();
                     if(!StringUtil.isNullOrEmpty(lineName)) {
                         log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"开始存入到对应流水线的订单列表中"+ DateUtil.date());
-                        System.out.println(!redisCache.hasKey(lineName) && !StringUtil.isNullOrEmpty(lineName));
-                        if (!redisCache.hasKey(lineName) && !StringUtil.isNullOrEmpty(lineName)) {
                             Vector<Order> orderQueue = new Vector<>();
                             orderQueue.add(order);
                             redisCache.setCacheList(lineName, orderQueue);
-                        } else {
-                            redisCache.getCacheList(lineName).add(order);
-                        }
                         log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"存入成功，"+ DateUtil.date());
                     }else{
                         log.error("LineTaskController--订单列表中订单未匹配流水线，"+ DateUtil.date());

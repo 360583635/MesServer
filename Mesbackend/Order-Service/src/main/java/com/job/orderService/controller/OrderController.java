@@ -42,6 +42,16 @@ public class OrderController {
 //        String userId = GetUserId.getUserId();
 //        System.out.println(userId);
 //    }
+
+    @PostMapping("/updateByOne")
+    public Result<Order> updateByOne(Order order){
+        boolean b = orderService.updateById(order);
+        if(b){
+            return Result.success(null,"修改成功");
+        }
+        return Result.error("修改失败");
+    }
+
     @GetMapping("/toAddOrder")
    public Result<List<FlowVo>> toAddOrder(HttpServletRequest request){
         String token = request.getHeader("token");
