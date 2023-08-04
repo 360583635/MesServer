@@ -54,7 +54,6 @@ public class ProduceController {
        else {
            return Result.error("添加失败");
        }
-
    }
     /**
      * 初始化产品添加
@@ -84,7 +83,7 @@ public class ProduceController {
         return  size+1;
     }
     /**
-     * 初始化仓库id
+     * 初始化仓库id（给产品选择初始仓库）
      */
     @PostMapping("/queryWarehouseByType")
     @ResponseBody
@@ -101,6 +100,12 @@ public class ProduceController {
         }
         return warehouses;
     }
+
+    /**
+     * 通过产品名称查询产品数据
+     * @param produceName
+     * @return
+     */
     @RequestMapping("/queryProduceByProduceName")
     List<Produce>queryProduceByProduceName(@RequestParam String produceName) {
         LambdaQueryWrapper<Produce> queryWrapper= new LambdaQueryWrapper<>();

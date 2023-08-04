@@ -13,7 +13,7 @@ public class  Inventory {
     /**
      * 仓库id
      */
-    private int warehouseId;
+    private Integer warehouseId;
     /**
      * 仓库类型
      */
@@ -37,10 +37,10 @@ public class  Inventory {
     /**
      * 逻辑删除
      */
-    private int isDelete;
+    private Integer isDelete;
     /**
      * 是否是安全仓库
      */
-    private int SaveWarehouse ;
+    private Integer SaveWarehouse ;
 }
 
