@@ -13,7 +13,7 @@ public class Material {
     /**
      * 原材料id
      * */
-    private int materialId;
+    private Integer materialId;
     /**
      * 原材料名称
      */
@@ -43,7 +43,7 @@ public class Material {
     /**
      * 逻辑删除
      */
-    private int isDelete;
+    private Integer isDelete;
 
 
 }

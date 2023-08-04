@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * @Author 菜狗
  */
 @RestController
-@RequestMapping("data/line")
+@RequestMapping("/data/line")
 public class LineController {
     @Autowired
     private LineService lineService;

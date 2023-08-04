@@ -48,7 +48,7 @@ public class EquipmentController {
      * @return
      */
     @PostMapping("/initializationEquipment")
-    public Result initializationEquipment(@RequestParam String equipmentName,@RequestParam  int warehouseId){
+    public Result initializationEquipment(@RequestParam String equipmentName,@RequestParam  Integer warehouseId){
         Inventory inventory=new Inventory();
         inventory.setProduceName(equipmentName);
         inventory.setWarehouseId(warehouseId);
@@ -58,6 +58,11 @@ public class EquipmentController {
         inventoryService.save(inventory);
         return null ;
     }
+
+    /**
+     * 初始化设备id（统计个数）
+     * @return
+     */
     @PostMapping("equipmentId")
     Integer equipmentId(){
         List<Equipment>EquipmentsList=equipmentService.list();
@@ -84,6 +89,11 @@ public class EquipmentController {
         return functionNames;
     }
 
+    /**
+     * 通过功能名称查询设备信息
+     * @param functionName
+     * @return
+     */
     @PostMapping("/queryEquipmentByFunction")
     List<Equipment>queryEquipmentByFunction(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment>lambdaQueryWrapper=new LambdaQueryWrapper<>();
