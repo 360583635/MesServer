@@ -66,7 +66,7 @@ public class WorkController {
     }
 
     //前端网页数据呈现
-    @GetMapping("/search")
+    @PostMapping("/search")
 //    @HystrixCommand(fallbackMethod = "searchByDatetime_fallback", commandProperties = {
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
 //    })
