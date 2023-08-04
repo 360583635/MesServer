@@ -220,10 +220,11 @@ public class LineTaskController {
                         log.error("LineTaskController--订单列表中订单未匹配流水线，"+ DateUtil.date());
                     }
                 }
+
+                redisCache.setCacheObject("orderPQ",null);
             }else{
                 log.error("LineTaskController--订单列表为空，"+ DateUtil.date());
             }
-            redisCache.setCacheObject("orderPQ",null);
         }
 
     }
