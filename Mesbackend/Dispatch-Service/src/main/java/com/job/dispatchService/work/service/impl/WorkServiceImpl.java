@@ -1,5 +1,6 @@
 package com.job.dispatchService.work.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -48,9 +49,9 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
     public String insertWork(String processId, String  orderId){
         Work work = WorkBean.getWork();
 
-        Order order = orderMapper.selectById("1");
+        Order order = orderMapper.selectById(orderId);
 
-        Process process = processMapper.selectById("11");
+        Process process = processMapper.selectById(processId);
 
         //雪花算法生产工单id、设置状态（创建工单）、工序id、订单id、生产数量、创建时间、设备id
         work.setWId(String.valueOf(snowflake.nextId()));
@@ -59,7 +60,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         work.setWOrderId(orderId);
         work.setWProdNums(0);
         work.setWCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        work.setWEquipmentId("1");
+        work.setWEquipmentId(process.getEquipmentId());
 
         int result = workMapper.insert(work);
         if(result != 1){
@@ -196,8 +197,8 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
 //    })
     public List<Work> getWorkListByDateTime(String dateTime){
 //        int a = 1/0;
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.gt("w_create_time", dateTime);
+        LambdaQueryWrapper<Work> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.gt(Work::getWCreateTime, dateTime);
         List<Work> works = workMapper.selectList(queryWrapper);
         return works;
     }
