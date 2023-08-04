@@ -13,19 +13,19 @@ public class Produce {
     /**
      * 产品id
      */
-    private int produceId;
+    private Integer produceId;
     /**
      * 产品名称
      */
     private String produceName ;
 
-    private int producePrice;
+    private Integer producePrice;
     /**
      * 所占面积
      */
-    private int produceArea;
+    private Integer produceArea;
 
-    private int isDelete;
+    private Integer isDelete;
 
 
 }

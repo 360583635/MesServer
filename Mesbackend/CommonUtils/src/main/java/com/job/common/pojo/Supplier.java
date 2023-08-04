@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigInteger;
 @Data
 @TableName("t_supplier")
 @AllArgsConstructor
@@ -13,7 +11,7 @@ import java.math.BigInteger;
 public class Supplier {
 
 
-      private  int supplierId;
+      private  Integer supplierId;
       /**
        * 供应商id
        */

@@ -89,7 +89,7 @@ public class LineTaskController {
                                 return (Order) item;
                             }).collect(Collectors.toCollection(Vector::new));
 
-                            redisCache.setCacheList(lineName, new Vector<>());
+                            redisCache.deleteObject(lineName);
                             try {
                                 lock.lock();
                                 //判断订单列表是否有数据，流水线状态是否为 空闲或完成
@@ -221,14 +221,9 @@ public class LineTaskController {
                     String lineName = order.getProductLine();
                     if(!StringUtil.isNullOrEmpty(lineName)) {
                         log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"开始存入到对应流水线的订单列表中"+ DateUtil.date());
-                        System.out.println(!redisCache.hasKey(lineName) && !StringUtil.isNullOrEmpty(lineName));
-                        if (!redisCache.hasKey(lineName) && !StringUtil.isNullOrEmpty(lineName)) {
                             Vector<Order> orderQueue = new Vector<>();
                             orderQueue.add(order);
                             redisCache.setCacheList(lineName, orderQueue);
-                        } else {
-                            redisCache.getCacheList(lineName).add(order);
-                        }
                         log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"存入成功，"+ DateUtil.date());
                     }else{
                         log.error("LineTaskController--订单列表中订单未匹配流水线，"+ DateUtil.date());

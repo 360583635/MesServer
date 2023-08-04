@@ -1,5 +1,6 @@
 package com.job.orderService.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.Order;
 import com.job.common.redis.RedisCache;
 import com.job.common.utils.JwtUtil;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 @RestController
@@ -157,7 +159,9 @@ public class OrderController {
      */
     @GetMapping("/selectAllOrder")
     public Result<List<Order>> selectAllOrder(){
-        List<Order> orderList = orderMapper.selectList(null);
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getIsDelete,0);
+        List<Order> orderList = orderMapper.selectList(wrapper);
         return Result.success(orderList,"success");
     }
 
@@ -224,20 +228,19 @@ public class OrderController {
 
     /**
      * 批量逻辑删除
-     * @param idList
+     * @param
      * @return
      */
     @PostMapping("/deleteMuch")
-    @ResponseBody
-    public Result deleteMuchById(@RequestParam List<String> idList){
-
+    public Result deleteMuchById(@RequestBody Map<String,List<String>> map){
+        List<String> idList = map.get("idList");
         // 获取需要逻辑删除的记录的ID列表
         Vector<Order> recordList = new Vector<>();
 
         for (String id : idList) {
             Order order=new Order();
             order.setOrderId(id);
-            order.setIsDelete(0);  // 设置要更新的字段和值
+            order.setIsDelete(1);  // 设置要更新的字段和值
             recordList.add(order);
 
         }

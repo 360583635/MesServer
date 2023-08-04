@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Equipment {
     @TableId("equipment_id")
-    private int equipmentId;
+    private Integer equipmentId;
     /**
      * 设备id
      */
@@ -25,7 +25,7 @@ public class Equipment {
     /**
      * 设备功能
      */
-    private int equipmentCode;
+    private Integer equipmentCode;
     /**
      *设备唯一标识码
      */
@@ -56,5 +56,5 @@ public class Equipment {
     /**
      * 设备所占面积
      */
-    private float equipmentArea;
+    private Float equipmentArea;
 }

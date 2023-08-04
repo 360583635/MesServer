@@ -68,21 +68,22 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
                     //获取数量
                     int number1 = number[y];
                     double cost = material.getMaterialCost().doubleValue();
-                    System.out.println(material.getMaterialCost());
-                    System.out.println("cost="+cost);
+//                    System.out.println(material.getMaterialCost());
+//                    System.out.println("cost="+cost);
                     //获取区域面积
 
                     float area1 = material.getMaterialArea();
                     //获取体积
                     String materialVolume = "";
-                    for (int i1 = 0; i1 < material.getMaterialVolume().length(); i1++) {
-                        if (material.getMaterialVolume().charAt(i1)>=48 && material.getMaterialVolume().charAt(i1)<=60) {
-                            materialVolume += material.getMaterialVolume().charAt(i1);
+                    if(material.getMaterialVolume()!=null){
+                        for (int i1 = 0; i1 < material.getMaterialVolume().length(); i1++) {
+                            if (material.getMaterialVolume().charAt(i1)>=48 && material.getMaterialVolume().charAt(i1)<=60) {
+                                materialVolume += material.getMaterialVolume().charAt(i1);
+                            }
                         }
                     }
-                    int volume1 = Integer.parseInt(materialVolume);
-
-
+                    int volume1 = 0;
+                    if (materialVolume.length()>0)volume1 = Integer.parseInt(materialVolume);
                     area[y] = number1*area1/100;
                     volume[y] = number1*volume1/100;
                     total[y] = number1*cost;
@@ -138,11 +139,12 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
         int sumWarehouseArea = 0;
 
 
-        for (Warehouse warehouse : list2) {
-            sumWarehouseCapacity += warehouse.getWarehouseCapacity();
-            sumWarehouseAvailable += warehouse.getWarehouseAvailable();
-            sumWarehouseArea += warehouse.getWarehouseLayers()*warehouse.getWarehouseArea();
-
+        if(list2!=null&&list2.size()>0){
+            for (Warehouse warehouse : list2) {
+                if(warehouse.getWarehouseCapacity()!=null)sumWarehouseCapacity += warehouse.getWarehouseCapacity();
+                if(warehouse.getWarehouseAvailable()!=null)sumWarehouseAvailable += warehouse.getWarehouseAvailable();
+                sumWarehouseArea += warehouse.getWarehouseLayers()*warehouse.getWarehouseArea();
+            }
         }
 
 
@@ -167,12 +169,14 @@ public class MaterialServiceImpl extends ServiceImpl<MaterialMapper, Material> i
                 if (s.equals(material.getMaterialName())){
 
                     String materialVolume = "";
-                    for (int i1 = 0; i1 < material.getMaterialVolume().length(); i1++) {
-                        if (material.getMaterialVolume().charAt(i1)>=48 && material.getMaterialVolume().charAt(i1)<=57) {
-                            materialVolume += material.getMaterialVolume().charAt(i1);
+                    if(material.getMaterialVolume()!=null)
+                        for (int i1 = 0; i1 < material.getMaterialVolume().length(); i1++) {
+                            if (material.getMaterialVolume().charAt(i1)>=48 && material.getMaterialVolume().charAt(i1)<=57) {
+                                materialVolume += material.getMaterialVolume().charAt(i1);
+                            }
                         }
-                    }
-                    int warehouseAvailable1 = Integer.parseInt(materialVolume);
+                    int warehouseAvailable1 = 0;
+                    if(materialVolume.length()>0)warehouseAvailable1 = Integer.parseInt(materialVolume);
                     map1.put(s,warehouseAvailable1*number[y]/100);
                 }
             }
