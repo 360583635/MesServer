@@ -29,7 +29,7 @@ public class Equipment {
     /**
      *设备唯一标识码
      */
-    private  String equipmentStatus;
+    private  Integer equipmentStatus;
     /**
      * 设备状态
      */

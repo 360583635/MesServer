@@ -3,11 +3,12 @@ package com.job.productionManagementService.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.job.common.pojo.Equipment;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Material;
 import com.job.common.result.Result;
+import com.job.productionManagementService.mapper.EquipmentMapper;
 import com.job.productionManagementService.mapper.MaterialMapper;
-import com.job.productionManagementService.service.EquipmentService;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.MaterialService;
 import com.job.productionManagementService.service.ProduceService;
@@ -39,7 +40,7 @@ public class InventoryController {
     private MaterialMapper materialMapper;
 
     @Autowired
-    private EquipmentService equipmentService;
+    private EquipmentMapper equipmentMapper;
 
     @Resource
     private ProduceService produceService;
@@ -174,6 +175,22 @@ public class InventoryController {
         return nameList ;
 
     }
+    /**
+     * 查询所有设备名称
+     * @return
+     */
+    @PostMapping("queryEquipmentName")
+    List<String> queryEquipment(){
+        QueryWrapper<Equipment> queryWrapper= Wrappers.query();
+        queryWrapper.select("equipment_name");
+        List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper);
+        List<String> nameList = new ArrayList<>();
+        for (Equipment name : equipmentList ) {
+            nameList.add(name.getEquipmentName());
+        }
+        return nameList ;
+
+    }
 
     /**
      * 根据原材料名称查询原材料名称以及数量无参数版
@@ -219,5 +236,6 @@ public class InventoryController {
        }
        return Result.success(number,"安全仓库数量");
    }
+
 
     }
