@@ -1,5 +1,6 @@
 package com.job.dispatchService.work.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -196,8 +197,8 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
 //    })
     public List<Work> getWorkListByDateTime(String dateTime){
 //        int a = 1/0;
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.gt("w_create_time", dateTime);
+        LambdaQueryWrapper<Work> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.gt(Work::getWCreateTime, dateTime);
         List<Work> works = workMapper.selectList(queryWrapper);
         return works;
     }

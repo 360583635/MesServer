@@ -81,6 +81,7 @@ public class WorkController {
         Map map = new HashMap();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+        System.out.println(dateTime + "===========");
         if(dateTime != null && !dateTime.isEmpty()){
             boolean state = DateTimeUtil.isValid(dateTime);
             if(state == false){
@@ -91,6 +92,7 @@ public class WorkController {
             map.put("state", "ok");
 
             List<Work> works = workService.getWorkListByDateTime(dateTime);
+            System.out.println(works + "=================");
             List pagesList = this.forEachWorks(works);
             map.put("pagesList", pagesList);
         }else if((dateTime != null && dateTime.isEmpty()) || dateTime == null){
