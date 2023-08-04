@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Vector;
 
 @RestController
 @RequestMapping("/order")
@@ -211,6 +212,32 @@ public class OrderController {
 //        }
     }
 
+    /**
+     * 批量逻辑删除
+     * @param idList
+     * @return
+     */
+    @PostMapping("/deleteMuch")
+    @ResponseBody
+    public Result deleteMuchById(@RequestParam List<String> idList){
+
+        // 获取需要逻辑删除的记录的ID列表
+        Vector<Order> recordList = new Vector<>();
+
+        for (String id : idList) {
+            Order order=new Order();
+            order.setOrderId(id);
+            order.setIsDelete(0);  // 设置要更新的字段和值
+            recordList.add(order);
+
+        }
+        boolean b = orderService.updateBatchById(recordList);
+        if(b){
+            return Result.success(null,"删除成功");
+        }
+        return Result.error("删除失败");
+
+    }
     /**
      * 订单的派发
      * @return
