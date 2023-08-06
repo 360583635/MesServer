@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import com.job.common.pojo.Process;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelationMapper, FlowProcessRelation> implements FlowProcessRelationService {
 
     Logger log = LoggerFactory.getLogger(FlowProcessRelationServiceImpl.class);
