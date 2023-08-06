@@ -95,10 +95,7 @@ public class EquipmentController {
     @PostMapping("/queryEquipmentByFunction")
     List<Equipment>queryEquipmentByFunction(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment>lambdaQueryWrapper=new LambdaQueryWrapper<>();
-        lambdaQueryWrapper
-                .eq(Equipment::getFunctionName,functionName)
-                .eq(Equipment::getEquipmentStatus,0)
-                .eq(Equipment::getIsDelete,1);
+        lambdaQueryWrapper.eq(Equipment::getFunctionName,functionName);
         return equipmentService.list(lambdaQueryWrapper);
     }
 
@@ -109,10 +106,7 @@ public class EquipmentController {
     @ResponseBody
     List<Equipment> queryEquipmentsByType(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper
-                .like(Equipment::getFunctionName,functionName)
-                .eq(Equipment::getEquipmentStatus,0)
-                .eq(Equipment::getIsDelete,1);
+        queryWrapper.like(Equipment::getFunctionName,functionName).eq(Equipment::getEquipmentState,0);
         List<Equipment> equipmentList = equipmentService.list(queryWrapper);
         return equipmentList;
     }
@@ -208,11 +202,6 @@ public class EquipmentController {
     @PostMapping("/queryEquipments")
     List<Equipment> queryEquipments() {
         return equipmentService.list();
-    }
-
-    @PostMapping("/updateEquipmentStatus")
-    public Boolean updateEquipmentStatus(@RequestParam String equipmentId){
-        return equipmentService.updateEquipmentStatus(equipmentId);
     }
 
 }

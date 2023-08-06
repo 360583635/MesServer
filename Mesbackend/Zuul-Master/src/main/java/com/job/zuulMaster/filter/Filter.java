@@ -51,17 +51,22 @@ public class Filter implements GlobalFilter , Ordered {
             else {
             System.out.println("234");
             System.out.println(token);
-            if (StringUtils.isNullOrEmpty(token)){
-                System.out.println("没有token就跳转到登录界面");
-                String redirectUrl = "http://localhost:8080/#/pages/pt/login/login";
-                exchange.getResponse().getHeaders().set(HttpHeaders.LOCATION, redirectUrl);
-                //303状态码表示由于请求对应的资源存在着另一个URI，应使用GET方法定向获取请求的资源
-                exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(HttpStatus.SC_SEE_OTHER));
-                exchange.getResponse().getHeaders().add("Content-Type", "text/plain;charset=UTF-8");
-                return exchange.getResponse().setComplete();
+          //  if (StringUtils.isNullOrEmpty(token)){
+//                System.out.println("没有token就跳转到登录界面");
+//                String redirectUrl = "http://localhost:8080/#/pages/pt/login/login";
+//                exchange.getResponse().getHeaders().set(HttpHeaders.LOCATION, redirectUrl);
+//                //303状态码表示由于请求对应的资源存在着另一个URI，应使用GET方法定向获取请求的资源
+//                exchange.getResponse().setStatusCode(HttpStatusCode.valueOf(HttpStatus.SC_SEE_OTHER));
+//                //exchange.getResponse().getHeaders().setAccessControlAllowOrigin("http://localhost:8080");
+//                //resp.setHeader("Access-Control-Allow-Origin", "http://localhost:8080/");
+//                exchange.getResponse().getHeaders().set("Access-Control-Allow-Origin","*");
+//                //exchange.getResponse().getHeaders().setAccessControlAllowOrigin("*");
+//
+//                exchange.getResponse().getHeaders().add("Content-Type", "application/x-www-form-urlencoded");
+//                return exchange.getResponse().setComplete();
 
-            }
-            else {
+       //     }
+//            else {
                 //解析token
                 String userid;
                 try {
@@ -99,7 +104,7 @@ public class Filter implements GlobalFilter , Ordered {
             }
 
         }
-    }
+
     @Override
     public int getOrder() {
         return 0;

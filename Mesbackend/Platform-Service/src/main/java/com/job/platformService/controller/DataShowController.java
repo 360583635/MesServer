@@ -1,14 +1,17 @@
 package com.job.platformService.controller;
 
 
+import com.job.common.utils.JwtUtil;
 import com.job.platformService.config.RedisCache;
 import com.job.platformService.pojo.MyDTO;
 import com.job.platformService.result.Result;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
+@RequestMapping("platform")
 @RestController
 public class DataShowController {
     @Autowired
@@ -102,8 +105,19 @@ public class DataShowController {
 
     //    查找单个数据
     @RequestMapping("/select/key")
-    public Result findById(@RequestParam(value = "id") String key){
+    public Result findById(@RequestParam(value = "id") String key,HttpServletRequest request){
         System.out.println(key);
+        String token=request.getHeader("Authorization");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        System.out.println(key);
+        System.out.println(000000000000000);
         Map<String, Object> cacheMap = redisCache.getCacheMap(key);
         System.out.println(cacheMap);
         Result result=new Result();
@@ -116,7 +130,17 @@ public class DataShowController {
 
     //    删除单个缓存数据
     @RequestMapping("delete/key")
-    public Result deteById(@RequestParam(value = "id") String key){
+    public Result deteById(@RequestParam(value = "id") String key, HttpServletRequest request){
+        String token=request.getHeader("Authorization");
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+
         System.out.println(888);
         System.out.println(key);
         boolean b = redisCache.deleteObject(key);

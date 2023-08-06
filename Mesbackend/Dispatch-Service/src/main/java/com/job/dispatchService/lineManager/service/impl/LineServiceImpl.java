@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import static com.job.dispatchService.lineManager.controller.LineTaskController.
 
 @Service
 @Slf4j
+@Transactional
 public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements LineService {
 
     @Autowired

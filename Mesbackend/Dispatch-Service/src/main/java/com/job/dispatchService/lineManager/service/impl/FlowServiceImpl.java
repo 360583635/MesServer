@@ -26,12 +26,14 @@ import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Service
+@Transactional
 public class FlowServiceImpl extends ServiceImpl<FlowMapper, Flow> implements FlowService {
 
 

@@ -33,29 +33,12 @@ import java.util.List;
 @RequestMapping("/dispatch/flow/process")
 public class FlowProcessRelationController {
 
-    /**
-     * 工序基础数据服务
-     */
-    @Autowired
-    public ProcessService processService;
-
-    /**
-     * 流程基础数据服务
-     */
-    @Autowired
-    public FlowService flowService;
 
     /**
      * 流程与工序基础数据服务
      */
     @Autowired
     public FlowProcessRelationService flowProcessRelationService;
-
-    @Autowired
-    private AuthenticationClient authenticationClient;
-
-    @Autowired
-    private RedisCache redisCache;
 
 
     /**
@@ -76,7 +59,7 @@ public class FlowProcessRelationController {
      * @param record 平台表对象
      * @return 更改界面
      */
-    @GetMapping("/add-or-update-ui")
+    /*@GetMapping("/add-or-update-ui")
     public String addOrUpdateUI(Model model, Flow record) throws Exception {
         List<ProcessVo> allProcessVos = flowProcessRelationService.allProcessViewServer();
         //全部工序
@@ -89,7 +72,7 @@ public class FlowProcessRelationController {
             model.addAttribute("currentProcess",currentProcessVo);
         }
         return "";
-    }
+    }*/
 
     /**
      * 流程信息分页查询
