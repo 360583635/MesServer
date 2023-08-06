@@ -106,7 +106,7 @@ public class EquipmentController {
     @ResponseBody
     List<Equipment> queryEquipmentsByType(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(Equipment::getFunctionName,functionName);
+        queryWrapper.like(Equipment::getFunctionName,functionName).eq(Equipment::getEquipmentStatus,0);
         List<Equipment> equipmentList = equipmentService.list(queryWrapper);
         return equipmentList;
     }

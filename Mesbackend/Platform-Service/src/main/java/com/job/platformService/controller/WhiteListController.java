@@ -35,6 +35,8 @@ public class WhiteListController {
     public Result show(@RequestParam(value = "option") String option){
 
         List<Users> usersList=query(option);
+        System.out.println(option);
+
         System.out.println("wuwuuwuwu");
         System.out.println(usersList);
         //前端读取list,去除list对象中的name(展示)
@@ -79,7 +81,8 @@ public class WhiteListController {
     {
         System.out.println(IDS);
         //获取token
-        String token=request.getParameter("Authorization");
+        //String token=request.getParameter("Authorization");
+        String token=request.getHeader("Authorization");
         String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);
@@ -120,7 +123,8 @@ public class WhiteListController {
     @RequestMapping("/del")
     public Result del(@RequestParam(value ="IDS") List<String> idS,HttpServletRequest request){
         //获取token
-        String token=request.getParameter("Authorization");
+       // String token=request.getParameter("Authorization");
+        String token=request.getHeader("Authorization");
         String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);

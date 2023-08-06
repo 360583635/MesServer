@@ -13,6 +13,7 @@ import com.job.authenticationService.service.UsersService;
 import com.job.authenticationService.utils.JwtUtil;
 import com.job.common.pojo.*;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -349,7 +350,9 @@ public class UsersController {
   //  @PreAuthorize("hasAuthority('showdetail')")
     @RequestMapping("/showdetail")
     public Result showdetail(HttpServletRequest request){
-        String token=request.getParameter("Authorization");
+
+        //String token=request.getParameter("Authorization");
+        String token=request.getHeader("Authorization");
         System.out.println("进入showdetail"+token);
         //解析token
         String userid;
@@ -416,7 +419,8 @@ public class UsersController {
     public  Result UpdatePassword(@RequestParam("password") String password,
                                   @RequestParam("password1") String password1,
                                   HttpServletRequest request){
-        String token=request.getParameter("Authorization");
+      //  String token=request.getParameter("Authorization");
+        String token=request.getHeader("Authorization");
         System.out.println("进入showdetail"+token);
         //解析token
         String userid;
@@ -428,10 +432,12 @@ public class UsersController {
             throw new RuntimeException("token非法");
         }
         Users users=usersService.getById(userid);
+        System.out.println(password.equals(password1));
         if(password.equals(password1)){
             BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
             String encode=passwordEncoder.encode(password);
             users.setPassword(encode);
+            System.out.println(encode);
             int i= usersMapper.updateById(users);
             if(i>0){
                 return Result.success(null,"修改成功");
