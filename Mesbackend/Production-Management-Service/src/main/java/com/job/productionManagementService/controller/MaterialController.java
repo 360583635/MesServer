@@ -44,8 +44,8 @@ public class MaterialController {
      * @param id
      * @return
      */
-    @GetMapping("/queryMaterialsById/{id}")
-    List<Material> queryMaterialsById(@PathVariable("id") String id){
+    @GetMapping("/queryMaterialsById")
+    List<Material> queryMaterialsById(@RequestParam Integer id){
         LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Material::getMaterialId,id);
         return materialService.list(queryWrapper);

@@ -88,4 +88,10 @@ public interface ProductionManagementClient {
     @PostMapping("/productionManagement/warehouse/MaterialStockOutPlus")
     @ResponseBody
     Result MaterialStockOutPlus( @RequestParam String materials);
+
+    @PostMapping("/productionManagement/equipment/updateEquipmentStatus")
+    public Boolean updateEquipmentStatus(@RequestParam String equipmentId);
+
+    @PostMapping("/productionManagement/equipment/queryEquipmentByFunction")
+    List<Equipment>queryEquipmentByFunction(@RequestParam String functionName);
 }

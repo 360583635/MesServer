@@ -33,29 +33,12 @@ import java.util.List;
 @RequestMapping("/dispatch/flow/process")
 public class FlowProcessRelationController {
 
-    /**
-     * 工序基础数据服务
-     */
-    @Autowired
-    public ProcessService processService;
-
-    /**
-     * 流程基础数据服务
-     */
-    @Autowired
-    public FlowService flowService;
 
     /**
      * 流程与工序基础数据服务
      */
     @Autowired
     public FlowProcessRelationService flowProcessRelationService;
-
-    @Autowired
-    private AuthenticationClient authenticationClient;
-
-    @Autowired
-    private RedisCache redisCache;
 
 
     /**
@@ -76,7 +59,7 @@ public class FlowProcessRelationController {
      * @param record 平台表对象
      * @return 更改界面
      */
-    @GetMapping("/add-or-update-ui")
+    /*@GetMapping("/add-or-update-ui")
     public String addOrUpdateUI(Model model, Flow record) throws Exception {
         List<ProcessVo> allProcessVos = flowProcessRelationService.allProcessViewServer();
         //全部工序
@@ -89,7 +72,7 @@ public class FlowProcessRelationController {
             model.addAttribute("currentProcess",currentProcessVo);
         }
         return "";
-    }
+    }*/
 
     /**
      * 流程信息分页查询
@@ -107,28 +90,9 @@ public class FlowProcessRelationController {
      * @throws Exception
      */
     @PostMapping("/add-or-update")
-    @ResponseBody
     public Result addOrUpdate(@RequestBody FlowDto flowDto, HttpServletRequest request) throws Exception {
         //        String userId= UserUtil.getUserId(httpServletRequest);
-        String token=request.getHeader("token");
-        System.out.println(token);
-        try {
-            Claims claims = JwtUtil.parseJWT(token);
-            String userId = claims.getSubject();
-            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
-            String name = users.getName();
-            //System.out.println(userId);
-            flowDto.setUpdateUsername(name);
-            if(StringUtils.isNotEmpty(flowDto.getCreateUsername())&&flowDto.getCreateUsername()!=""){
-                flowDto.setCreateUsername(name);
-                flowDto.setCreateTime(DateUtil.date());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("token非法");
-        }
-        flowDto.setUpdateTime(DateUtil.date());
-        return flowProcessRelationService.addOrUpdate(flowDto);
+        return flowProcessRelationService.addOrUpdateService(flowDto,request);
     }
 
 
@@ -140,15 +104,8 @@ public class FlowProcessRelationController {
      * @return Result 执行结果
      */
     @PostMapping("/delete")
-    @ResponseBody
     public Result deleteByTableNameId(FlowDto req) throws Exception {
-        //先删除流程头表
-        flowService.removeById(req.getId());
-        //删除流程关系表
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("flow_id", req.getId());
-        flowProcessRelationService.remove(queryWrapper);
-        return Result.success(null,"删除成功");
+        return deleteByTableNameId(req);
     }
 
 }
