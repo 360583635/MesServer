@@ -8,11 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface InventoryMapper extends BaseMapper<Inventory> {
 
 
-    Integer getMaterialNumberByName(String materialName);
 
-    Integer getEquipNumberByName(String equipmentName);
-
-    Integer getProcessNumberByName(String processName);
-
-    String getMaterialNameByWarehouseType(int WarehouseType);
 }
