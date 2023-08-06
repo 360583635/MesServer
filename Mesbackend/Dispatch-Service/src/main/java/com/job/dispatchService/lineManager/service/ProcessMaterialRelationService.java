@@ -1,11 +1,16 @@
 package com.job.dispatchService.lineManager.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.job.common.pojo.Process;
 import com.job.common.pojo.ProcessMaterialRelation;
+import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
 import com.job.dispatchService.lineManager.vo.MaterialVo;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 庸俗可耐
@@ -37,4 +42,14 @@ public interface ProcessMaterialRelationService extends IService<ProcessMaterial
      * @throws Exception 异常
      */
     List<MaterialVo> currentMaterialViewServer(String processId) throws Exception;
+
+    String addOrUpdateUI(Model model, Process record, HttpServletRequest request);
+
+    Result addOrUpdateRelation(ProcessDto processDto);
+
+    List<String> queryMaterialsByProcess(String processName);
+
+    Map<String, Integer> queryMaterialsByFlowName(Map<String, String> map);
+
+    List<MaterialVo> queryMaterials(HttpServletRequest request);
 }
