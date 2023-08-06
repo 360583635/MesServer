@@ -57,6 +57,7 @@ public class MenuController {
                            @RequestParam(value = "permission") String permission,
                            @RequestParam(value = "remark") String remark, HttpServletRequest request) {
         //  String token = request.getHeader("token");
+      //  String token=request.getParameter("Authorization");
         String token=request.getParameter("Authorization");
         //解析token
         String userid;
@@ -97,7 +98,8 @@ public class MenuController {
      */
     @RequestMapping("/delete")
     public Result deleteMenus(@RequestParam("menusid") String menusid,HttpServletRequest request) {
-        String token=request.getParameter("Authorization");
+       // String token=request.getParameter("Authorization");
+        String token=request.getHeader("Authorization");
         //String token=request.getParameter("Authorization");
         System.out.println("controller:"+token);
         String userid;
@@ -147,8 +149,8 @@ public class MenuController {
                               @RequestParam(value = "permission") String permission,
                               @RequestParam(value = "remark") String remark, HttpServletRequest request) {
 
-        //String token = request.getHeader("token");
-        String token=request.getParameter("Authorization");
+        String token = request.getHeader("Authorization");
+        //String token=request.getParameter("Authorization");
         //解析token
         String userid;
         try {

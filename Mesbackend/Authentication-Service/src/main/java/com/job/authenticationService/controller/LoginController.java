@@ -4,15 +4,18 @@ package com.job.authenticationService.controller;
 import com.job.authenticationService.pojo.ResponseResult;
 import com.job.authenticationService.service.LoginService;
 import com.job.common.pojo.Users;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @RestController
 @RequestMapping("/authen")
+//@CrossOrigin
 public class LoginController {
 
 
