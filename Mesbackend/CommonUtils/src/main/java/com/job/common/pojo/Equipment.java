@@ -27,7 +27,7 @@ public class Equipment {
      */
     private Integer equipmentCode;
     /**
-     *设备唯一标识码
+     *设备唯一标识码 0:空闲,1:使用中,2:异常,3:维修中
      */
     private  Integer equipmentStatus;
     /**

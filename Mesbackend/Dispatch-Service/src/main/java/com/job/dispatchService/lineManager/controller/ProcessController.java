@@ -156,6 +156,11 @@ public class ProcessController {
         Process process = new Process();
         BeanUtils.copyProperties(processDto,process);
 
+        Boolean aBoolean = productionManagementClient.updateEquipmentStatus(process.getEquipmentId());
+        if(!aBoolean){
+            return Result.error("设备状态信息修改失败,工序增加异常");
+        }
+
         LambdaQueryWrapper<Process> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Process::getIsDelete,1)
@@ -191,16 +196,26 @@ public class ProcessController {
         if(count>0){
             return Result.error("请先删除与本工序有关的流程");
         }
-        LambdaUpdateWrapper<Process> updateWrapper=new LambdaUpdateWrapper<>();
-        updateWrapper.set(Process::getIsDelete,0).eq(Process::getId,processId);
-        boolean b = processService.update(updateWrapper);
-        LambdaUpdateWrapper<ProcessMaterialRelation> queryWrapper1 = new LambdaUpdateWrapper<>();
-        queryWrapper1
+        //删除工序
+        LambdaQueryWrapper<Process> queryWrapper1=new LambdaQueryWrapper<>();
+        queryWrapper1.eq(Process::getIsDelete,1).eq(Process::getId,processId);
+        Process one = processService.getOne(queryWrapper1);
+        one.setIsDelete(0);
+        boolean b = processService.updateById(one);
+
+        //修改设备状态为空闲
+        boolean aBoolean = productionManagementClient.updateEquipmentStatus(one.getEquipmentId());
+
+
+        //删除工序相关关系
+        LambdaUpdateWrapper<ProcessMaterialRelation> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper
                 .eq(ProcessMaterialRelation::getProcessId,processId)
                 .set(ProcessMaterialRelation::getIsDelete,0);
-        boolean update = processMaterialRelationService.update(queryWrapper1);
+        boolean update = processMaterialRelationService.update(updateWrapper);
 
-        if(b&&update){
+
+        if(b&&update&&aBoolean){
             return Result.success(null,"删除成功");
         }
         return Result.error("操作失败，请刷新页面重试");
@@ -328,7 +343,7 @@ public class ProcessController {
         for(String equipmentType : equipmentTypes){
             EquipmentVo equipmentVo = new EquipmentVo();
             equipmentVo.setTitle(equipmentType);
-            List<Equipment> equipmentList = productionManagementClient.queryEquipmentsByType(equipmentType);
+            List<Equipment> equipmentList = productionManagementClient.queryEquipmentByFunction(equipmentType);
             List<Map<String,String>> mapList = new ArrayList<>();
             for(Equipment equipment : equipmentList){
                 Map<String,String> map = new HashMap<>();
