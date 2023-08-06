@@ -1,15 +1,13 @@
 package com.job.dispatchService.lineManager.controller;
 
 
-
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-
-import com.job.common.pojo.Flow;
 import com.job.common.pojo.Line;
 import com.job.common.pojo.Users;
+import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.request.FlowPageReq;
@@ -21,7 +19,6 @@ import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,7 +34,6 @@ import static com.job.dispatchService.lineManager.controller.LineTaskController.
 
 @RestController
 @RequestMapping("/dispatch/line")
-@CrossOrigin
 @Slf4j
 public class LineController {
 
@@ -46,6 +42,9 @@ public class LineController {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private RedisCache redisCache;
 
     //逻辑删除1未删除0已删除
     private static int IS_DELETE_NO=1;
@@ -106,7 +105,7 @@ public class LineController {
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             pipeLine.setUpdateUsername(name);
@@ -149,7 +148,7 @@ public class LineController {
         try {
             Claims claims = JwtUtil.parseJWT(token);
             String userId = claims.getSubject();
-            Users users = (Users) authenticationClient.showdetail(userId).getData();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
             String name = users.getName();
             //System.out.println(userId);
             pipeLine.setUpdateUsername(name);
@@ -170,8 +169,8 @@ public class LineController {
      * @param lineId
      * @return
      */
-    @DeleteMapping ("/removeLine/{lineId}")
-    public Result removeLine(@PathVariable String lineId){
+    @PostMapping ("/removeLine")
+    public Result removeLine(@RequestParam String lineId){
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
@@ -240,8 +239,8 @@ public class LineController {
     /**
      * 根据流水线id查询流水线
      */
-    @GetMapping("/queryLineById/{id}")
-    public Result selectLineById(@PathVariable("id") String id){
+    @PostMapping("/queryLineById")
+    public Result selectLineById(@RequestParam("lineId") String id){
         LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
         queryWrapper
                 .eq(Line::getIsDelete,1)
@@ -278,7 +277,7 @@ public class LineController {
      */
     @RequestMapping("/haltLine/{id}")
     public Result haltLine(@PathVariable("id") String id) throws InterruptedException {
-        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
                 .eq(Line::getId,id);
@@ -299,7 +298,7 @@ public class LineController {
     @PostMapping("/updateStatus")
     public Result updateStatus(@RequestParam String id){
 
-        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Line> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Line::getIsDelete,1)
                 .eq(Line::getId,id);

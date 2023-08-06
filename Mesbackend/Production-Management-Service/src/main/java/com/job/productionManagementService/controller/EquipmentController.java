@@ -1,9 +1,7 @@
 package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.job.common.pojo.Equipment;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Warehouse;
@@ -48,7 +46,7 @@ public class EquipmentController {
      * @return
      */
     @PostMapping("/initializationEquipment")
-    public Result initializationEquipment(@RequestParam String equipmentName,@RequestParam  int warehouseId){
+    public Result initializationEquipment(@RequestParam String equipmentName,@RequestParam  Integer warehouseId){
         Inventory inventory=new Inventory();
         inventory.setProduceName(equipmentName);
         inventory.setWarehouseId(warehouseId);
@@ -58,6 +56,11 @@ public class EquipmentController {
         inventoryService.save(inventory);
         return null ;
     }
+
+    /**
+     * 初始化设备id（统计个数）
+     * @return
+     */
     @PostMapping("equipmentId")
     Integer equipmentId(){
         List<Equipment>EquipmentsList=equipmentService.list();
@@ -84,6 +87,11 @@ public class EquipmentController {
         return functionNames;
     }
 
+    /**
+     * 通过功能名称查询设备信息
+     * @param functionName
+     * @return
+     */
     @PostMapping("/queryEquipmentByFunction")
     List<Equipment>queryEquipmentByFunction(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment>lambdaQueryWrapper=new LambdaQueryWrapper<>();
@@ -130,13 +138,17 @@ public class EquipmentController {
     @ResponseBody
     public Result saveEquipment(@RequestBody Equipment equipment){
 
-
         boolean save = equipmentService.save(equipment);
         if(save){
             return Result.success(null,"保存成功");
         }
         return Result.error("保存失败");
     }
+
+    /**
+     * 查询可用仓库
+     * @return
+     */
    @PostMapping("/queryWarehouseByType")
    @ResponseBody
     List<Warehouse> queryWarehouseByType(){
@@ -168,34 +180,28 @@ public class EquipmentController {
         return Result.error("保存失败");
     }
 
+    /**
+     * 查询设备信息
+     * @param id
+     * @return
+     */
     @PostMapping("/queryEquipmentById")
     @ResponseBody
-    public Equipment queryEquipmentById(@RequestParam String id){
+    public List<Equipment> queryEquipmentById(@RequestParam Integer id){
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Equipment::getEquipmentId,id);
-        Equipment byId = equipmentService.getOne(queryWrapper);
-        return byId;
+
+        return  equipmentService.list(queryWrapper) ;
     }
 
     /**
-     * 查询所有原材料名称
+     * 查询所有设备信息
      * @return
      */
-    @PostMapping("queryEquipmentName")
-    List<String> queryEquipment(){
-        QueryWrapper<Equipment> queryWrapper= Wrappers.query();
-        queryWrapper.select("equipment_name");
-        List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper);
-        List<String> nameList = new ArrayList<>();
-        for (Equipment name : equipmentList ) {
-            nameList.add(name.getEquipmentName());
-        }
-
-        return nameList ;
-
+    @PostMapping("/queryEquipments")
+    List<Equipment> queryEquipments() {
+        return equipmentService.list();
     }
-
-
 
 }

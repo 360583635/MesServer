@@ -24,10 +24,10 @@ public interface ProductionManagementClient {
      * @return
      */
     @GetMapping("/productionManagement/material/queryMaterials")
-    List<Material>  queryMaterials();
+    List<Material>  queryMaterials(@RequestHeader("token") String token);
 
     @GetMapping("/productionManagement/equipment/queryEquipmentTypes")
-    List<String> queryEquipmentTypes();
+    List<String> queryEquipmentTypes(@RequestHeader("token") String token);
 
     @GetMapping("/productionManagement/equipment/queryEquipmentsByType/{functionName}")
     List<Equipment> queryEquipmentsByType(@PathVariable("functionName") String functionName);
@@ -50,7 +50,7 @@ public interface ProductionManagementClient {
      * @return
      */
     @GetMapping("/productionManagement/inventory/queryNumbersByMaterialName")
-    Integer queryMaterialNumberByMaterialName(@RequestParam String materialName);
+    Integer queryMaterialNumberByMaterialName(@RequestHeader("token")String token,@RequestParam String materialName);
     /**
      * 根据产品名称查询产品id
      * @param produceName
@@ -66,14 +66,26 @@ public interface ProductionManagementClient {
      * 查询所有产品名称(wen)
      */
     @GetMapping("/productionManagement/produce/queryProduceName")
-    Set<String> queryProduceName();
+    Set<String> queryProduceName(@RequestHeader("token") String token);
 
     /**
-     * 原材料出库
+     * 普通原材料出库
      * @param materials
      * @return
      */
     @PostMapping("/productionManagement/warehouse/MaterialStockOut")
     @ResponseBody
      Result MaterialStockOut( @RequestParam String materials);
+
+    @PostMapping("/productionManagement/inventory/queryNumbersBySaveWarehouse")
+    Integer queryMaterialNumberBySaveWarehouse(@RequestHeader("token")String token,@RequestParam String materialName);
+
+    /**
+     * 加急订单出库方式
+     * @param materials
+     * @return
+     */
+    @PostMapping("/productionManagement/warehouse/MaterialStockOutPlus")
+    @ResponseBody
+    Result MaterialStockOutPlus( @RequestParam String materials);
 }

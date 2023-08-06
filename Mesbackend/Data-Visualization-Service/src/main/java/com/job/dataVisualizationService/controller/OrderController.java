@@ -33,7 +33,7 @@ public class OrderController {
     //金额
     @GetMapping ("/count")    //全部数量金额统计
     public Result<Object> getCount(OrderData order){
-        System.out.println(order);
+//        System.out.println(order);
         Map<Object,Object> map = orderService.countData(order);
         return Result.success(map,"success");
     }

@@ -4,11 +4,10 @@ package com.job.zuulMaster.filter;
 //import com.job.authenticationService.utils.JwtUtil;
 
 //import com.job.zuulMaster.redis.RedisCache;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.job.common.pojo.Menus;
-import com.job.zuulMaster.utils.Query;
+
 import com.job.zuulMaster.mapper.MenusMapper;
 import com.job.zuulMaster.utils.JwtUtil;
+import com.job.zuulMaster.utils.Query;
 import com.mysql.cj.util.StringUtils;
 import io.jsonwebtoken.Claims;
 import org.apache.http.HttpHeaders;
@@ -18,10 +17,10 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
 import java.util.List;
 
 @Component
@@ -39,8 +38,8 @@ public class Filter implements GlobalFilter , Ordered {
 //        ThreadLocal threadLocal = new InheritableThreadLocal();
 //        threadLocal.set("userid");
 //        if(exchange.getRequest().getURI().toString().contains("order")) return chain.filter(exchange);
-        String token=exchange.getRequest().getQueryParams().getFirst("Authorization");
-
+//        String token=exchange.getRequest().getQueryParams().getFirst("Authorization");
+        String token = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (path.equals("/authen/login")) {
             System.out.println("111");
             return chain.filter(exchange);
@@ -83,9 +82,14 @@ public class Filter implements GlobalFilter , Ordered {
                 }else {
                     List<String > urllist= menusMapper.selectPermsByUserId(userid);
                     System.out.println("wuwuwuu");
+                    System.out.println(path);
+                    System.out.println(urllist.size());
+                    System.out.println(urllist.contains(path));
                     for (String s : urllist) {
                         if (path.equals(s)){
                             System.out.println("hjsgfh");
+                            System.out.println(path);
+                            System.out.println(s);
                             return chain.filter(exchange);
                         }
                     }

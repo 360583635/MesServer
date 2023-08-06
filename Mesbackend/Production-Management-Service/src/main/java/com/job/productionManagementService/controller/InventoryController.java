@@ -3,11 +3,12 @@ package com.job.productionManagementService.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.job.common.pojo.Equipment;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Material;
 import com.job.common.result.Result;
+import com.job.productionManagementService.mapper.EquipmentMapper;
 import com.job.productionManagementService.mapper.MaterialMapper;
-import com.job.productionManagementService.service.EquipmentService;
 import com.job.productionManagementService.service.InventoryService;
 import com.job.productionManagementService.service.MaterialService;
 import com.job.productionManagementService.service.ProduceService;
@@ -39,7 +40,7 @@ public class InventoryController {
     private MaterialMapper materialMapper;
 
     @Autowired
-    private EquipmentService equipmentService;
+    private EquipmentMapper equipmentMapper;
 
     @Resource
     private ProduceService produceService;
@@ -145,6 +146,19 @@ public class InventoryController {
         }
         return number;
     }
+
+    @PostMapping("/queryNumbersBySaveWarehouse")
+    Integer queryMaterialNumberBySaveWarehouse(@RequestParam String materialName) {
+        LambdaQueryWrapper<Inventory>queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Inventory::getMaterialName,materialName);
+        List<Inventory>inventoryList = inventoryService.list(queryWrapper);
+        int number =0 ;
+        int size =inventoryList.size();
+        for (int i=0 ;i<size;i++){
+            number=number+inventoryList.get(i).getNumber();
+        }
+        return number;
+    }
     /**
      * 查询所有原材料名称
      */
@@ -157,6 +171,22 @@ public class InventoryController {
         List<String> nameList = new ArrayList<>();
         for (Material name : materials) {
             nameList.add(name.getMaterialName());
+        }
+        return nameList ;
+
+    }
+    /**
+     * 查询所有设备名称
+     * @return
+     */
+    @PostMapping("queryEquipmentName")
+    List<String> queryEquipment(){
+        QueryWrapper<Equipment> queryWrapper= Wrappers.query();
+        queryWrapper.select("equipment_name");
+        List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper);
+        List<String> nameList = new ArrayList<>();
+        for (Equipment name : equipmentList ) {
+            nameList.add(name.getEquipmentName());
         }
         return nameList ;
 
@@ -206,5 +236,6 @@ public class InventoryController {
        }
        return Result.success(number,"安全仓库数量");
    }
+
 
     }
