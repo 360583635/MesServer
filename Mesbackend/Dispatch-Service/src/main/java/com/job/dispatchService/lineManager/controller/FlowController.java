@@ -39,26 +39,10 @@ public class FlowController {
     @Autowired
     public FlowService flowService;
 
-    @Autowired
-    public FlowProcessRelationService relationService;
-    @Autowired
-    public LineService lineService;
-
-    @Autowired
-    private AuthenticationClient authenticationClient;
-
-    @Autowired
-    private ProductionManagementClient productionManagementClient;
-
-    @Autowired
-    private FlowProcessRelationService flowProcessRelationService;
-
-    @Autowired
-    private RedisCache redisCache;
-
-    //逻辑删除1未删除0已删除
-    private static int IS_DELETE_NO=1;
-    private static int IS_DELETE_YES=0;
+    /*@Autowired
+    public FlowProcessRelationService relationService;*/
+   /* @Autowired
+    public LineService lineService;*/
     /**
      * 流程信息信息分页查询
      *
