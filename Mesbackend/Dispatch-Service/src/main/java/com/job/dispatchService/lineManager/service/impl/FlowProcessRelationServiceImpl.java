@@ -1,10 +1,16 @@
 package com.job.dispatchService.lineManager.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.common.pojo.Flow;
 import com.job.common.pojo.FlowProcessRelation;
+import com.job.common.pojo.Users;
+import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
+import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.FlowDto;
 import com.job.dispatchService.lineManager.mapper.FlowProcessRelationMapper;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
@@ -12,22 +18,39 @@ import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.FlowService;
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.ProcessVo;
+import com.job.feign.clients.AuthenticationClient;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import com.job.common.pojo.Process;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelationMapper, FlowProcessRelation> implements FlowProcessRelationService {
 
     Logger log = LoggerFactory.getLogger(FlowProcessRelationServiceImpl.class);
 
+    /**
+     * 工序基础数据服务
+     */
+    @Autowired
+    private ProcessService processService;
+
+    @Autowired
+    private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 流程基础数据服务
@@ -35,11 +58,6 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
     @Autowired
     public FlowService flowService;
 
-    /**
-     * 工序基础数据服务
-     */
-    @Autowired
-    public ProcessService processService;
     /**
      * 流程与工序关系
      */
@@ -160,4 +178,44 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
     public List<ProcessVo> currentProcessViewServer(String flowId) throws Exception {
         return flowProcessRelationMapper.queryProcessRelationByFlowId(flowId);
     }
+
+    @Override
+    public Result addOrUpdateService(FlowDto flowDto, HttpServletRequest request) throws Exception {
+        String token=request.getHeader("token");
+        System.out.println(token);
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            String userId = claims.getSubject();
+            Users users = BeanUtil.copyProperties(redisCache.getCacheObject("login"+userId), Users.class);
+            String name = users.getName();
+            //System.out.println(userId);
+            flowDto.setUpdateUsername(name);
+            if(StringUtils.isNotEmpty(flowDto.getCreateUsername())&&flowDto.getCreateUsername()!=""){
+                flowDto.setCreateUsername(name);
+                flowDto.setCreateTime(DateUtil.date());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        flowDto.setUpdateTime(DateUtil.date());
+        return addOrUpdate(flowDto);
+    }
+
+    @Override
+    public Result deleteByTableNameId(FlowDto req) {
+        //先删除流程头表
+        flowService.removeById(req.getId());
+        //删除流程关系表
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper
+                .eq("flow_id", req.getId());
+        boolean remove = remove(queryWrapper);
+        if(remove){
+            return Result.success(null,"删除成功");
+        }
+        return Result.error("删除失败");
+    }
+
+
 }

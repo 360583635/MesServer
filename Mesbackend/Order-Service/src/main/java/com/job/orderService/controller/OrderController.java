@@ -238,11 +238,14 @@ public class OrderController {
         Vector<Order> recordList = new Vector<>();
 
         for (String id : idList) {
-            Order order=new Order();
-            order.setOrderId(id);
-            order.setIsDelete(1);  // 设置要更新的字段和值
-            recordList.add(order);
-
+            Order getById = orderService.getById(id);
+            Integer productionStatus = getById.getProductionStatus();
+            if (productionStatus==0 || productionStatus==1){
+                Order order=new Order();
+                order.setOrderId(id);
+                order.setIsDelete(1);  // 设置要更新的字段和值
+                recordList.add(order);
+            }
         }
         boolean b = orderService.updateBatchById(recordList);
         if(b){
