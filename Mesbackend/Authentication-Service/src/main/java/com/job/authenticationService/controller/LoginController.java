@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/authen")
-@CrossOrigin
+//@CrossOrigin
 public class LoginController {
 
 
