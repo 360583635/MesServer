@@ -25,10 +25,10 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
                 .eq(Equipment::getEquipmentId,equipmentId)
                 .eq(Equipment::getIsDelete,1);
         Equipment equipment = equipmentMapper.selectOne(queryWrapper);
-        if(equipment.getEquipmentStatus()==0){
-            equipment.setEquipmentStatus(1);
-        }else if(equipment.getEquipmentStatus()==1){
-            equipment.setEquipmentStatus(0);
+        if(equipment.getEquipmentState()==0){
+            equipment.setEquipmentState(1);
+        }else if(equipment.getEquipmentState()==1){
+            equipment.setEquipmentState(0);
         }
         int updateById = equipmentMapper.updateById(equipment);
         if(updateById !=0){
