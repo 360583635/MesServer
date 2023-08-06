@@ -25,10 +25,7 @@ public class Equipment {
     /**
      * 设备功能
      */
-    private Integer equipmentCode;
-    /**
-     *设备唯一标识码
-     */
+    
     private  Integer equipmentState;
     /**
      * 设备状态

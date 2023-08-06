@@ -38,6 +38,13 @@ public class ProduceController {
     private WarehouseService warehouseService;
     @Resource
     private ProduceMapper produceMapper;
+
+    /**
+     * 初始化查询所有产品
+     * @return
+     */
+    @GetMapping("/queryProduces")
+    List<Produce> queryProduces() {return produceService.queryProduces();}
     /**
      *
      * 添加新产品
