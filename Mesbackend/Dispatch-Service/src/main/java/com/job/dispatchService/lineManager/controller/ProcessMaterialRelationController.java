@@ -36,23 +36,11 @@ import java.util.Map;
 @Slf4j
 public class ProcessMaterialRelationController {
 
-    @Autowired
-    private ProcessService processService;
+
 
     @Autowired
     private ProcessMaterialRelationService processMaterialRelationService;
 
-    @Autowired
-    private ProductionManagementClient productionManagementClient;
-
-    @Autowired
-    private FlowProcessRelationService flowProcessRelationService;
-
-    @Autowired
-    private AuthenticationClient authenticationClient;
-
-    @Autowired
-    private RedisCache redisCache;
 
 
     /**
@@ -64,18 +52,8 @@ public class ProcessMaterialRelationController {
      */
     @GetMapping("/add-or-update-ui")
     public String addOrUpdateUI(Model model, Process record, HttpServletRequest request) throws Exception {
-        String token = request.getHeader("token");
-        List<MaterialVo> allMaterialVos = processMaterialRelationService.allMaterialViewServer(token);
-        //全部工序
-        model.addAttribute("allMaterial",allMaterialVos);
-        if(StringUtils.isNotEmpty(record.getId())){
-            Process processById = processService.getById(record.getId());
-            //当前流程信息
-            model.addAttribute("process",processById);
-            List<MaterialVo> currentMaterialVos = processMaterialRelationService.currentMaterialViewServer(record.getId());
-            model.addAttribute("currentMaterial",currentMaterialVos);
-        }
-        return "";
+       return  processMaterialRelationService.addOrUpdateUI(model,record,request);
+
     }
 
     /**
@@ -87,13 +65,8 @@ public class ProcessMaterialRelationController {
     @PostMapping("/add-or-update")
     @ResponseBody
     public Result addOrUpdate(@RequestBody ProcessDto processDto) throws Exception {
-        List<ProcessMaterialRelation> processMaterialRelationList = processMaterialRelationService.addOrUpdate(processDto);
-        log.info("返回的工序与原材料关系集合有"+String.valueOf(processMaterialRelationList)+"条数据。");
-        boolean saveBatch = processMaterialRelationService.saveBatch(processMaterialRelationList);
-        if(saveBatch == true){
-            return Result.success(null,"更新成功");
-        }
-        return Result.error("更新失败");
+        return processMaterialRelationService.addOrUpdateRelation(processDto);
+
     }
 
 
@@ -105,17 +78,8 @@ public class ProcessMaterialRelationController {
      */
     @PostMapping("/queryMaterialsByProcess")
     public List<String> queryMaterialsByProcess(@RequestParam String processName) throws Exception{
-        LambdaQueryWrapper<ProcessMaterialRelation> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper
-                .eq(ProcessMaterialRelation::getIsDelete,1)
-                .eq(ProcessMaterialRelation::getProcessName,processName);
-        List<ProcessMaterialRelation> processMaterialRelationList = processMaterialRelationService.list(queryWrapper);
-        List<String> materialNameList = new ArrayList<>();
-        for(ProcessMaterialRelation processMaterialRelation : processMaterialRelationList){
-            String materialName = processMaterialRelation.getMaterialName();
-            materialNameList.add(materialName);
-        }
-        return materialNameList;
+        return processMaterialRelationService.queryMaterialsByProcess(processName);
+
     }
 
     /**
@@ -123,37 +87,8 @@ public class ProcessMaterialRelationController {
      */
     @PostMapping("/queryMaterialsByFlowName")
     public Map<String,Integer> queryMaterialsByFlowName(@RequestBody Map<String,String> map) throws Exception {
-        String flowName = map.get("flowName");
-        Map<String,Integer> materialMap = new HashMap<>();
+        return processMaterialRelationService.queryMaterialsByFlowName(map);
 
-        LambdaQueryWrapper<FlowProcessRelation> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper
-                .eq(FlowProcessRelation::getIsDelete,1)
-                .eq(FlowProcessRelation::getFlow,flowName)
-                .orderBy(true,false,FlowProcessRelation::getSortNum);
-        List<FlowProcessRelation> processRelationList = flowProcessRelationService.list(queryWrapper);
-
-        //遍历流程工序关系列表
-        for(FlowProcessRelation flowProcessRelation:processRelationList){
-            String process = flowProcessRelation.getProcess();
-            List<String> queryMaterialsByProcess = queryMaterialsByProcess(process);
-            for(String materialName : queryMaterialsByProcess){
-                LambdaQueryWrapper<ProcessMaterialRelation> processMaterialRelationLambdaQueryWrapper = new LambdaQueryWrapper<>();
-                processMaterialRelationLambdaQueryWrapper
-                        .eq(ProcessMaterialRelation::getIsDelete,1)
-                        .eq(ProcessMaterialRelation::getProcessName,process)
-                        .eq(ProcessMaterialRelation::getMaterialName,materialName);
-                ProcessMaterialRelation processMaterialRelation = processMaterialRelationService.getOne(processMaterialRelationLambdaQueryWrapper);
-                if(materialMap.containsKey(materialName)==false){
-                    //根据工序名称，原材料名称查询工序原材料关系表获取原材料数量信息
-                    materialMap.put(materialName, Integer.valueOf(processMaterialRelation.getNumber()));
-                }else{
-                    materialMap.put(materialName, Integer.valueOf(processMaterialRelation.getNumber())+materialMap.get(materialName));
-                }
-            }
-        }
-
-        return materialMap;
     }
 
     /**
@@ -162,16 +97,8 @@ public class ProcessMaterialRelationController {
      */
     @GetMapping("/queryMaterials")
     public List<MaterialVo> queryMaterials(HttpServletRequest request){
-        String token = request.getHeader("token");
-        List<Material> materialList = productionManagementClient.queryMaterials(token);
-        List<MaterialVo> materialVoList = new ArrayList<>();
-        for(Material material : materialList){
-            MaterialVo materialVo = new MaterialVo();
-            materialVo.setTitle(material.getMaterialName());
-            materialVo.setValue(String.valueOf(material.getMaterialId()));
-            materialVoList.add(materialVo);
-        }
-        return materialVoList;
+        return processMaterialRelationService.queryMaterials(request);
+
     }
 
 
