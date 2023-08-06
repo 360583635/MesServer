@@ -7,6 +7,7 @@ import com.job.common.pojo.Process;
 import com.job.common.pojo.ProcessMaterialRelation;
 import com.job.common.result.Result;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
+import com.job.dispatchService.lineManager.mapper.FlowProcessRelationMapper;
 import com.job.dispatchService.lineManager.mapper.ProcessMapper;
 import com.job.dispatchService.lineManager.mapper.ProcessMaterialRelationMapper;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
@@ -42,8 +43,9 @@ public class ProcessMaterialRelationServiceImpl extends ServiceImpl<ProcessMater
     @Resource
     private ProcessMaterialRelationMapper processMaterialRelationMapper;
 
-    @Autowired
-    private FlowProcessRelationService flowProcessRelationService;
+
+    @Resource
+    private FlowProcessRelationMapper flowProcessRelationMapper;
 
     @Resource
     private ProcessMapper processMapper;
@@ -157,7 +159,7 @@ public class ProcessMaterialRelationServiceImpl extends ServiceImpl<ProcessMater
                 .eq(FlowProcessRelation::getIsDelete,1)
                 .eq(FlowProcessRelation::getFlow,flowName)
                 .orderBy(true,false,FlowProcessRelation::getSortNum);
-        List<FlowProcessRelation> processRelationList = flowProcessRelationService.list(queryWrapper);
+        List<FlowProcessRelation> processRelationList = flowProcessRelationMapper.selectList(queryWrapper);
 
         //遍历流程工序关系列表
         for(FlowProcessRelation flowProcessRelation:processRelationList){

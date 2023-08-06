@@ -36,22 +36,11 @@ import java.util.Map;
 @Slf4j
 public class ProcessMaterialRelationController {
 
-    @Autowired
-    private ProcessService processService;
+
 
     @Autowired
     private ProcessMaterialRelationService processMaterialRelationService;
 
-    @Autowired
-    private ProductionManagementClient productionManagementClient;
-
-
-
-    @Autowired
-    private AuthenticationClient authenticationClient;
-
-    @Autowired
-    private RedisCache redisCache;
 
 
     /**

@@ -14,6 +14,7 @@ import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.FlowDto;
 import com.job.dispatchService.lineManager.mapper.FlowMapper;
 import com.job.dispatchService.lineManager.mapper.FlowProcessRelationMapper;
+import com.job.dispatchService.lineManager.mapper.ProcessMapper;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 
 import com.job.dispatchService.lineManager.service.FlowService;
@@ -21,6 +22,7 @@ import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.ProcessVo;
 import com.job.feign.clients.AuthenticationClient;
 import io.jsonwebtoken.Claims;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -44,8 +46,10 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
     /**
      * 工序基础数据服务
      */
-    @Autowired
-    private ProcessService processService;
+
+
+    @Resource
+    private ProcessMapper processMapper;
 
     @Autowired
     private AuthenticationClient authenticationClient;
@@ -106,7 +110,7 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
             FlowProcessRelation relation = new FlowProcessRelation();
             relation.setFlowId(flowId);//流程ID
             relation.setFlow(flowName);//流程编码
-            Process process = processService.getById(processVoList.get(i).getValue());
+            Process process = processMapper.selectById(processVoList.get(i).getValue());
             if(i == 0){//首个工序
                 relation.setPerProcess("");
                 relation.setPerProcess("");
@@ -161,7 +165,7 @@ public class FlowProcessRelationServiceImpl extends ServiceImpl<FlowProcessRelat
      */
     @Override
     public List<ProcessVo> allProcessViewServer() throws Exception {
-        List<Process> processList = processService.list();
+        List<Process> processList = processMapper.selectList(null);
         List<ProcessVo> processvos = new ArrayList<>();
         //得出全部的工序数据
         for(Process process : processList) {
