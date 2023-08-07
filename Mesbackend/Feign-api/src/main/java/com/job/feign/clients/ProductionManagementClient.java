@@ -27,7 +27,7 @@ public interface ProductionManagementClient {
     List<Material>  queryMaterials(@RequestHeader("token") String token);
 
     @GetMapping("/productionManagement/equipment/queryEquipmentTypes")
-    List<String> queryEquipmentTypes(@RequestHeader("token") String token);
+    List<String> queryEquipmentTypes();
 
     @GetMapping("/productionManagement/equipment/queryEquipmentsByType/{functionName}")
     List<Equipment> queryEquipmentsByType(@PathVariable("functionName") String functionName);

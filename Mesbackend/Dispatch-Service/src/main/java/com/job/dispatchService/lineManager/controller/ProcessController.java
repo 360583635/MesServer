@@ -182,7 +182,7 @@ public class ProcessController {
     @GetMapping("/queryEquipmentTypes")
     public Result<List<String>> queryEquipmentTypes(HttpServletRequest request){
         String token = request.getHeader("token");
-        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes(token);
+        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes();
         return Result.success(equipmentTypes,"查询成功");
     }
 

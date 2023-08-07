@@ -28,37 +28,36 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
         //设备状态统计
         Map<Object,Object> map = new HashMap<>();
         QueryWrapper<Equipment> q1 = new QueryWrapper<>();
-        q1.select("count(equipment_id) as count","equipment_status");
-        q1.groupBy("equipment_status");
+        q1.select("count(equipment_id) as count","equipment_state");
+        q1.groupBy("equipment_state");
         List<Equipment> list = equipmentMapper.selectList(q1);
 
 
         Map<Object,Object> map1 = new HashMap<>();
         Map<Object,Object> map2 = new HashMap<>();
         for (Equipment equipment : list) {
-            map1.put(equipment.getEquipmentStatus(),equipment.getCount());
+            map1.put(equipment.getEquipmentState(),equipment.getCount());
 
             QueryWrapper<Equipment> q2 = new QueryWrapper<>();
             q2.select("equipment_id");
-            q2.eq("equipment_status",equipment.getEquipmentStatus());
+            q2.eq("equipment_state",equipment.getEquipmentState());
             List<Equipment> list2 = equipmentMapper.selectList(q2);
             List list1 = new ArrayList<>();
             for (Equipment equipment1 : list2) {
                 list1.add(equipment1.getEquipmentId());
             }
-            map2.put(equipment.getEquipmentStatus(),list1);
+            map2.put(equipment.getEquipmentState(),list1);
         }
 
         Map<Object,Object> map3 = new HashMap<>();
 
         QueryWrapper<Equipment> q3 = new QueryWrapper<>();
-        q3.select("equipment_id","equipment_status","equipment_code","production_Capacity","maximum_Load","Operating_Speed");
+        q3.select("equipment_id","equipment_state","production_Capacity","maximum_Load","Operating_Speed");
         List<Equipment> list1 = equipmentMapper.selectList(q3);
 
         for (Equipment equipment : list1) {
             Map<Object,Object> map4 =new HashMap<>();
             map4.put("设备id",equipment.getEquipmentId());
-            map4.put("equipment_code",equipment.getEquipmentCode());
             map4.put("production_Capacity",equipment.getProductionCapacity());
             map4.put("maximum_Load",equipment.getMaximumLoad());
             map4.put("Operating_Speed",equipment.getOperatingSpeed());

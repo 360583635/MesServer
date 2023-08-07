@@ -28,14 +28,17 @@ import com.job.feign.pojo.Equipment;
 import io.jsonwebtoken.Claims;
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.ToString;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 
 @Service
+@Transactional
 public class ProcessServiceImpl extends ServiceImpl<ProcessMapper, Process> implements ProcessService {
     @Autowired
     private RedisCache redisCache;
@@ -231,7 +234,7 @@ public class ProcessServiceImpl extends ServiceImpl<ProcessMapper, Process> impl
     @Override
     public Result queryEquipmentMap(HttpServletRequest request) {
         String token = request.getHeader("token");
-        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes(token);
+        List<String> equipmentTypes = productionManagementClient.queryEquipmentTypes();
         List<EquipmentVo> equipmentVoList = new ArrayList<>();
         for(String equipmentType : equipmentTypes){
             EquipmentVo equipmentVo = new EquipmentVo();
