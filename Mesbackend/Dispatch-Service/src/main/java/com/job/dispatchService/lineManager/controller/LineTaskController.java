@@ -261,7 +261,11 @@ public class LineTaskController {
                     log.info(lineName+"线程不存在，开始创建，"+ DateUtil.date());
                     lineInstance(line);
                 }else{
-                    log.info(threadByName+"线程存在，"+ DateUtil.date());
+                    if(!threadByName.isAlive()) {
+                        threadByName.start();
+                    }else{
+                        log.info(threadByName + "线程存活，" + DateUtil.date());
+                    }
                 }
             }
         }else{
