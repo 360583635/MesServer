@@ -12,8 +12,6 @@ import java.util.Map;
 public interface OrderService extends IService<Order> {
  OrderData preData();
  Map<Object,Object> countData(OrderData order);
-
  Map<Object,Object> classification(OrderData order);
-
  Map<Object,Object> countOneData(OrderData order);
 }

@@ -6,6 +6,8 @@ import com.job.common.pojo.*;
 import com.job.common.pojo.Process;
 import com.job.dataVisualizationService.mapper.*;
 import com.job.dataVisualizationService.service.LineService;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.Map;
 /**
  * @Auther:Liang
  */
+
 @Service
 public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements LineService {
     @Autowired
@@ -40,23 +43,26 @@ public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements Li
         Line line = lineMapper.selectOne(q1);
 
         QueryWrapper<Line> q2 = new QueryWrapper<>();
-        q2.select("line","line_status");
+        q2.select("line","id","line_status");
         List<Line> list = lineMapper.selectList(q2);
 
         String[] linenames = new String[list.size()];
         String[] states = new String[list.size()];
+        String[] ids = new String[list.size()];
 
         int i = 0;
         for (Line line1 : list) {
             linenames[i] = line1.getLine();
             states[i] = line1.getLineStatus();
+            ids[i] = line1.getId();
             i++;
         }
-        map.put("执行成功总数",line.getTotalSuccessCount());
-        map.put("执行异常总数",line.getTotalExceptionCount());
-        map.put("执行订单总数",line.getTotalSuccessCount()+line.getTotalExceptionCount());
-        map.put("流水线名称",linenames);
-        map.put("流水线状态",states);
+        map.put("success_counts",line.getTotalSuccessCount());
+        map.put("exception_counts",line.getTotalExceptionCount());
+        map.put("counts",line.getTotalSuccessCount()+line.getTotalExceptionCount());
+        map.put("linenames",linenames);
+        map.put("linestates",states);
+        map.put("ids",ids);
         return map;
     }
 
@@ -67,34 +73,36 @@ public class LineServiceImpl extends ServiceImpl<LineMapper, Line> implements Li
         q1.eq("id",line.getId());
         Line line1 = lineMapper.selectOne(q1);
 
-        map.put("执行成功次数",line1.getSuccessCount());
-        map.put("执行异常次数",line1.getExceptionCount());
-        map.put("待执行订单次数",line1.getOrderCount());
+        map.put("success_count",line1.getSuccessCount());
+        map.put("exception_count",line1.getExceptionCount());
+        map.put("waiting_count",line1.getOrderCount());
         map.put("已执行订单总数",line1.getSuccessCount()+line1.getExceptionCount());
-        map.put("流水线状态",line1.getLineStatus());
+        map.put("line_status",line1.getLineStatus());
 
 
         QueryWrapper<Flow> q2 = new QueryWrapper<>();
         q2.eq("id",line1.getLineFlowId());
         Flow flow = flowMapper.selectOne(q2);
-        map.put("流水线名",flow.getFlow());
-        map.put("流水线描述",flow.getFlowDesc());
+        map.put("flowname",flow.getFlow());
+        map.put("flow_desc",flow.getFlowDesc());
 
         QueryWrapper<FlowProcessRelation> q3 = new QueryWrapper<>();
         q3.select("sort_num","process_id");
-        q3.eq("flow_id",line.getId());
+        q3.eq("flow_id",line1.getLineFlowId());
         q3.orderByAsc("sort_num");
         List<FlowProcessRelation> list = flowProcessRelationMapper.selectList(q3);
 
-        List<Work> works = new ArrayList<>();
+        List<Process> processes = new ArrayList<>();
         for (FlowProcessRelation flowProcessRelation : list) {
-            QueryWrapper<Work> q4 = new QueryWrapper<>();
+            System.out.println(flowProcessRelation.getProcessId());
+            QueryWrapper<Process> q4 = new QueryWrapper<>();
             q4.select();
-            q4.eq("w_process_id",flowProcessRelation.getProcessId());
-            Work work = workMapper.selectOne(q4);
-            works.add(work);
+            q4.eq("id",flowProcessRelation.getProcessId());
+            Process process = processMapper.selectOne(q4);
+            System.out.println(process);
+            processes.add(process);
         }
-        map.put("流水线流程",works);
+        map.put("line_processes",processes);
 
         return map;
     }
