@@ -3,6 +3,7 @@ package com.job.dispatchService.lineManager.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.job.common.pojo.FlowProcessRelation;
+import com.job.common.pojo.Material;
 import com.job.common.pojo.Process;
 import com.job.common.pojo.ProcessMaterialRelation;
 import com.job.common.result.Result;
@@ -15,7 +16,6 @@ import com.job.dispatchService.lineManager.service.ProcessMaterialRelationServic
 import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.MaterialVo;
 import com.job.feign.clients.ProductionManagementClient;
-import com.job.feign.pojo.Material;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;

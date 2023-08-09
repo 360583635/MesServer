@@ -1,8 +1,6 @@
 package com.job.feign.clients;
-
-
-import com.job.feign.pojo.Equipment;
-import com.job.feign.pojo.Material;
+import com.job.common.pojo.Equipment;
+import com.job.common.pojo.Material;
 import com.job.feign.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +58,6 @@ public interface ProductionManagementClient {
     Integer queryProduceIdByProduceName(@RequestParam String produceName);
 
     @PostMapping("/productionManagement/equipment/queryEquipmentById")
-    @ResponseBody
      Equipment queryEquipmentById(@RequestParam String id);
     /**
      * 查询所有产品名称(wen)
