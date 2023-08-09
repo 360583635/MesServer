@@ -38,7 +38,17 @@ public class ProduceController {
     private WarehouseService warehouseService;
     @Resource
     private ProduceMapper produceMapper;
-
+    /**
+     * 根据id查询产品
+     * @param id
+     * @return
+     */
+    @GetMapping("/queryProducesById")
+    List<Produce> queryProducesById(@RequestParam Integer id){
+        LambdaQueryWrapper<Produce> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Produce::getProduceId,id);
+        return produceService.list(queryWrapper);
+    }
     /**
      * 初始化查询所有产品
      * @return
@@ -84,7 +94,6 @@ public class ProduceController {
      */
     @PostMapping("produceId")
     Integer produceId(){
-        System.out.println(1);
         List<Produce>produceList=produceService.list();
         int size = produceList.size();
         return  size+1;
