@@ -35,7 +35,7 @@ public class Order{
     private Integer priority;// 0 无优先级；1 中等优先级； 2 高优先级
     private String productLine;
     private Integer productionStatus;//0 未生产；1待生产；2 生产中；3 生产异常；4 生产完成
-    private Integer orderPrice;
+    private Long orderPrice;
     private String rawName;
     private String rawNum;
     private String customTel;

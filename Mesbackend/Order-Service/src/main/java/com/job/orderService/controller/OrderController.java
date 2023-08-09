@@ -3,8 +3,8 @@ package com.job.orderService.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.Order;
 import com.job.common.redis.RedisCache;
+import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
-import com.job.orderService.common.result.Result;
 import com.job.orderService.mapper.OrderMapper;
 import com.job.orderService.service.OrderService;
 import com.job.orderService.service.UsersService;
@@ -33,15 +33,7 @@ public class OrderController {
     @Autowired
     private UsersService usersService;
 
-//    /**
-//     * 测试获取用户id
-//     * @return
-//     */
-//    @GetMapping("/getUserId")
-//    public void getUserId(){
-//        String userId = GetUserId.getUserId();
-//        System.out.println(userId);
-//    }
+
 
     @PostMapping("/updateByOne")
     public Result<Order> updateByOne(@RequestBody Order order){
@@ -53,10 +45,9 @@ public class OrderController {
     }
 
     @GetMapping("/toAddOrder")
-   public Result<List<FlowVo>> toAddOrder(HttpServletRequest request){
-        String token = request.getHeader("token");
+   public Result<List<FlowVo>> toAddOrder(){
         System.out.println("开始初始化~~");
-       Result<List<FlowVo>> result = orderService.toAddOrder(token);
+       Result<List<FlowVo>> result = orderService.toAddOrder();
         System.out.println(result);
        return result;
    }
@@ -80,7 +71,7 @@ public class OrderController {
             e.printStackTrace();
             throw new RuntimeException("token非法");
         }
-        Result<Object> result = orderService.addOrder(order,token);
+        Result<Object> result = orderService.addOrder(order);
         return result;
 //        //数据验证
 //        if (order == null){
@@ -122,10 +113,7 @@ public class OrderController {
         Result<Order> result = orderService.updateOrder(orderId);
         return result;
 
-//        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-//        wrapper.eq(Order::getOrderId,orderId);
-//        Order order = orderMapper.selectOne(wrapper);
-//        return Result.success(order,"success");
+
     }
 
     /**
@@ -137,19 +125,7 @@ public class OrderController {
     public Result<Order> saveUpdateOrder(@RequestBody Order order){
         Result<Order> result = orderService.saveUpdateOrder(order);
         return result;
-//        Order oldOrder = orderService.getById(order.getOrderId());
-//        Integer status = oldOrder.getProductionStatus();
-//        if ("0".equals(status.toString())){
-//            System.out.println(order);
-//            boolean b = orderService.updateById(order);
-//            if (b){
-//                return Result.success("success");
-//            }else {
-//                return Result.error("error:保存失败!");
-//            }
-//        }else {
-//            return Result.error("该状态下的订单无法进行修改!");
-//        }
+
 
     }
 
@@ -174,10 +150,6 @@ public class OrderController {
         Result<List<Order>> result = orderService.selectOrderByName(productName);
         return result;
 
-//        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-//        wrapper.eq(Order::getOrderId,orderId);
-//        Order order = orderMapper.selectOne(wrapper);
-//        return Result.success(order,"success");
     }
 
     /**
@@ -189,10 +161,7 @@ public class OrderController {
     public Result<Order> showOrderDetail(@RequestParam String orderId){
         Result<Order> result = orderService.showOrderDetail(orderId);
         return result;
-//        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-//        wrapper.eq(Order::getOrderId,orderId);
-//        Order order = orderMapper.selectOne(wrapper);
-//        return Result.success(order,"success");
+
     }
 
     /**
@@ -204,26 +173,7 @@ public class OrderController {
     public Result<Order> deleteOrder(@RequestParam String orderId){
         Result<Order> result = orderService.deleteOrder(orderId);
         return result;
-//        LambdaQueryWrapper<Order> wrapper=new LambdaQueryWrapper<>();
-//        wrapper.eq(Order::getOrderId,orderId);
-//        Order order = orderMapper.selectOne(wrapper);
-//        System.out.println(order);
-//        Integer status = order.getProductionStatus();
-//        if (status == 0){
-//            order.setIsDelete(1);
-//            LambdaQueryWrapper<Order> wrapper1=new LambdaQueryWrapper<>();
-//            wrapper1.eq(Order::getOrderId,orderId);
-//            int i = orderMapper.update(order, wrapper1);
-//            if (i>0){
-//                return Result.success("订单删除成功！");
-//            }else {
-//                return Result.error("订单删除失败！");
-//            }
-//
-//        }else {
-//            return Result.error("该状态下的订单无法删除！");
-//
-//        }
+
     }
 
     /**
@@ -279,7 +229,4 @@ public class OrderController {
 //        return null;
 //    }
 
-    /**
-     * 查询生产产品数量
-     */
 }
