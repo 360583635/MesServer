@@ -186,11 +186,11 @@ public class EquipmentController {
      * @return
      */
     @PostMapping("/queryEquipmentById")
-    public Equipment queryEquipmentById(@RequestParam Integer id){
+    public Equipment queryEquipmentById(@RequestParam String id){
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper
                 .eq(Equipment::getIsDelete,1)
-                .eq(Equipment::getEquipmentId,id);
+                .eq(Equipment::getEquipmentId,Integer.parseInt(id));
         return  equipmentService.getOne(queryWrapper) ;
     }
 
