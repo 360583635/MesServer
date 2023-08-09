@@ -225,7 +225,6 @@ public class LineTaskController {
                 for (Order order : orderPQ) {
                     String lineName = order.getProductLine();
                     if(!StringUtil.isNullOrEmpty(lineName)) {
-
                         log.info("派发给流水线实体"+lineName+"的订单"+order.getOrderId()+"开始存入到对应流水线的订单列表中"+ DateUtil.date());
                             Vector<Order> orderQueue = new Vector<>();
                             orderQueue.add(order);

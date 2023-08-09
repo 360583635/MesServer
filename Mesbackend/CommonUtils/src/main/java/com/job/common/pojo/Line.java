@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
-@TableName("t_line")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@TableName("t_line")
 public class Line {
     /**
      * 流水线ID
