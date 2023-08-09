@@ -44,7 +44,7 @@ public class OrderController {
 //    }
 
     @PostMapping("/updateByOne")
-    public Result<Order> updateByOne(Order order){
+    public Result<Order> updateByOne(@RequestBody Order order){
         boolean b = orderService.updateById(order);
         if(b){
             return Result.success(null,"修改成功");

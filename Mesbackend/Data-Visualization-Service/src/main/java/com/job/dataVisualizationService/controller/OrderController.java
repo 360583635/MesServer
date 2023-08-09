@@ -28,20 +28,12 @@ public class OrderController {
         return Result.success(map,"success");
     }
 
-    //月份
-    //数量
-    //金额
     @GetMapping ("/count")    //全部数量金额统计
     public Result<Object> getCount(OrderData order){
-//        System.out.println(order);
         Map<Object,Object> map = orderService.countData(order);
         return Result.success(map,"success");
     }
 
-    //名称
-    //月份
-    //数量
-    //金额
     @GetMapping("/countone")    //单个数量金额统计
     public Result<Object> getCountOne( OrderData order){
         Map<Object,Object> map = orderService.countOneData(order);

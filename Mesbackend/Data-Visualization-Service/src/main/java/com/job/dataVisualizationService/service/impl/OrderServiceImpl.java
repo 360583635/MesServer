@@ -111,6 +111,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderData.setPreTime(mPre);
         orderData.setPreAmount(arrAtm);
         orderData.setPreCount(arrCnt);
+
+        System.out.println(arrAtm);
+        System.out.println(arrCnt);
         return orderData;
     }
 
@@ -129,21 +132,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         int day = Integer.parseInt(dayString);
         if(mmString.charAt(0) == '0')mmString = mmString.substring(1);
         int mm = Integer.parseInt(mmString);
-
-        //获取当前时间
-
         //获得结束时间
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.DAY_OF_MONTH,-day);
-
-        Calendar preTime = Calendar.getInstance();
         //获得开始时间
+        Calendar preTime = Calendar.getInstance();
         preTime.add(Calendar.DAY_OF_MONTH,-day);
         preTime.add(Calendar.MONTH,-order.getSeparate());
         //数量 金额 时间
         String [] time = new String[order.getDataNumber()];
         int[] count = new int[order.getDataNumber()];
         int[] amount = new int[order.getDataNumber()];
+
+
+        String[] typeName = new String[order.getDataNumber()];
+        QueryWrapper<Order> q2 = new QueryWrapper<>();
+        q2.select("product_name");
+        q2.groupBy("product_name");
+        List<Order> orders1 = orderMapper.selectList(q2);
+        List<String> productname = new ArrayList<>();
+        for (Order order1 : orders1) {
+            productname.add(order1.getProductName());
+        }
+
+
 
         for (int i = 0; i < order.getDataNumber(); i++) {
             LambdaQueryWrapper<Order> q = new LambdaQueryWrapper<>();
@@ -152,9 +164,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             long count1 = orderMapper.selectCount(q);
             List<Order> orders = orderMapper.selectList(q);
             time[i] = endTime.getWeekYear()+"-"+(endTime.getTime().getMonth()+1);
-
             count[i] = (int)count1;
-
             int total = 0;
             for (Order order2 :orders
                  ) {
@@ -165,10 +175,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             amount[i] = total;
         }
 
+        //升级处理《使用pojo OrderDate》 改成英文
         Map<Object,Object> map = new HashMap<>();
-        map.put("时间",time);
-        map.put("数量",count);
-        map.put("金额",amount);
+        map.put("time",time);
+        map.put("count",count);
+        map.put("amount",amount);
+        map.put("product_name",productname);
 
         return map;
     }
@@ -176,25 +188,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public Map<Object,Object> classification(OrderData order) {
         OrderData orderData = new OrderData();
-
+        //通过产品名称 查询产品数量
         QueryWrapper<Order> q1 = new QueryWrapper<>();
         q1.select("DISTINCT(product_name)");
         Long typeCount = orderMapper.selectCount(q1);
 
+        //数据存放      id——产品id type——产品名称 total——产品总价值
         String[] type = new String[Math.toIntExact(typeCount)];
         int[] total = new int[Math.toIntExact(typeCount)];
         String[] id = new String[Math.toIntExact(typeCount)];
 
-//        System.out.println(order);
-
-        //sql语句
+        //通过产品名称 查询产品的总价值
         QueryWrapper<Order> q = new QueryWrapper<>();
         q.select("product_name","SUM(order_price*order_number) AS orderTotal");
         q.between("order_date",order.getStartTime(),order.getEndTime());
         q.groupBy("product_name");
         List<Order> orders = orderMapper.selectList(q);
 
-//        System.out.println(orders);
+        //将数据分类
         int i = 0;
         for (Order order1:orders
              ) {
@@ -207,6 +218,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderData.setProductType(type);
         orderData.setTotal(total);
 
+        //存放数据
         Map<Object,Object> map = new HashMap<>();
         int y = 0;
         for (String s : type) {
@@ -216,16 +228,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             map.put(y,map1);
             y++;
         }
-        map.put("开始统计时间",order.getStartTime());
+        map.put("st",order.getStartTime());
         map.put("结束统计时间",order.getEndTime());
         return map;
     }
 
     @Override
     public Map<Object,Object> countOneData(OrderData order) {
-//        System.out.println("productname="+order.getProductName());
-//        System.out.println("DataNumber="+order.getDataNumber());
-//        System.out.println("Separate="+order.getSeparate());
         OrderData orderData = new OrderData();
         //格式化时间日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -239,12 +248,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         int day = Integer.parseInt(dayString);
         if(mmString.charAt(0) == '0')mmString = mmString.substring(1);
         int mm = Integer.parseInt(mmString);
-        //获取当前时间
         //获得结束时间
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.DAY_OF_MONTH,-day);
-        Calendar preTime = Calendar.getInstance();
         //获得开始时间
+        Calendar preTime = Calendar.getInstance();
         preTime.add(Calendar.DAY_OF_MONTH,-day);
         preTime.add(Calendar.MONTH,-order.getSeparate());
         //数量 金额 时间
@@ -257,18 +265,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for (int i = 0; i < order.getDataNumber(); i++) {
             LambdaQueryWrapper<Order> q = new LambdaQueryWrapper<>();
             q.le(Order::getOrderDate,endTime);
-//            System.out.println("endTime="+endTime);
             q.ge(Order::getOrderDate,preTime);
-//            System.out.println("preTime="+preTime);
             q.eq(Order::getProductName, order.getProductName());
-//            System.out.println("productName="+order.getProductName());
             long count1 = orderMapper.selectCount(q);
 
             List<Order> orders = orderMapper.selectList(q);
 
-
-
-//            System.out.println("orders="+orders);
             time[i] = endTime.getWeekYear()+"-"+(endTime.getTime().getMonth()+1);
             count[i] = (int)count1;
 
@@ -283,12 +285,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             amount[i] = total;
         }
         Map<Object,Object> map = new HashMap<>();
-        map.put("时间",time);
-        map.put("数量",count);
-        map.put("金额",amount);
-        map.put("产品id",productID);
-
-
+        map.put("time",time);
+        map.put("count",count);
+        map.put("amount",amount);
+        map.put("product_id",productID);
         return map;
     }
 }

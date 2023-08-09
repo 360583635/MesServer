@@ -36,7 +36,15 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
         Map<Object,Object> map1 = new HashMap<>();
         Map<Object,Object> map2 = new HashMap<>();
         for (Equipment equipment : list) {
-            map1.put(equipment.getEquipmentState(),equipment.getCount());
+            String string = "";
+            switch (equipment.getEquipmentState()){
+                case 0:string="空闲";break;
+                case 1:string="使用中";break;
+                case 2:string="异常";break;
+                case 3:string="维修中";break;
+            }
+
+            map1.put(string,equipment.getCount());
 
             QueryWrapper<Equipment> q2 = new QueryWrapper<>();
             q2.select("equipment_id");
@@ -57,19 +65,19 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 
         for (Equipment equipment : list1) {
             Map<Object,Object> map4 =new HashMap<>();
-            map4.put("设备id",equipment.getEquipmentId());
+            map4.put("id",equipment.getEquipmentId());
             map4.put("production_Capacity",equipment.getProductionCapacity());
             map4.put("maximum_Load",equipment.getMaximumLoad());
             map4.put("Operating_Speed",equipment.getOperatingSpeed());
+            //设备id —— 设备详细信息
             map3.put(equipment.getEquipmentId(),map4);
         }
-
-        map.put("设备状态数量统计",map1);
-        map.put("设备状态编号统计",map2);
-        map.put("设备详情",map3);
-
-
-
+        //状态数量对应
+        map.put("state_count",map1);
+        //状态 ids 对应
+        map.put("state_ids",map2);
+        //设备详情对应
+        map.put("equipment",map3);
         return map;
     }
 }
