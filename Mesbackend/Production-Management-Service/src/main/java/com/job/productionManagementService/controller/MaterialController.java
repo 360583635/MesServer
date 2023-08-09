@@ -59,12 +59,14 @@ public class MaterialController {
     @PostMapping ("/queryMaterialsByName")
     List<Material> queryMaterialsByName(@RequestParam String materialName){
         LambdaQueryWrapper<Material> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Material::getMaterialId,materialName);
+        queryWrapper
+                .like(Material::getMaterialName,materialName)
+                .eq(Material::getIsDelete,1);
         return materialService.list(queryWrapper);
     }
 
     /**
-     * 逻辑删除
+     * 查询原材料
      * @param materialName
      * @return
      */
@@ -132,10 +134,26 @@ public class MaterialController {
         inventory.setWarehouseType(0);
         inventory.setIsDelete(1);
         inventory.setNumber(0);
+        inventory.setSaveWarehouse(0);
         inventoryService.save(inventory);
         return null ;
     }
-
+    /**
+     * 初始化安全库存
+     * @return
+     */
+    @PostMapping("/initializationMaterialSave")
+    public Result initializationMaterialSave(@RequestParam String materialName,@RequestParam int warehouseId){
+        Inventory inventory=new Inventory();
+        inventory.setMaterialName(materialName);
+        inventory.setWarehouseId(warehouseId);
+        inventory.setWarehouseType(0);
+        inventory.setIsDelete(1);
+        inventory.setNumber(0);
+        inventory.setSaveWarehouse(1);
+        inventoryService.save(inventory);
+        return null ;
+    }
     @PostMapping("/update")
     @ResponseBody
     public Result updateMaterial(@RequestBody Material material){

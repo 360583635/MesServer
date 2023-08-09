@@ -1,5 +1,6 @@
 package com.job.common.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,7 @@ public class Produce {
     /**
      * 产品id
      */
+    @TableId("produce_id")
     private Integer produceId;
     /**
      * 产品名称
