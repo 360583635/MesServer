@@ -96,7 +96,7 @@ public class LineTaskController {
                                 try {
                                     lock.lock();
                                     //判断订单列表是否有数据，流水线状态是否为 空闲或完成
-                                    if ((!orderQueue.isEmpty() && line.getLineStatus().equals("0")) || (!orderQueue.isEmpty() && line.getLineStatus().equals("4"))) {
+                                    if ((!orderQueue.isEmpty() && line.getLineStatus().equals("0"))) {
                                         //从订单列表里获取订单
                                         Order order = orderQueue.get(0);
                                         orderQueue.remove(order);
@@ -180,9 +180,9 @@ public class LineTaskController {
                                                     lineService.updateById(line);
                                                     log.error(lineName + "流水线异常，" + order.getOrderId() + "订单执行失败");
                                                 } else if ("ok".equals(workingStatus)) {
-                                                    //如果工单运行成功，将订单和流水线状态设置为 完成
+                                                    //如果工单运行成功，将订单设置为 完成, 流水线设置为待生产
                                                     order.setProductionStatus(4);
-                                                    line.setLineStatus("4");
+                                                    line.setLineStatus("0");
                                                     line.setSuccessCount(line.getSuccessCount() + 1);
                                                     orderClient.updateByOne(order);
                                                     lineService.updateById(line);
