@@ -201,7 +201,9 @@ public class EquipmentController {
      */
     @PostMapping("/queryEquipments")
     List<Equipment> queryEquipments() {
-        return equipmentService.list();
+        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Equipment::getIsDelete,1);
+        return equipmentService.list(queryWrapper);
     }
 
 }
