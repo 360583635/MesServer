@@ -2,6 +2,7 @@ package com.job.productionManagementService.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Produce;
@@ -125,7 +126,7 @@ public class ProduceController {
     @RequestMapping("/queryProduceByProduceName")
     List<Produce>queryProduceByProduceName(@RequestParam String produceName) {
         LambdaQueryWrapper<Produce> queryWrapper= new LambdaQueryWrapper<>();
-        queryWrapper.eq(Produce::getProduceName,produceName);
+        queryWrapper.like(Produce::getProduceName,produceName);
         List<Produce> produceList = new ArrayList<>();
         produceList=produceService.list(queryWrapper);
         return produceList;
@@ -167,4 +168,22 @@ public class ProduceController {
         }
         return nameList;
     }
+    /**
+     * 根据id逻辑删除
+     * @param produceId
+     * @return
+     */
+    @PostMapping("/delete")
+    @ResponseBody
+    public Result removeById(@RequestParam long produceId){
+        LambdaUpdateWrapper<Produce> lambdaUpdateWrapper=new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(Produce::getProduceId,produceId).set(Produce::getIsDelete,0);
+        boolean update = produceService.update(lambdaUpdateWrapper);
+        if(update){
+            return Result.success(null,"成功删除");
+        }else {
+            return Result.error("删除失败");
+        }
+    }
+
 }
