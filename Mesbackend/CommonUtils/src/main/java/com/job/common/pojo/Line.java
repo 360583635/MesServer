@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
-@TableName("t_line")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@TableName("t_line")
 public class Line {
     /**
      * 流水线ID
@@ -35,7 +35,7 @@ public class Line {
     private String lineFlowId;
     /**
      * 状态
-     * 0 待生产；1 停机；2 生产中；3 生产异常；4 生产完成
+     * 0 待生产；1 停机；2 生产中；3 生产异常；
      */
     private String lineStatus;
     /**

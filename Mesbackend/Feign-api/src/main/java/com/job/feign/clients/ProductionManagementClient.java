@@ -1,7 +1,7 @@
 package com.job.feign.clients;
 import com.job.common.pojo.Equipment;
 import com.job.common.pojo.Material;
-import com.job.feign.result.Result;
+import com.job.common.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
