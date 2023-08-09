@@ -13,14 +13,12 @@ import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.MaterialVo;
 import com.job.feign.clients.AuthenticationClient;
 import com.job.feign.clients.ProductionManagementClient;
-import com.job.feign.pojo.Material;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

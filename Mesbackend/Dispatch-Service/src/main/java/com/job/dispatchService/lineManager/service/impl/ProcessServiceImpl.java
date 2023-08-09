@@ -6,10 +6,8 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.job.common.pojo.FlowProcessRelation;
+import com.job.common.pojo.*;
 import com.job.common.pojo.Process;
-import com.job.common.pojo.ProcessMaterialRelation;
-import com.job.common.pojo.Users;
 import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
@@ -24,7 +22,6 @@ import com.job.dispatchService.lineManager.service.ProcessService;
 import com.job.dispatchService.lineManager.vo.EquipmentVo;
 import com.job.dispatchService.lineManager.vo.MaterialVo;
 import com.job.feign.clients.ProductionManagementClient;
-import com.job.feign.pojo.Equipment;
 import io.jsonwebtoken.Claims;
 import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -243,7 +240,7 @@ public class ProcessServiceImpl extends ServiceImpl<ProcessMapper, Process> impl
             List<Map<String,String>> mapList = new ArrayList<>();
             for(Equipment equipment : equipmentList){
                 Map<String,String> map = new HashMap<>();
-                map.put("id", String.valueOf(equipment.getEquipmentID()));
+                map.put("id", String.valueOf(equipment.getEquipmentId()));
                 map.put("title",equipment.getEquipmentName());
                 mapList.add(map);
             }
