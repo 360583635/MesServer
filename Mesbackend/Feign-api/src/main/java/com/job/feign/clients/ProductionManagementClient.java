@@ -48,7 +48,7 @@ public interface ProductionManagementClient {
      * @return
      */
     @GetMapping("/productionManagement/inventory/queryNumbersByMaterialName")
-    Integer queryMaterialNumberByMaterialName(@RequestHeader("token")String token,@RequestParam String materialName);
+    Integer queryMaterialNumberByMaterialName(@RequestParam String materialName);
     /**
      * 根据产品名称查询产品id
      * @param produceName
@@ -75,7 +75,7 @@ public interface ProductionManagementClient {
      Result MaterialStockOut( @RequestParam String materials);
 
     @PostMapping("/productionManagement/inventory/queryNumbersBySaveWarehouse")
-    Integer queryMaterialNumberBySaveWarehouse(@RequestHeader("token")String token,@RequestParam String materialName);
+    Integer queryMaterialNumberBySaveWarehouse(@RequestParam String materialName);
 
     /**
      * 加急订单出库方式
@@ -87,7 +87,7 @@ public interface ProductionManagementClient {
     Result MaterialStockOutPlus( @RequestParam String materials);
 
     @PostMapping("/productionManagement/equipment/updateEquipmentStatus")
-    public Boolean updateEquipmentStatus(@RequestParam String equipmentId);
+    Boolean updateEquipmentStatus(@RequestParam String equipmentId);
 
     @PostMapping("/productionManagement/equipment/queryEquipmentByFunction")
     List<Equipment>queryEquipmentByFunction(@RequestParam String functionName);

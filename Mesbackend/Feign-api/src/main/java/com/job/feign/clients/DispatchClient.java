@@ -10,5 +10,5 @@ import java.util.Map;
 @FeignClient(value = "DISPATCHSERVICE",url = "http://localhost:6031")
 public interface DispatchClient {
     @PostMapping("/dispatch/process/material/queryMaterialsByFlowName")
-     Map<String,Integer> queryMaterialsByFlowName(@RequestHeader("token") String token,@RequestBody Map<String,String> map);
+     Map<String,Integer> queryMaterialsByFlowName(@RequestBody Map<String,String> map);
 }
