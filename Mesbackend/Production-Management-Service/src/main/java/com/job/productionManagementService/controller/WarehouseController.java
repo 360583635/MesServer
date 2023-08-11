@@ -210,6 +210,7 @@ public class  WarehouseController {
          //更改库存表的数据
              LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
              inventoryLambdaQueryWrapper
+                     .eq(Inventory::getSaveWarehouse,0)
                      .eq(Inventory::getMaterialName,materialName)
                      .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
 
@@ -220,6 +221,7 @@ public class  WarehouseController {
                  materialNumbers = materialNumber + materialNumbers;
                  LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                  inventoryLambdaUpdateWrapper
+                         .eq(Inventory::getSaveWarehouse,0)
                          .eq(Inventory::getMaterialName, materialName)
                          .set(Inventory::getNumber, materialNumbers);
                  inventoryService.update(inventoryLambdaUpdateWrapper);
@@ -231,6 +233,7 @@ public class  WarehouseController {
                  inventory1.setIsDelete(1);
                  inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
                  inventory1.setMaterialName(materialName);
+                 inventory1.setSaveWarehouse(0);
               inventoryService.save(inventory1);
              }
              return Result.success("null","入库成功");
@@ -247,6 +250,7 @@ public class  WarehouseController {
              //数量也加进去
              LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
              inventoryLambdaQueryWrapper
+                     .eq(Inventory::getSaveWarehouse,0)
                      .eq(Inventory::getMaterialName,materialName)
                      .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
              //如果仓库里面原本有这个原材料
@@ -256,6 +260,7 @@ public class  WarehouseController {
                  materialNumbers = maxNumber + materialNumbers;
                  LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                  inventoryLambdaUpdateWrapper
+                         .eq(Inventory::getSaveWarehouse,0)
                          .eq(Inventory::getMaterialName, materialName)
                          .eq(Inventory::getWarehouseType,0)
                          .set(Inventory::getNumber, materialNumbers);
@@ -330,6 +335,7 @@ public class  WarehouseController {
                 //更改库存表的数据
                 LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
                 inventoryLambdaQueryWrapper
+                        .eq(Inventory::getSaveWarehouse,1)
                         .eq(Inventory::getMaterialName,materialName)
                         .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
 
@@ -340,6 +346,7 @@ public class  WarehouseController {
                     materialNumbers = materialNumber + materialNumbers;
                     LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                     inventoryLambdaUpdateWrapper
+                            .eq(Inventory::getSaveWarehouse,1)
                             .eq(Inventory::getMaterialName, materialName)
                             .set(Inventory::getNumber, materialNumbers);
                     inventoryService.update(inventoryLambdaUpdateWrapper);
@@ -351,6 +358,7 @@ public class  WarehouseController {
                     inventory1.setIsDelete(1);
                     inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
                     inventory1.setMaterialName(materialName);
+                    inventory1.setSaveWarehouse(1);
                     inventoryService.save(inventory1);
                 }
                 return Result.success("null","入库成功");
@@ -367,6 +375,7 @@ public class  WarehouseController {
                 //数量也加进去
                 LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
                 inventoryLambdaQueryWrapper
+                        .eq(Inventory::getSaveWarehouse,1)
                         .eq(Inventory::getMaterialName,materialName)
                         .eq(Inventory::getWarehouseId,warehouseList.get(i).getWarehouseId());
                 //如果仓库里面原本有这个原材料
@@ -376,6 +385,7 @@ public class  WarehouseController {
                     materialNumbers = maxNumber + materialNumbers;
                     LambdaUpdateWrapper<Inventory> inventoryLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
                     inventoryLambdaUpdateWrapper
+                            .eq(Inventory::getSaveWarehouse,1)
                             .eq(Inventory::getMaterialName, materialName)
                             .eq(Inventory::getWarehouseType,0)
                             .set(Inventory::getNumber, materialNumbers);
@@ -390,6 +400,7 @@ public class  WarehouseController {
                     inventory1.setWarehouseId(warehouseList.get(i).getWarehouseId());
                     inventory1.setMaterialName(materialName);
                     inventory1.setSaveWarehouse(0);
+                    inventory1.setSaveWarehouse(1);
                     inventoryService.save(inventory1);
                 }
                 materialNumber=(materialNumber-maxNumber);
