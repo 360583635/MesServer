@@ -11,7 +11,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.job.zuulMaster.mapper")
-public class ZuulMaster {
+public class    ZuulMaster {
     public static void main(String[] args) {
         SpringApplication.run(ZuulMaster.class,args);
 

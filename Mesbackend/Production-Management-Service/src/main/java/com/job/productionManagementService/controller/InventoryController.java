@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.job.common.pojo.Equipment;
 import com.job.common.pojo.Inventory;
 import com.job.common.pojo.Material;
-import com.job.common.result.Result;
 import com.job.productionManagementService.mapper.EquipmentMapper;
 import com.job.productionManagementService.mapper.MaterialMapper;
 import com.job.productionManagementService.service.InventoryService;
@@ -222,20 +221,26 @@ public class InventoryController {
      * 通过原材料名称查询安全仓库所存储的原材料总个数
      */
    @PostMapping("/querySaveWarehouseMaterialNumber")
-    public Result<Integer> querySaveWarehouseMaterialNumber(@RequestParam String materialName){
-       LambdaQueryWrapper<Inventory>inventoryLambdaQueryWrapper=new LambdaQueryWrapper<>();
-       inventoryLambdaQueryWrapper
-               .eq(Inventory::getMaterialName,materialName)
-               .eq(Inventory::getSaveWarehouse,1)
-               .eq(Inventory::getWarehouseType,0);
-       List<Inventory>inventoryList=inventoryService.list(inventoryLambdaQueryWrapper);
-       int number =0 ;
-       int size =inventoryList.size();
-       for (int i =0 ;i<size;i++){
-           number=number+inventoryList.get(i).getNumber();
-       }
-       return Result.success(number,"安全仓库数量");
-   }
+   List querySaveWarehouseMaterialNumber() {
+       QueryWrapper<Material> materialQueryWrapper = Wrappers.query();
+       materialQueryWrapper.select("material_name");
+       List<Material> materials = materialMapper.selectList(materialQueryWrapper);
+       List<String> nameList = new ArrayList<>();
+       for (Material name : materials) {
+           nameList.add(name.getMaterialName());
+           int number =0 ;
+           LambdaQueryWrapper<Inventory> queryWrapper = new LambdaQueryWrapper<>();
+           queryWrapper.eq(Inventory::getMaterialName, name.getMaterialName())
+                   .eq(Inventory::getSaveWarehouse,1);
+           List<Inventory>materialList=inventoryService.list(queryWrapper);
+           for (Inventory inventory : materialList) {
+               int materialName = inventory.getNumber();
+               number = number + materialName;
+           }
+           nameList.add(String.valueOf(number));
 
+       }
+       return nameList;
+   }
 
     }
