@@ -1,6 +1,7 @@
 package com.job.authenticationService.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.job.common.pojo.Users;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,16 +10,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class LoginUser implements UserDetails {
+public class LoginUser implements UserDetails{
+
  
     private Users user;
-    private List<String > permission;
+    @JsonIgnore
+    private List<String> permission;
 
     public LoginUser(Users users, List<String> permissionKeyList) {
         this.user=users;
@@ -27,7 +31,7 @@ public class LoginUser implements UserDetails {
 
 
     //    //存储SpringSecurity所需要的权限信息的集合
-    @JSONField(serialize = false)
+    @JsonIgnore
     private List<GrantedAuthority> authorities;
 
 
