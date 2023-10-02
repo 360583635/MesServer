@@ -3,6 +3,7 @@ package com.job.orderService.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.job.common.pojo.Order;
 import com.job.common.redis.RedisCache;
+
 import com.job.common.result.Result;
 import com.job.common.utils.JwtUtil;
 import com.job.orderService.mapper.OrderMapper;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.atomic.LongAdder;
 
 @RestController
 @RequestMapping("/order")
@@ -47,6 +49,7 @@ public class OrderController {
     @GetMapping("/toAddOrder")
    public Result<List<FlowVo>> toAddOrder(){
         System.out.println("开始初始化~~");
+        //LongAdder
        Result<List<FlowVo>> result = orderService.toAddOrder();
         System.out.println(result);
        return result;

@@ -6,6 +6,8 @@ import com.job.authenticationService.service.LoginService;
 import com.job.authenticationService.utils.JwtUtil;
 import com.job.authenticationService.utils.RedisCache;
 import com.job.common.pojo.Users;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class  LoginServiceImpl implements LoginService {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -28,14 +31,12 @@ public class  LoginServiceImpl implements LoginService {
 
     @Override
     public ResponseResult login(Users users) {
-        System.out.println("12345");
-        //AuthenticationManager authenticate进行用户认真
+        log.info("登录服务开始");
+        //AuthenticationManager authenticate进行用户认证
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(users.getName(), users.getPassword());
-        System.out.println(authenticationToken);
-        System.out.println("5678");
+        log.info("进行用户认证："+authenticationToken);
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-       // Authentication authenticate=authenticationManager.authenticate(authenticationToken);
-        System.out.printf("111");
+        log.info("用户认证结束");
 
         //如果认证没通过，给出对应的提示
         if (Objects.isNull(authenticate)) {

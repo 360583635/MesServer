@@ -45,9 +45,5 @@ public class TaskSchedulerConfig implements SchedulingConfigurer {
                         System.out.println("当前任务执行失败"+r);
                     }
                 });
-
     }
-
-
-
 }
