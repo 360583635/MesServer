@@ -27,7 +27,6 @@ import java.util.List;
 public class Filter implements GlobalFilter , Ordered {
     @Autowired
     private Query querys;
-
     @Autowired
     private MenusMapper menusMapper;
     @Override

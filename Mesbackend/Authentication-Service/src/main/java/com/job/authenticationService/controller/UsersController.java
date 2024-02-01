@@ -1,5 +1,7 @@
 package com.job.authenticationService.controller;
 
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -42,6 +44,14 @@ public class UsersController {
 
     @Autowired
     private RolesMapper rolesMapper;
+
+
+    private long workerId = 6001;
+
+    private long datacenterId = 1;
+
+    private Snowflake snowflake = IdUtil.createSnowflake(workerId, datacenterId);
+
 
     /**
      * 查询角色
@@ -179,6 +189,10 @@ public class UsersController {
         users.setName(name);
         users.setCreateTime(date);
         users.setUpdateTime(date);
+
+        //雪花算法设置用户Id
+        users.setId(snowflake.nextIdStr());
+
         usersService.save(users);
         String id=users.getId();
         System.out.println(id);
