@@ -7,7 +7,6 @@ public class ResponseResult<T> {
     /**
      * 状态码
      */
-
     private Integer code;
     /**
      * 提示信息，如果有错误时，前端可以获取该字段进行提示

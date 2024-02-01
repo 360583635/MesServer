@@ -19,7 +19,7 @@ public class JwtUtil {
     //有效期为
     public static final Long JWT_TTL = 24*60 * 60 *1000L;// z4* 60 * 60 *1000  一天
     //设置秘钥明文
-    public static final String JWT_KEY = "sangeng";
+    public static final String JWT_KEY = "123456";
  
     public static String getUUID(){
         String token = UUID.randomUUID().toString().replaceAll("-", "");

@@ -9,5 +9,4 @@ import com.job.common.pojo.Material;
  * @description
  */
 public interface MaterialMapper extends BaseMapper<Material> {
-
 }

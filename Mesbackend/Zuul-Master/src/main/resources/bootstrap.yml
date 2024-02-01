@@ -5,7 +5,7 @@ spring:
     active: dev
   cloud:
     nacos:
-      server-addr: 116.205.138.253:8848
+      server-addr: 127.0.0.1:8848
       config:
         file-extension: properties
     #解决gateway 与 mvc 包冲突的问题

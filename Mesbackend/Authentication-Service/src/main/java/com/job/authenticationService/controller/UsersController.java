@@ -150,7 +150,7 @@ public class UsersController {
 //        System.out.println(options);
 //        System.out.println(options.subList(0,-1));
 
-        String token=request.getParameter("Authorization");
+        /*String token=request.getParameter("Authorization");
         System.out.println(111);
         System.out.println(token);
         String userid;
@@ -162,15 +162,15 @@ public class UsersController {
             throw new RuntimeException("token非法");
         }
         //获取修改人信息
-        Users users1=usersService.getById(userid);
+        Users users1=usersService.getById(userid);*/
 
 
 
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
         Date date=new Date();
         Users users=new Users();
-        users.setCreateUser(users1.getName());
-        users.setUpdateUser(users1.getName());
+        /*users.setCreateUser(users1.getName());
+        users.setUpdateUser(users1.getName());*/
         users.setIsDelete(1);
         users.setState(state);
         String encode=passwordEncoder.encode(password);
@@ -191,8 +191,8 @@ public class UsersController {
                 usersRoles.setCreateTime(date);
                 usersRoles.setUpdateTime(date);
                 usersRoles.setCreateTime(date);
-                usersRoles.setUpdateUser(users1.getName());
-                usersRoles.setCreateUser(users1.getName());
+                /*usersRoles.setUpdateUser(users1.getName());
+                usersRoles.setCreateUser(users1.getName());*/
                 usersRoles.setRoleId(s);
                 usersRolesService.save(usersRoles);
             }
