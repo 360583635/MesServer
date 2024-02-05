@@ -7,7 +7,6 @@ import com.job.authenticationService.utils.JwtUtil;
 import com.job.authenticationService.utils.RedisCache;
 import com.job.common.pojo.Users;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +27,11 @@ public class  LoginServiceImpl implements LoginService {
     private RedisCache redisCache;
 
 
-
+    /**
+     * 用户登录
+     * @param users
+     * @return
+     */
     @Override
     public ResponseResult login(Users users) {
         log.info("登录服务开始");
@@ -60,14 +63,14 @@ public class  LoginServiceImpl implements LoginService {
         return new ResponseResult(200, "登录成功",map);
     }
 
-    @Override
-    public ResponseResult logout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        String  userid = loginUser.getUser().getId();
-        redisCache.deleteObject("login"+userid);
-        return new ResponseResult(200,"退出成功");
-    }
+//    @Override
+//    public ResponseResult logout() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+//        String  userid = loginUser.getUser().getId();
+//        redisCache.deleteObject("login"+userid);
+//        return new ResponseResult(200,"退出成功");
+//    }
 
 }
 

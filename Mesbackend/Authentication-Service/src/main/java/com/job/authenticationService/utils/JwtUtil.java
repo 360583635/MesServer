@@ -1,10 +1,8 @@
 package com.job.authenticationService.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
- 
+import io.jsonwebtoken.*;
+import org.apache.commons.lang.StringUtils;
+
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
@@ -108,6 +106,31 @@ public class JwtUtil {
                 .parseClaimsJws(jwt)
                 .getBody();
     }
- 
- 
+
+    /**
+     * 从token中获取过期时间
+     * @param jwt
+     * @return
+     * @throws Exception
+     */
+    public static Long getExpires(String jwt) throws Exception {
+        Claims claims = parseJWT(jwt);
+        long time = claims.getExpiration().getTime();
+        return time;
+    }
+
+    /**
+     * 获取jti(会员id)
+     * @param jwt
+     * @return
+     * @throws Exception
+     */
+    public static String getJti(String jwt) throws Exception {
+        if(StringUtils.isEmpty(jwt)){
+            return "";
+        }
+        Claims claims = parseJWT(jwt);
+        return (String)claims.get("id");
+    }
+
 }

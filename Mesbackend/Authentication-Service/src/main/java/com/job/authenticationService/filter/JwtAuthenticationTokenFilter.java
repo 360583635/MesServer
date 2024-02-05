@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Component
@@ -31,10 +32,23 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         response.addHeader("Cache-Control", "no-cache='set-cookie'");
         response.addHeader("Pragma", "no-cache");
         response.addHeader("Access-Control-Allow-Headers", "Authorization");
+        /*if (Arrays.stream(JwtUtil.getWhiteList()).anyMatch(uri -> uri.equals(request.getServletPath()))) {
+            filterChain.doFilter(request, response);
+            return;
+        }*/
         //获取token
         String token = request.getHeader("Authorization");
         String token1 = request.getParameter("Authorization");
-        System.out.println("filter:"+token);
+        String jti = null;
+        try {
+            jti = JwtUtil.getJti(token);
+        } catch (Exception e) {
+            throw new RuntimeException("jti获取失败");
+        }
+        if(redisCache.redisTemplate.hasKey("token:black:"+ jti +":string")){
+            throw new RuntimeException("用户未登录");
+        }
+        System.out.println("filtertoken:"+token);
         System.out.println("filtertoken1:"+token1);
         if (!StringUtils.hasText(token1)) {
             //放行

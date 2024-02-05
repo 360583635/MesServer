@@ -8,7 +8,5 @@ import jakarta.servlet.http.HttpSession;
 
 public interface LoginService{
     ResponseResult login(Users users);
-
-    ResponseResult logout();
 }
 

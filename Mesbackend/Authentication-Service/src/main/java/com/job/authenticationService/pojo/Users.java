@@ -16,6 +16,7 @@ import java.util.Date;
 public class Users implements Serializable {
     private static final long serialVersionUID = -40356785423868312L;
 
+    //用@Tabled会自动生成id号,如果字段是Long就以雪花规则生成id，如果字段是String则以UUID生成;
     @TableId
     private Long  id;
 

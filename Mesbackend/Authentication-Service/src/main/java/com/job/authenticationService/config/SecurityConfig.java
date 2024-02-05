@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig{
 
     @Bean
@@ -28,18 +29,14 @@ public class SecurityConfig{
     @Autowired
     JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+    @Autowired
+    private LogoutHandler logoutHandler;
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//
-//        http
-//                .authorizeHttpRequests((authz) -> authz
-//                                .requestMatchers("/hello").permitAll()
-//                        .requestMatchers("/authen/login").anonymous()
-////                        .anyRequest().authenticated()
-//                );
-        http.csrf().disable();
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests((authz)->authz
                 .requestMatchers("/authen/login").anonymous()
@@ -54,11 +51,15 @@ public class SecurityConfig{
                 .requestMatchers("/updateUser").permitAll()
                 .requestMatchers("/update/detail").permitAll()
                 .requestMatchers("/authen/menus/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest()
+                .authenticated()
         );
 
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-      //  http.cors();
+        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class).logout().logoutUrl("/authen/logout").logoutSuccessHandler(logoutSuccessHandler)
+                .addLogoutHandler(logoutHandler);
 
         return http.build();
     }

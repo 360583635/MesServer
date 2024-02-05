@@ -21,8 +21,8 @@ public class RedisCache
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
-     * @param key 缓存的键值
-     * @param value 缓存的值
+     * @param key     缓存的键值
+     * @param value   缓存的值
      */
     public <T> void setCacheObject(final String key, final T value)
     {
@@ -37,7 +37,7 @@ public class RedisCache
      * @param timeout 时间
      * @param timeUnit 时间颗粒度
      */
-    public <T> void setCacheObject(final String key, final T value, final Integer timeout, final TimeUnit timeUnit)
+    public <T> void setCacheObject(final String key, final T value, final Long timeout, final TimeUnit timeUnit)
     {
         redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
@@ -235,5 +235,16 @@ public class RedisCache
     public Collection<String> keys(final String pattern)
     {
         return redisTemplate.keys(pattern);
+    }
+
+    /**
+     * 判断是否含有该key值
+     *
+     * @param key
+     * @return
+     */
+    public Boolean hasKey(final String key)
+    {
+        return redisTemplate.hasKey(key);
     }
 }

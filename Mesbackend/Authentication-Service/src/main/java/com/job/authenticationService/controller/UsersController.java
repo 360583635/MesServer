@@ -1,5 +1,6 @@
 package com.job.authenticationService.controller;
 
+import cn.hutool.core.io.unit.DataUnit;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -21,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
+import cn.hutool.core.date.DateUtil;
 import java.util.*;
 //@CrossOrigin
 @RequestMapping("/authen")
@@ -44,13 +45,6 @@ public class UsersController {
 
     @Autowired
     private RolesMapper rolesMapper;
-
-
-    private long workerId = 6001;
-
-    private long datacenterId = 1;
-
-    private Snowflake snowflake = IdUtil.createSnowflake(workerId, datacenterId);
 
 
     /**
@@ -143,6 +137,63 @@ public class UsersController {
             return Result.error("查询失败");
         }
     }
+
+    /**
+     * 注册管理员账号
+     * @param name
+     * @param password
+     * @param phone
+     * @param email
+     * @param sex
+     * @param address
+     * @return
+     */
+    @RequestMapping("/regist")
+    public Result<Users> regist(@RequestParam(value = "name") String name,
+                                @RequestParam(value = "password") String password,
+                                @RequestParam(value = "phone") String phone,
+                                @RequestParam(value = "email") String email,
+                                @RequestParam(value = "sex") String sex,
+                                @RequestParam(value = "address") String address
+                                /*@RequestParam(value = "birth") String birth*/){
+        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+
+        Users users=new Users();
+        users.setCreateTime(DateUtil.date());
+        users.setUpdateTime(DateUtil.date());
+        /*users.setCreateUser(users1.getName());
+        users.setUpdateUser(users1.getName());*/
+        users.setIsDelete(1);
+        String encode=passwordEncoder.encode(password);
+        users.setPassword(encode);
+        users.setName(name);
+        users.setPhone(phone);
+        users.setEmail(email);
+//        users.setBirth(birth);
+        users.setAddress(address);
+        users.setSex(sex);
+        boolean saveUsers = usersService.save(users);
+        String id = null;
+        if(saveUsers){
+            id = users.getId();
+        }else{
+            return Result.error("用户注册失败");
+        }
+        UsersRoles usersRoles = new UsersRoles();
+        usersRoles.setUserId(id);
+        usersRoles.setUpdateTime(DateUtil.date());
+        usersRoles.setCreateTime(DateUtil.date());
+                /*usersRoles.setUpdateUser(users1.getName());
+                usersRoles.setCreateUser(users1.getName());*/
+        usersRoles.setRoleId("1");
+        boolean saveRoles = usersRolesService.save(usersRoles);
+        if(saveRoles){
+            return Result.success(null,"注册成功");
+        }
+        return Result.error("权限添加失败");
+
+    }
+
     /**
      * 添加员工用户
      * @param name
@@ -190,9 +241,6 @@ public class UsersController {
         users.setCreateTime(date);
         users.setUpdateTime(date);
 
-        //雪花算法设置用户Id
-        users.setId(snowflake.nextIdStr());
-
         usersService.save(users);
         String id=users.getId();
         System.out.println(id);
@@ -202,7 +250,6 @@ public class UsersController {
             for (String s : options) {
                 UsersRoles usersRoles = new UsersRoles();
                 usersRoles.setUserId(id);
-                usersRoles.setCreateTime(date);
                 usersRoles.setUpdateTime(date);
                 usersRoles.setCreateTime(date);
                 /*usersRoles.setUpdateUser(users1.getName());

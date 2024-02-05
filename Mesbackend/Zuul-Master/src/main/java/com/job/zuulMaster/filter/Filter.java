@@ -10,6 +10,7 @@ import com.job.zuulMaster.utils.JwtUtil;
 import com.job.zuulMaster.utils.Query;
 import com.mysql.cj.util.StringUtils;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @Component
+@Slf4j
 public class Filter implements GlobalFilter , Ordered {
     @Autowired
     private Query querys;
@@ -43,10 +45,10 @@ public class Filter implements GlobalFilter , Ordered {
             System.out.println("111");
             return chain.filter(exchange);
         }
-//        } else if (path.equals("/authen/hello")) {
-//            System.out.println("222");
-//            return chain.filter(exchange);
-//        }
+         else if (path.equals("/authen/regist")) {
+            System.out.println("222");
+            return chain.filter(exchange);
+        }
             else {
             System.out.println("234");
             System.out.println(token);
@@ -76,7 +78,7 @@ public class Filter implements GlobalFilter , Ordered {
                     e.printStackTrace();
                     throw new RuntimeException("token非法");
                 }
-                System.out.println(userid);
+                System.out.println("当前用户Id为"+userid);
                 //更具id查找到Usres,然后看Usesde id 是否在Blacklist中，在的化直接返回。
                 List<String > blackList=querys.query();
                 System.out.println(blackList);
