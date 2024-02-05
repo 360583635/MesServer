@@ -1,6 +1,5 @@
 package com.job.dispatchService.lineManager.vo;
 
-import com.job.common.pojo.Equipment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

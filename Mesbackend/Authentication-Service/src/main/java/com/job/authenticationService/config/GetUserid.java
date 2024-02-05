@@ -4,7 +4,7 @@ import com.job.authenticationService.pojo.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+
 @Slf4j
 public class GetUserid {
     public static String  getID(){

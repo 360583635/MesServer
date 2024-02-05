@@ -3,6 +3,7 @@ package com.job.dispatchService.lineManager.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -257,6 +258,10 @@ public class ProcessServiceImpl extends ServiceImpl<ProcessMapper, Process> impl
         }
 
         Process process = (Process) queryById(id).getData();
+        if(ObjectUtil.isEmpty(process)||process==null){
+            System.out.println("传入参数为"+id);
+            return Result.error("工序查找失败");
+        }
         ProcessUpdateDto processUpdateDto = new ProcessUpdateDto();
         BeanUtil.copyProperties(process,processUpdateDto);
         String equipmentId = process.getEquipmentId();

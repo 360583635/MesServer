@@ -93,10 +93,14 @@ public class EquipmentController {
      * @return
      */
     @PostMapping("/queryEquipmentByFunction")
-    List<Equipment>queryEquipmentByFunction(@RequestParam String functionName){
+    Result<List<Equipment>> queryEquipmentByFunction(@RequestParam String functionName){
         LambdaQueryWrapper<Equipment>lambdaQueryWrapper=new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Equipment::getFunctionName,functionName);
-        return equipmentService.list(lambdaQueryWrapper);
+        List<Equipment> list = equipmentService.list(lambdaQueryWrapper);
+        if(list==null||list.size()<=0){
+            return Result.success("设备信息查询成功");
+        }
+        return Result.error("设备信息查询失败");
     }
 
     /**

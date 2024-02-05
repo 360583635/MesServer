@@ -1,34 +1,22 @@
 package com.job.dispatchService.lineManager.controller;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.job.common.pojo.*;
 import com.job.common.pojo.Process;
 import com.job.common.redis.RedisCache;
 import com.job.common.result.Result;
-import com.job.common.utils.JwtUtil;
 import com.job.dispatchService.lineManager.dto.ProcessDto;
-import com.job.dispatchService.lineManager.dto.ProcessUpdateDto;
 import com.job.dispatchService.lineManager.request.ProcessPageReq;
 import com.job.dispatchService.lineManager.service.FlowProcessRelationService;
 import com.job.dispatchService.lineManager.service.ProcessMaterialRelationService;
 import com.job.dispatchService.lineManager.service.ProcessService;
-import com.job.dispatchService.lineManager.vo.EquipmentVo;
-import com.job.dispatchService.lineManager.vo.MaterialVo;
 import com.job.feign.clients.AuthenticationClient;
 import com.job.feign.clients.ProductionManagementClient;
-import io.jsonwebtoken.Claims;
-import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
 
 /**
