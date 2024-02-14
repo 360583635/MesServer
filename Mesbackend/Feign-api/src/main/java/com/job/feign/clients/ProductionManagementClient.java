@@ -90,5 +90,5 @@ public interface ProductionManagementClient {
     Boolean updateEquipmentStatus(@RequestParam String equipmentId);
 
     @PostMapping("/productionManagement/equipment/queryEquipmentByFunction")
-    List<Equipment>queryEquipmentByFunction(@RequestParam String functionName);
+    Result<List<Equipment>> queryEquipmentByFunction(@RequestParam String functionName);
 }

@@ -97,8 +97,8 @@ public class EquipmentController {
         LambdaQueryWrapper<Equipment>lambdaQueryWrapper=new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Equipment::getFunctionName,functionName);
         List<Equipment> list = equipmentService.list(lambdaQueryWrapper);
-        if(list==null||list.size()<=0){
-            return Result.success("设备信息查询成功");
+        if(list!=null||list.size()>0){
+            return Result.success(list,"设备信息查询成功");
         }
         return Result.error("设备信息查询失败");
     }

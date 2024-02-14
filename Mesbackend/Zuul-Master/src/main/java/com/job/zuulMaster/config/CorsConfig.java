@@ -9,15 +9,20 @@ import org.springframework.web.util.pattern.PathPatternParser;
 
 @Configuration
 public class CorsConfig {
+
+    // 当前跨域请求最大有效时长。这里默认1天
+    private static final long MAX_AGE = 24 * 60 * 60;
+
     @Bean
     public CorsWebFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedMethod("*");
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");//设置访问源请求方法
+        config.addAllowedOrigin("*");//设置访问源地址
+        config.addAllowedHeader("*");//设置访问源请求头
+        config.setMaxAge(MAX_AGE);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/**", config);//对接口配置跨域设置
 
         return new CorsWebFilter(source);
     }

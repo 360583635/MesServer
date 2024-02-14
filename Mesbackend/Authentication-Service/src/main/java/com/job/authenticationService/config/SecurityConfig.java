@@ -55,7 +55,7 @@ public class SecurityConfig{
                 .authenticated()
         );
 
-        http.csrf().disable();
+        http.csrf().disable().cors().and();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class).logout().logoutUrl("/authen/logout").logoutSuccessHandler(logoutSuccessHandler)

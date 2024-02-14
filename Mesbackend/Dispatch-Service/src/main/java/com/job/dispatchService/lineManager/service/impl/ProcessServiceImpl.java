@@ -237,7 +237,7 @@ public class ProcessServiceImpl extends ServiceImpl<ProcessMapper, Process> impl
         for(String equipmentType : equipmentTypes){
             EquipmentVo equipmentVo = new EquipmentVo();
             equipmentVo.setTitle(equipmentType);
-            List<Equipment> equipmentList = productionManagementClient.queryEquipmentByFunction(equipmentType);
+            List<Equipment> equipmentList = productionManagementClient.queryEquipmentByFunction(equipmentType).getData();
             List<Map<String,String>> mapList = new ArrayList<>();
             for(Equipment equipment : equipmentList){
                 Map<String,String> map = new HashMap<>();
